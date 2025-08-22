@@ -66,21 +66,19 @@ def download_binaries():
                 pbar.update(len(chunk))
     zip_data.seek(0)
 
-    print("📂 Extracting binaries ...")
     with zipfile.ZipFile(zip_data) as zf:
-        root = zf.namelist()[0].split("/")[0]  # DockSuiteX_Binaries-main/
+        root = zf.namelist()[0].split("/")[0]  # DockSuiteX_Binaries-main
         for member in zf.namelist():
+            if member.endswith("/"):  # skip directories for now
+                continue
             if member.startswith(root):
-                # strip the root folder
-                target_path = BIN_DIR / member[len(root):]
-                if not target_path.name:  # skip root folder itself
-                    continue
-                if member.endswith("/"):
-                    target_path.mkdir(parents=True, exist_ok=True)
-                else:
-                    target_path.parent.mkdir(parents=True, exist_ok=True)
-                    with zf.open(member) as src, open(target_path, "wb") as dst:
-                        dst.write(src.read())
+                relative_path = member[len(root):].lstrip(
+                    "/")  # remove root + leading slash
+                target_path = BIN_DIR / relative_path
+
+                target_path.parent.mkdir(parents=True, exist_ok=True)
+                with zf.open(member) as src, open(target_path, "wb") as dst:
+                    dst.write(src.read())
 
     print(f"✅ All binaries saved in {BIN_DIR}")
 
