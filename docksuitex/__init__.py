@@ -31,26 +31,25 @@ __all__ = [
 ]
 
 
-
-# Download Binaries with Download Progress and Extraction Notice
 import platform
 import requests
 import zipfile
 import io
 from pathlib import Path
-from tqdm import tqdm  # pip install tqdm
+from tqdm import tqdm
 
-# Configuration
+# GitHub repo zip
 GITHUB_ZIP = "https://github.com/MangalamGSinha/DockSuiteX_Binaries/archive/refs/heads/main.zip"
-BIN_DIR = Path(__file__).parent / "bin"  # target folder for all binaries
-NEEDED_FOLDERS = ["mgltools", "p2rank_2.5.1", "OpenBabel-3.1.1", "AutoDock", "Vina"]
+BIN_DIR = Path(__file__).parent / "bin"
+
 
 def download_binaries():
     if platform.system() != "Windows":
         raise RuntimeError("❌ DockSuiteX only supports Windows!")
 
-    # Skip if already downloaded
-    if all((BIN_DIR / f).exists() for f in NEEDED_FOLDERS):
+    # If bin already exists, skip
+    if BIN_DIR.exists() and any(BIN_DIR.iterdir()):
+        print(f"✅ Binaries already exist in {BIN_DIR}")
         return
 
     print("⬇️ Downloading DockSuiteX_Binaries ...")
@@ -59,8 +58,7 @@ def download_binaries():
 
     total_size = int(resp.headers.get('content-length', 0))
     zip_data = io.BytesIO()
-    
-    # Download with progress bar
+
     with tqdm(total=total_size, unit='B', unit_scale=True, desc='Downloading') as pbar:
         for chunk in resp.iter_content(chunk_size=1024*1024):
             if chunk:
@@ -68,23 +66,23 @@ def download_binaries():
                 pbar.update(len(chunk))
     zip_data.seek(0)
 
-    # Extraction
     print("📂 Extracting binaries ...")
     with zipfile.ZipFile(zip_data) as zf:
-        root = zf.namelist()[0].split("/")[0]  # e.g., "DockSuiteX_Binaries-main/"
-        for folder in NEEDED_FOLDERS:
-            folder_prefix = f"{root}{folder}/"
-            for member in zf.namelist():
-                if member.startswith(folder_prefix):
-                    target_path = BIN_DIR / member[len(root):]
-                    if member.endswith("/"):
-                        target_path.mkdir(parents=True, exist_ok=True)
-                    else:
-                        target_path.parent.mkdir(parents=True, exist_ok=True)
-                        with zf.open(member) as src, open(target_path, "wb") as dst:
-                            dst.write(src.read())
+        root = zf.namelist()[0].split("/")[0]  # DockSuiteX_Binaries-main/
+        for member in zf.namelist():
+            if member.startswith(root):
+                # strip the root folder
+                target_path = BIN_DIR / member[len(root):]
+                if not target_path.name:  # skip root folder itself
+                    continue
+                if member.endswith("/"):
+                    target_path.mkdir(parents=True, exist_ok=True)
+                else:
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    with zf.open(member) as src, open(target_path, "wb") as dst:
+                        dst.write(src.read())
 
     print(f"✅ All binaries saved in {BIN_DIR}")
 
-download_binaries()
 
+download_binaries()
