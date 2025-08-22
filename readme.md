@@ -256,23 +256,23 @@ pf.save_report("outputs/pockets")
 
 #### Class: `AD4Docking`
 
-| Parameter              | Type                        | Default      | Description                                                                                  |
-| ---------------------- | --------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
-| `receptor`           | str/Path                    | —           | Path to receptor PDBQT file.                                                                 |
-| `ligand`             | str/Path                    | —           | Path to ligand PDBQT file.                                                                   |
-| `grid_center`        | tuple\[float, float, float] | —           | Center coordinates (x, y, z) of the docking grid in Ångström.                              |
-| `grid_size`          | tuple\[int, int, int]       | (60, 60, 60) | Number of grid points along*(x, y, z)* axes. Effective box size =`grid_size × spacing`. |
-| `spacing`            | float                       | 0.375        | Distance between adjacent grid points (Å). Controls the resolution of the grid.             |
-| `dielectric`         | float                       | -0.1465      | Dielectric constant for electrostatics.                                                      |
-| `smooth`             | float                       | 0.5          | Smoothing factor for potential maps.                                                         |
-| `ga_pop_size`        | int                         | 150          | Genetic algorithm population size.                                                           |
-| `ga_num_evals`       | int                         | 2,500,000    | Maximum number of energy evaluations in GA.                                                  |
-| `ga_num_generations` | int                         | 27,000       | Maximum number of generations in GA.                                                         |
-| `ga_elitism`         | int                         | 1            | Number of top individuals preserved during GA.                                               |
-| `ga_mutation_rate`   | float                       | 0.02         | Probability of mutation in GA.                                                               |
-| `ga_crossover_rate`  | float                       | 0.8          | Probability of crossover in GA.                                                              |
-| `ga_run`             | int                         | 10           | Number of independent GA runs.                                                               |
-| `rmstol`             | float                       | 2.0          | RMSD tolerance for clustering docking results.                                               |
+| Parameter              | Type                        | Default      | Description                                                                                |
+| ---------------------- | --------------------------- | ------------ | ------------------------------------------------------------------------------------------ |
+| `receptor`           | str/Path                    | —           | Path to receptor PDBQT file.                                                               |
+| `ligand`             | str/Path                    | —           | Path to ligand PDBQT file.                                                                 |
+| `grid_center`        | tuple\[float, float, float] | —           | Center coordinates (x, y, z) of the docking grid in Ångström.                            |
+| `grid_size`          | tuple\[int, int, int]       | (60, 60, 60) | Number of grid points along (x, y, z) axes. Effective box size =`grid_size × spacing`. |
+| `spacing`            | float                       | 0.375        | Distance between adjacent grid points (Å). Controls the resolution of the grid.           |
+| `dielectric`         | float                       | -0.1465      | Dielectric constant for electrostatics.                                                    |
+| `smooth`             | float                       | 0.5          | Smoothing factor for potential maps.                                                       |
+| `ga_pop_size`        | int                         | 150          | Genetic algorithm population size.                                                         |
+| `ga_num_evals`       | int                         | 2,500,000    | Maximum number of energy evaluations in GA.                                                |
+| `ga_num_generations` | int                         | 27,000       | Maximum number of generations in GA.                                                       |
+| `ga_elitism`         | int                         | 1            | Number of top individuals preserved during GA.                                             |
+| `ga_mutation_rate`   | float                       | 0.02         | Probability of mutation in GA.                                                             |
+| `ga_crossover_rate`  | float                       | 0.8          | Probability of crossover in GA.                                                            |
+| `ga_run`             | int                         | 10           | Number of independent GA runs.                                                             |
+| `rmstol`             | float                       | 2.0          | RMSD tolerance for clustering docking results.                                             |
 
 #### Method: `run()`
 
@@ -318,7 +318,7 @@ docking.save_results("outputs/ad4_docking")
 | `receptor`       | str/Path                    | —              | Path to receptor PDBQT file.                                                                                       |
 | `ligand`         | str/Path                    | —              | Path to ligand PDBQT file.                                                                                         |
 | `grid_center`    | tuple\[float, float, float] | —              | Center coordinates (x, y, z) of the docking grid in Ångström.                                                    |
-| `grid_size`      | tuple\[int, int, int]       | (20, 20, 20)    | Physical length of the grid box along*(x, y, z)* in**Ångström** . Spacing is fixed internally at 0.375 Å. |
+| `grid_size`      | tuple\[int, int, int]       | (20, 20, 20)    | Physical length of the grid box along (x, y, z) in **Ångström**. Spacing is fixed internally at 0.375 Å. |
 | `exhaustiveness` | int                         | 8               | How exhaustively Vina searches conformational space.                                                               |
 | `num_modes`      | int                         | 9               | Maximum number of binding modes to output.                                                                         |
 | `cpu`            | int                         | os.cpu\_count() | Number of CPU cores to use.                                                                                        |
