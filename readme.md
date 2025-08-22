@@ -30,7 +30,7 @@ It integrates **protein and ligand preparation**, **binding site prediction**, *
 * **Utilities**
 
   * Fetch proteins from **RCSB PDB** (`.pdb`) and Fetch ligands from **PubChem** (`.sdf`)
-  * Parse docking logs → single CSV summary (`vina_summary.csv`, `ad4_summary.csv`)
+  * Parse multiple docking logs and combine results into a single CSV file.
   * Visualize molecules in Jupyter with **py3Dmol**
   * Clean temp folders between runs
 
@@ -39,6 +39,17 @@ It integrates **protein and ligand preparation**, **binding site prediction**, *
 ## 📦 Installation
 
 DockSuiteX currently works **only on Windows**.
+
+#### Prerequisites
+
+  **Java (JDK/JRE)** is required for **P2Rank**.
+  You can download the latest LTS release from [Adoptium Temurin](https://adoptium.net/temurin/releases).
+  After installation, make sure Java is added to your **System PATH** so it can be accessed from the command line.
+  You can verify by running:
+
+```bash
+  java -version
+```
 
 #### Install from PyPI
 
@@ -313,17 +324,17 @@ docking.save_results("outputs/ad4_docking")
 
 #### Class: `VinaDocking`
 
-| Parameter          | Type                        | Default         | Description                                                                                                        |
-| ------------------ | --------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `receptor`       | str/Path                    | —              | Path to receptor PDBQT file.                                                                                       |
-| `ligand`         | str/Path                    | —              | Path to ligand PDBQT file.                                                                                         |
-| `grid_center`    | tuple\[float, float, float] | —              | Center coordinates (x, y, z) of the docking grid in Ångström.                                                    |
-| `grid_size`      | tuple\[int, int, int]       | (20, 20, 20)    | Physical length of the grid box along (x, y, z) in **Ångström**. Spacing is fixed internally at 0.375 Å. |
-| `exhaustiveness` | int                         | 8               | How exhaustively Vina searches conformational space.                                                               |
-| `num_modes`      | int                         | 9               | Maximum number of binding modes to output.                                                                         |
-| `cpu`            | int                         | os.cpu\_count() | Number of CPU cores to use.                                                                                        |
-| `verbosity`      | int                         | 1               | Level of console output (0=quiet, 1=normal, 2=verbose).                                                            |
-| `seed`           | int, optional               | None            | Random seed for reproducibility.                                                                                   |
+| Parameter          | Type                        | Default         | Description                                                                                                      |
+| ------------------ | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `receptor`       | str/Path                    | —              | Path to receptor PDBQT file.                                                                                     |
+| `ligand`         | str/Path                    | —              | Path to ligand PDBQT file.                                                                                       |
+| `grid_center`    | tuple\[float, float, float] | —              | Center coordinates (x, y, z) of the docking grid in Ångström.                                                  |
+| `grid_size`      | tuple\[int, int, int]       | (20, 20, 20)    | Physical length of the grid box along (x, y, z) in**Ångström**. Spacing is fixed internally at 0.375 Å. |
+| `exhaustiveness` | int                         | 8               | How exhaustively Vina searches conformational space.                                                             |
+| `num_modes`      | int                         | 9               | Maximum number of binding modes to output.                                                                       |
+| `cpu`            | int                         | os.cpu\_count() | Number of CPU cores to use.                                                                                      |
+| `verbosity`      | int                         | 1               | Level of console output (0=quiet, 1=normal, 2=verbose).                                                          |
+| `seed`           | int, optional               | None            | Random seed for reproducibility.                                                                                 |
 
 #### Method: `run()`
 
