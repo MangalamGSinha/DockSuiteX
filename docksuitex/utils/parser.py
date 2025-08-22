@@ -25,7 +25,7 @@ def parse_vina_log_to_csv(results_dir: str, output_csv: str = "vina_summary.csv"
 
     results = []
 
-    for log_file in Path(results_dir).rglob("*.txt"):
+    for log_file in Path(results_dir).rglob("*/log.txt"):
         with open(log_file, "r") as f:
             text = f.read()
 
