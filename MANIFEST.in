@@ -1,0 +1,32 @@
+# Core documentation and license
+include README.md
+include LICENSE
+
+# Include entire DockSuiteX/bin folder (tools like vina, obabel, etc.)
+recursive-include docksuitex/bin *
+
+# Include utility scripts or data inside DockSuiteX/utils
+recursive-include docksuitex/utils *
+
+# Include examples outside the main package
+recursive-include examples *
+
+
+
+
+# Exclude Python cache and temporary files
+global-exclude __pycache__/*
+
+# Exclude Git and version control folders
+global-exclude .git/*
+global-exclude .github/*
+
+# Exclude build artifacts
+global-exclude build/*
+global-exclude dist/*
+global-exclude *.egg-info/*
+
+# Exclude tests and docs
+global-exclude tests/*
+global-exclude notebooks/*
+global-exclude docs/*

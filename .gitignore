@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Keep bin folder intact (MGLTools etc.)
+!docksuitex/bin/**
+!docksuitex/bin/**/**
+
+# Ignore project-specific junk
+docksuitex/__pycache__/
+docksuitex/temp/
+temp/
+build/
+dist/
+*.egg-info/
+Test.ipynb
