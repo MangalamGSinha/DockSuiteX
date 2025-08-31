@@ -11,7 +11,7 @@ Modules:
 from .viewer import view_molecule, view_results
 from .fetcher import fetch_pdb, fetch_sdf
 from .parser import parse_vina_log_to_csv, parse_ad4_dlg_to_csv
-from .cleaner import clean_temp_folder
+from .cleaner import clean_temp_folder, delete_binaries
 
 __all__ = [
     "view_molecule",
@@ -21,4 +21,5 @@ __all__ = [
     "parse_vina_log_to_csv",
     "parse_ad4_dlg_to_csv",
     "clean_temp_folder",
+    "delete_binaries"
 ]

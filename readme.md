@@ -57,7 +57,7 @@ DockSuiteX currently works **only on Windows**.
   You can verify by running:
 
 ```bash
-  java -version
+java -version
 ```
 
 #### Install from PyPI
@@ -688,8 +688,6 @@ from docksuitex.utils import delete_binaries
 # Useful when you want to re-download fresh binaries.
 delete_binaries()
 ```
-
-
 
 ---
 
