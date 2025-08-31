@@ -2,8 +2,8 @@
 include README.md
 include LICENSE
 
-# Include entire DockSuiteX/bin folder (tools like vina, obabel, etc.)
-recursive-include docksuitex/bin *
+# Exclude entire DockSuiteX/bin folder (tools like vina, obabel, etc.)
+recursive-exclude docksuitex/bin *
 
 # Include utility scripts or data inside DockSuiteX/utils
 recursive-include docksuitex/utils *

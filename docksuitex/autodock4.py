@@ -4,13 +4,12 @@ import shutil
 from typing import Union
 import uuid
 import os
-import stat
+from .protein import Protein
+from .ligand import Ligand
+from .utils.viewer import view_results
 
-
-AUTOGRID_EXE = (Path(__file__).parent / "bin" /
-                "AutoDock" / "autogrid4.exe").resolve()
-AUTODOCK_EXE = (Path(__file__).parent / "bin" /
-                "AutoDock" / "autodock4.exe").resolve()
+AUTOGRID_EXE = (Path(__file__).parent / "bin" / "autodock" / "autogrid4.exe").resolve()
+AUTODOCK_EXE = (Path(__file__).parent / "bin" / "autodock" / "autodock4.exe").resolve()
 TEMP_DIR = (Path(__file__).parent / "temp").resolve()
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -19,14 +18,15 @@ class AD4Docking:
     """
     A Python wrapper for AutoDock4 and AutoGrid to automate receptor–ligand docking.
 
-    This class prepares grid parameter files (GPF) and docking parameter files (DPF),
-    runs AutoGrid and AutoDock, and organizes results in a temporary folder.
+    This class automates receptor–ligand docking using AutoDock4.
+    It prepares grid parameter (GPF) and docking parameter (DPF) files,
+    runs AutoGrid and AutoDock, and saves docking results.
     """
 
     def __init__(
         self,
-        receptor: Union[str, Path],
-        ligand: Union[str, Path],
+        receptor: Union[str, Path, "Protein"],
+        ligand: Union[str, Path, "Ligand"],
         grid_center: tuple[float, float, float],
         grid_size: tuple[int, int, int] = (60, 60, 60),
         spacing: float = 0.375,
@@ -78,8 +78,21 @@ class AD4Docking:
         rmstol : float, default=2.0
             RMSD tolerance for clustering docking results.
         """
-        self.receptor = Path(receptor).resolve()
-        self.ligand = Path(ligand).resolve()
+        # normalize receptor
+        if isinstance(receptor, Protein):
+            if receptor.pdbqt_path is None or not Path(receptor.pdbqt_path).exists():
+                raise RuntimeError("❌ Protein not prepared. Run Protein.prepare() first.")
+            self.receptor = Path(receptor.pdbqt_path)
+        else:
+            self.receptor = Path(receptor).resolve()
+
+        # normalize ligand
+        if isinstance(ligand, Ligand):
+            if ligand.pdbqt_path is None or not Path(ligand.pdbqt_path).exists():
+                raise RuntimeError("❌ Ligand not prepared. Run Ligand.prepare() first.")
+            self.ligand = Path(ligand.pdbqt_path)
+        else:
+            self.ligand = Path(ligand).resolve()
 
         # Grid parameters
         self.grid_center = grid_center
@@ -113,15 +126,9 @@ class AD4Docking:
         self.dpf_file = self.temp_dir / "ligand.dpf"
         self.dlg_file = self.temp_dir / "results.dlg"
 
-        self.receptor_types = self._detect_receptor_types()
-        self.ligand_types = self._detect_ligand_types()
+        self.receptor_types = self._detect_atom_types(self.receptor)
+        self.ligand_types = self._detect_atom_types(self.ligand)
 
-    def _ensure_executable_permissions(self):
-        for exe_path in [AUTOGRID_EXE, AUTODOCK_EXE]:
-            if exe_path.exists():
-                current_permissions = exe_path.stat().st_mode
-                exe_path.chmod(current_permissions | stat.S_IEXEC |
-                               stat.S_IXUSR | stat.S_IXGRP)
 
     def _setup_environment(self):
         bin_dir = str((Path(__file__).parent / "bin" / "AutoDock").resolve())
@@ -129,9 +136,9 @@ class AD4Docking:
         if bin_dir not in current_path:
             os.environ["PATH"] = bin_dir + os.pathsep + current_path
 
-    def _detect_receptor_types(self):
+    def _detect_atom_types(self, path):
         atom_types = set()
-        with self.receptor.open("r") as f:
+        with path.open("r") as f:
             for line in f:
                 if line.startswith(("ATOM", "HETATM")):
                     parts = line.split()
@@ -140,15 +147,6 @@ class AD4Docking:
                         atom_types.add(line[77:79].strip())
         return sorted(atom_types)
 
-    def _detect_ligand_types(self):
-        atom_types = set()
-        with self.ligand.open("r") as f:
-            for line in f:
-                if line.startswith(("ATOM", "HETATM")):
-                    parts = line.split()
-                    if len(parts) >= 3:
-                        atom_types.add(parts[-1])
-        return sorted(atom_types)
 
     def _create_gpf(self):
         maps_lines = "\n".join(
@@ -232,73 +230,91 @@ analysis
             for model in models:
                 out.write(model + "\n")
 
-    def _run_with_error_handling(self, cmd, log_file):
-        cmd_str = [str(x) for x in cmd]
+
+
+
+
+    def run(self):
+        """
+        Runs AutoGrid and AutoDock for molecular docking.
+
+        Raises:
+        RuntimeError: If AutoGrid or AutoDock fails, or expected output
+            files (.fld or .dlg) are missing.
+        """
+        self._setup_environment()
+
+        # Run AutoGrid
+        self._create_gpf()
+        autogrid_cmd = [str(AUTOGRID_EXE), "-p", str(self.gpf_file.name), "-l", str(self.glg_file.name)]
         result = subprocess.run(
-            cmd_str,
+            autogrid_cmd,
             cwd=str(self.temp_dir),
             capture_output=True,
             text=True,
-            check=False
         )
         if result.returncode != 0:
-            if log_file.exists():
-                raise RuntimeError(
-                    f"❌ Process failed. Log file content:\n{log_file.read_text()}")
-            raise subprocess.CalledProcessError(
-                result.returncode, cmd_str, result.stdout, result.stderr)
-        return result
-
-    def run(self):
-        self._setup_environment()
-        self._ensure_executable_permissions()
-
-        if not AUTOGRID_EXE.exists():
-            raise FileNotFoundError(
-                f"❌ AutoGrid executable not found: {AUTOGRID_EXE}")
-        if not AUTODOCK_EXE.exists():
-            raise FileNotFoundError(
-                f"❌ AutoDock executable not found: {AUTODOCK_EXE}")
-
-        self._create_gpf()
-        autogrid_cmd = [str(AUTOGRID_EXE), "-p",
-                        str(self.gpf_file.name), "-l", str(self.glg_file.name)]
-        self._run_with_error_handling(autogrid_cmd, self.glg_file)
+            if self.glg_file.exists():
+                raise RuntimeError(f"❌ AutoGrid failed. Log file content:\n{self.glg_file.read_text()}")
+            raise subprocess.CalledProcessError(result.returncode, autogrid_cmd, result.stdout, result.stderr)
 
         fld_file = self.temp_dir / "receptor.maps.fld"
         if not fld_file.exists():
             raise RuntimeError("❌ AutoGrid did not create the .fld file")
 
+        # Run AutoDock
         self._create_dpf()
-        autodock_cmd = [str(AUTODOCK_EXE), "-p",
-                        str(self.dpf_file.name), "-l", str(self.dlg_file.name)]
-        self._run_with_error_handling(autodock_cmd, self.dlg_file)
+        autodock_cmd = [str(AUTODOCK_EXE), "-p", str(self.dpf_file.name), "-l", str(self.dlg_file.name)]
+        result = subprocess.run(
+            autodock_cmd,
+            cwd=str(self.temp_dir),
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            if self.dlg_file.exists():
+                raise RuntimeError(f"❌ AutoDock failed. Log file content:\n{self.dlg_file.read_text()}")
+            raise subprocess.CalledProcessError(result.returncode, autodock_cmd, result.stdout, result.stderr)
 
-        self._extract_lowest_energy_conformations(
-            self.dlg_file, Path(self.temp_dir / "output.pdbqt"))
+        self._extract_lowest_energy_conformations(self.dlg_file, Path(self.temp_dir / "output.pdbqt"))
 
-    def save_results(self, save_dir: Union[str, Path] = Path("./ad4_results")):
+
+
+
+    def view_results(self):
         """
-        Save docking results to a specified directory.
+        Visualize docking results using NGLView.
 
-        Parameters
-        ----------
-        save_dir : str | Path, default="./ad4_results"
-            Directory where results will be copied.
+        Opens the receptor and docked ligand in an interactive
+        3D widget inside a Jupyter notebook.
 
-        Returns
-        -------
-        Path
-            Path to the saved results.
+        Returns:
+            nglview.NGLWidget: Interactive visualization of receptor–ligand complex.
+        """
+        view_results(protein_file=self.receptor, ligand_file=Path(self.temp_dir / "output.pdbqt"))
 
-        -------
+
+
+
+    def save_results(self, save_to: Union[str, Path] = Path("./ad4_results")):
+        """Save docking results to a specified directory.
+
+        Copies all temporary result files (GPF, DPF, DLG, PDBQT, logs)
+        into a user-specified directory.
+
+        Args:
+            save_to (str | Path, optional): Destination directory. Defaults to "./ad4_results".
+
+        Returns:
+            Path: Resolved path to the saved results directory.
+
         Raises:
-            RuntimeError: If any result file is missing (docking not run or failed).
+            RuntimeError: If docking has not been run or results are missing.
         """
         if not self.dlg_file.exists():
             raise RuntimeError(
                 "❌ Docking results are missing. Please run docking before saving results.")
 
-        save_dir = Path(save_dir).resolve()
-        shutil.copytree(self.temp_dir, save_dir, dirs_exist_ok=True)
-        return save_dir
+        save_to = Path(save_to).resolve()
+        shutil.copytree(self.temp_dir, save_to, dirs_exist_ok=True)
+        return save_to

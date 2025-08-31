@@ -1,8 +1,10 @@
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, Literal
 import uuid
+
+from docksuitex.utils.viewer import view_molecule
 
 # === CONFIGURATION ===
 MGLTOOLS_PATH = (Path(__file__).parent / "bin" / "mgltools").resolve()
@@ -10,27 +12,34 @@ MGL_PYTHON_EXE = (MGLTOOLS_PATH / "python.exe").resolve()
 PREPARE_LIGAND_SCRIPT = (MGLTOOLS_PATH / "Lib" / "site-packages" /
                          "AutoDockTools" / "Utilities24" / "prepare_ligand4.py").resolve()
 OBABEL_EXE = (Path(__file__).parent / "bin" /
-              "OpenBabel-3.1.1" / "obabel.exe").resolve()
+              "obabel" / "obabel.exe").resolve()
 
 TEMP_DIR = (Path(__file__).parent / "temp").resolve()
 TEMP_DIR.mkdir(exist_ok=True)
 
 
 class Ligand:
-    """
-    Ligand preparation pipeline using Open Babel and MGLTools.
+    """Ligand preparation pipeline using Open Babel and MGLTools.
 
-    This class supports automatic conversion, 3D generation, optional energy minimization, 
-    and conversion to the PDBQT format required by AutoDock Vina.
-
-    Supported input formats: mol2, sdf, pdb, mol, smi  
-    Supported forcefields: mmff94, mmff94s, uff, gaff
+    This class automates preprocessing of ligands by:
+    - Converting input formats to MOL2
+    - Optionally minimizing energy with forcefields
+    - Converting MOL2 to PDBQT using AutoDockTools
     """
 
     SUPPORTED_INPUTS = {"mol2", "sdf", "pdb", "mol", "smi"}
     SUPPORTED_FORCEFIELDS = {"mmff94", "mmff94s", "uff", "gaff"}
 
     def __init__(self, file_path: Union[str, Path]):
+        """Initialize a Ligand object with a given input file.
+
+        Args:
+            file_path (str | Path): Path to the ligand input file.
+
+        Raises:
+            FileNotFoundError: If the input file does not exist.
+            ValueError: If the file extension is unsupported.
+        """
         self.file_path = Path(file_path).resolve()
         self.mol2_path: Optional[Path] = None
         self.pdbqt_path: Optional[Path] = None
@@ -61,15 +70,11 @@ class Ligand:
             minimize (str, optional): Forcefield to use for energy minimization 
                 ("mmff94", "mmff94s", "uff", or "gaff"). If None, no minimization 
                 is performed. Default is None.
-            remove_water (bool): If True, remove water molecules during Open Babel 
-                preprocessing (HOH residues and [#8H2] pattern). Default is True.
-            add_hydrogens (bool): Whether to explicitly add hydrogens in ADT. 
-                Default is True.
-            add_charges (bool): Whether to assign Gasteiger charges in ADT. 
-                If False, all input charges are preserved. Default is True.
-            preserve_charge_types (list[str], optional): Atom types (e.g., ["Zn", "Fe"]) 
-                whose charges should be preserved. Other atoms get Gasteiger charges. 
-                Default is None.
+            remove_water (bool, optional): If True, remove water molecules during Open Babel preprocessing. Default is True.
+            add_hydrogens (bool, optional): Add polar hydrogens during PDBQT preparation. Default is True.
+            add_charges (bool, optional): Assign Gasteiger charges during PDBQT preparation. If False, all input charges are preserved. Default is True.
+            preserve_charge_types (list[str], optional): Atom types (e.g., ["Zn", "Fe"]) whose
+                charges should be preserved. Ignored if `add_charges=False`. Defaults to None.
 
         Raises:
             ValueError: If an unsupported forcefield or input format is provided.
@@ -135,24 +140,50 @@ class Ligand:
 
         self.pdbqt_path = self.temp_dir / pdbqt_filename
 
-    def save_pdbqt(self, save_path: Union[str, Path] = ".") -> Path:
-        """
-        Save the prepared PDBQT file to the specified location.
 
-        Args:
-            save_path (str | Path): Destination file or directory where the PDBQT file should be saved. 
-                If a directory is given, the original filename is preserved.
+
+    def view_molecule(self):
+        """Visualize the ligand structure in a Jupyter notebook.
+
+        Uses nglview to render either the prepared or original file.
+
+        Returns:
+            object: An nglview.NGLWidget object for rendering.
 
         Raises:
-            RuntimeError: If prepare() has not been called or the PDBQT file does not exist.
+            FileNotFoundError: If neither prepared nor input file exists.
+        """
+        path = Path(self.pdbqt_path if self.pdbqt_path else self.file_path).resolve()
+        return view_molecule(file_path=path)
+
+
+
+
+
+
+    def save_pdbqt(self, save_to: Union[str, Path] = ".") -> Path:
+        """Save the prepared PDBQT file to the specified location.
+
+        Args:
+            save_to (str | Path, optional): Destination file or directory.
+                - If directory: saves with the original filename.
+                - If file path: saves with the given name.
+
+        Returns:
+            Path: Path to the saved PDBQT file.
+
+        Raises:
+            RuntimeError: If `prepare()` has not been run or the PDBQT file is missing.
         """
         if self.pdbqt_path is None or not self.pdbqt_path.exists():
             raise RuntimeError("❌ Ligand not prepared. Run prepare() first.")
-        
-        save_path = Path(save_path).resolve()
-        if save_path.is_dir():
-            save_path = save_path / self.pdbqt_path.name
 
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(self.pdbqt_path, save_path)
-        return save_path
+        save_to = Path(save_to).expanduser().resolve()
+
+        # treat as file only if it has a suffix (e.g., .pdbqt)
+        if not save_to.suffix:
+            save_to = save_to / self.pdbqt_path.name
+
+        save_to.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(self.pdbqt_path, save_to)
+        return save_to

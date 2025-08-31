@@ -19,3 +19,17 @@ def clean_temp_folder():
     else:
         print("⚠️ Temp folder does not exist.")
         TEMP_DIR.mkdir(exist_ok=True)
+
+
+
+BIN_DIR = (Path(__file__).parent.parent / "bin").resolve()
+
+import shutil
+
+def delete_binaries():
+    """Delete the BIN_DIR folder and all its contents."""
+    if BIN_DIR.exists() and BIN_DIR.is_dir():
+        shutil.rmtree(BIN_DIR)
+        print(f"🗑️ Deleted {BIN_DIR}")
+    else:
+        print(f"⚠️ {BIN_DIR} does not exist.")

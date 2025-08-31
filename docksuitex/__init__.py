@@ -17,7 +17,9 @@ if platform.system() != "Windows":
 from .protein import Protein
 from .ligand import Ligand
 from .vina import VinaDocking
+from .batch_vina import BatchVinaDocking
 from .autodock4 import AD4Docking
+from .batch_autodock4 import BatchAD4Docking
 from .pocket_finder import PocketFinder
 from pathlib import Path
 
@@ -26,9 +28,16 @@ __all__ = [
     "Protein",
     "Ligand",
     "VinaDocking",
+    "BatchVinaDocking",
     "AD4Docking",
+    "BatchAD4Docking",
     "PocketFinder",
 ]
+
+
+
+
+
 
 
 import platform
@@ -37,6 +46,7 @@ import zipfile
 import io
 from pathlib import Path
 from tqdm import tqdm
+import shutil
 
 # GitHub repo zip
 GITHUB_ZIP = "https://github.com/MangalamGSinha/DockSuiteX_Binaries/archive/refs/heads/main.zip"
@@ -49,7 +59,7 @@ def download_binaries():
 
     # If bin already exists, skip
     if BIN_DIR.exists() and any(BIN_DIR.iterdir()):
-        print(f"✅ Binaries already exist in {BIN_DIR}")
+        # print(f"✅ Binaries already exist in {BIN_DIR}")
         return
 
     print("⬇️ Downloading DockSuiteX_Binaries ...")

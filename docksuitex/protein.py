@@ -1,13 +1,15 @@
 import os
 import subprocess
 from pathlib import Path
-from typing import Union, Optional
+from typing import Union, Optional, Literal
 import shutil
 
 from pdbfixer import PDBFixer
 from openmm.app import PDBFile
 
 import uuid
+
+from .utils.viewer import view_molecule
 
 
 # Constants
@@ -19,25 +21,34 @@ PREPARE_RECEPTOR_SCRIPT = (
 ).resolve()
 
 OBABEL_EXE = (Path(__file__).parent / "bin" /
-              "OpenBabel-3.1.1" / "obabel.exe").resolve()
+              "obabel" / "obabel.exe").resolve()
 TEMP_DIR = (Path(__file__).parent / "temp").resolve()
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class Protein:
-    """Handles protein preparation for docking using PDBFixer, Open Babel, and MGLTools.
+    """Handles protein preparation for docking using PDBFixer, Open Babel, and AutoDockTools.
 
     This class automates the preprocessing of protein structures by:
     - Converting various input formats to PDB using Open Babel
     - Optionally fixing missing residues and atoms using PDBFixer
     - Optionally removing water molecules, adding hydrogens and charges
-    - Converting the fixed PDB file to PDBQT format using MGLTools
+    - Converting the fixed PDB file to PDBQT format using AutoDockTools
     """
 
     SUPPORTED_INPUTS = {".pdb", ".mol2", ".sdf",
                         ".pdbqt", ".cif", ".ent", ".xyz"}
 
     def __init__(self, file_path: Union[str, Path]):
+        """Initialize a Protein object with a given file path.
+
+        Args:
+            file_path (str | Path): Path to the protein input file.
+
+        Raises:
+            FileNotFoundError: If the provided file does not exist.
+            ValueError: If the file format is not supported.
+        """
         self.file_path = Path(file_path).resolve()
         self.pdb_path: Optional[Path] = None
         self.pdbqt_path: Optional[Path] = None
@@ -65,19 +76,16 @@ class Protein:
         Handles protein preparation for docking using PDBFixer, Open Babel, and AutoDockTools (ADT).
 
         Args:
-            fix_pdb (bool): Whether to run PDBFixer cleanup (fix missing residues/atoms, 
-                replace non-standard residues). Default is True.
-            remove_heterogens (bool): If True, remove heterogens (non-protein residues, 
-                ligands, etc.) in PDBFixer step. Default is True.
-            add_hydrogens (bool): Whether to add hydrogens during PDBQT preparation. 
-                Default is True.
-            remove_water (bool): If True, remove water molecules during PDBQT preparation. 
-                Default is True.
-            add_charges (bool): Whether to assign Gasteiger charges during PDBQT generation. 
-                If False, all input charges are preserved. Default is True.
-            preserve_charge_types (list[str], optional): Atom types (e.g., ["Zn", "Fe"]) 
-                whose charges should be preserved during PDBQT generation. Ignored if 
-                add_charges=False. Default is None.
+            fix_pdb (bool, optional): Fix missing residues, atoms, replace non-standard residues using PDBFixer. Defaults to True.
+            remove_heterogens (bool, optional): Remove ligands/heterogens during fixing. Defaults to True.
+            add_hydrogens (bool, optional): Add hydrogens in PDBQT preparation. Defaults to True.
+            remove_water (bool, optional): Remove water molecules in PDBQT preparation. Defaults to True.
+            add_charges (bool, optional): Assign Gasteiger charges during PDBQT generation. If False, all input charges are preserved. Default is True.
+            preserve_charge_types (list[str], optional): Atom types (e.g., ["Zn", "Fe"])
+                whose charges should be preserved. Ignored if `add_charges=False`. Defaults to None.
+
+        Raises:
+            RuntimeError: If Open Babel or AutoDockTools commands fail.
         """
         # Create a unique temp directory per object
         self.temp_dir = TEMP_DIR / "Proteins" / f"{self.file_path.stem}_{uuid.uuid4().hex[:8]}"
@@ -101,7 +109,7 @@ class Protein:
             fixer.findMissingAtoms()
             fixer.addMissingAtoms()
         if remove_heterogens:
-            fixer.removeHeterogens()
+            fixer.removeHeterogens(keepWater=True)
 
 
         # Save fixed PDB
@@ -111,7 +119,7 @@ class Protein:
 
         self.pdb_path = fixed_pdb_path
 
-        # Convert to PDBQT using MGLTools
+        # Convert to PDBQT using AutoDockTools
         output_pdbqt = self.temp_dir / f"{self.file_path.stem}.pdbqt"
         U_flag = "nphs_lps_waters" if remove_water else "nphs_lps"
         cmd = [
@@ -137,25 +145,52 @@ class Protein:
 
         self.pdbqt_path = output_pdbqt
 
-    def save_pdbqt(self, save_path: Union[str, Path] = ".") -> Path:
-        """
-        Save the prepared PDBQT file to the specified location.
+    
 
-        Args:
-            save_path (str | Path): Destination file or directory where the PDBQT file should be saved. 
-                If a directory is given, the original filename is preserved.
+
+
+    def view_molecule(self):
+        """Visualize the ligand structure in a Jupyter notebook.
+
+        Uses nglview to render either the prepared or original file.
+
+        Returns:
+            object: An nglview.NGLWidget object for rendering.
 
         Raises:
-            RuntimeError: If prepare() has not been called or the PDBQT file does not exist.
+            FileNotFoundError: If neither prepared nor input file exists.
+        """
+        path = Path(self.pdbqt_path if self.pdbqt_path else self.file_path).resolve()
+        return view_molecule(file_path=path)
+
+
+
+
+
+    def save_pdbqt(self, save_to: Union[str, Path] = ".") -> Path:
+        """Save the prepared PDBQT file to a given location.
+
+        Args:
+            save_to (str | Path, optional): Destination path.
+                - If a directory: file will be saved with original name.
+                - If a file path: saved with the given name.
+
+        Returns:
+            Path: Final saved file path.
+
+        Raises:
+            RuntimeError: If `prepare()` has not been run or PDBQT file is missing.
         """
         if self.pdbqt_path is None or not self.pdbqt_path.exists():
             raise RuntimeError("❌ Protein not prepared. Run prepare() first.")
 
-        save_path = Path(save_path).resolve()
-        if save_path.is_dir():
-            save_path = save_path / self.pdbqt_path.name
+        save_to = Path(save_to).expanduser().resolve()
 
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(self.pdbqt_path, save_path)
-        return save_path
+        # treat as file only if it has a suffix (e.g., .pdbqt)
+        if not save_to.suffix:
+            save_to = save_to / self.pdbqt_path.name
+
+        save_to.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(self.pdbqt_path, save_to)
+        return save_to
 

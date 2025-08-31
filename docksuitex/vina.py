@@ -4,22 +4,26 @@ from typing import Optional, Union
 import shutil
 import os
 import uuid
+from .protein import Protein
+from .ligand import Ligand
+from .utils.viewer import view_results
 
 # Path to AutoDock Vina executable
-VINA_PATH = (Path(__file__).parent / "bin" / "Vina" / "vina.exe").resolve()
+VINA_PATH = (Path(__file__).parent / "bin" / "vina" / "vina.exe").resolve()
 TEMP_DIR = (Path(__file__).parent / "temp").resolve()
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class VinaDocking:
-    """
-    A wrapper class for running AutoDock Vina to perform molecular docking and extract results.
+    """A wrapper for running AutoDock Vina to perform molecular docking.
+
+    This class automates running Vina, and saving/visualizing results.
     """
 
     def __init__(
         self,
-        receptor: Union[str, Path],
-        ligand: Union[str, Path],
+        receptor: Union[str, Path, "Protein"],
+        ligand: Union[str, Path, "Ligand"],
         grid_center: tuple[float, float, float],
         grid_size: tuple[int, int, int] = (20, 20, 20),
         exhaustiveness: int = 8,
@@ -28,35 +32,51 @@ class VinaDocking:
         verbosity: int = 1,
         seed: Optional[int] = None,
     ):
-        """
-        Initialize a Vina docking run.
+        """Initialize a Vina docking job.
 
-        Parameters
-        ----------
-        receptor : str or Path
-            Path to the receptor PDBQT file.
-        ligand : str or Path
-            Path to the ligand PDBQT file.
-        grid_center : tuple of float
-            Coordinates (x, y, z) of the grid box grid_center in Å.
-        grid_size : tuple of int, default=(20, 20, 20)
-            grid_size of the search box in Å along each dimension (x, y, z).
-        exhaustiveness : int, default=8
-            How exhaustively the conformational space is sampled. Higher values
-            increase accuracy but also computation time.
-        num_modes : int, default=9
-            Maximum number of binding modes to output.
-        cpu : int, default=os.cpu_count()
-            Number of CPU cores to use for docking.
-        verbosity : int, default=1
-            Verbosity level of Vina output (0 = quiet, 1 = normal, 2 = verbose).
-        seed : int, optional
-            Random seed for reproducibility. If None, Vina chooses automatically.
+        Args:
+            receptor (Union[str, Path, Protein]): Path to receptor `.pdbqt` file or a `Protein` object.
+            ligand (Union[str, Path, Ligand]): Path to ligand `.pdbqt` file or a `Ligand` object.
+            grid_center (Tuple[float, float, float]): Grid box center coordinates (x, y, z) in Å.
+            grid_size (Tuple[int, int, int], optional): Grid box size along each axis in Å. Defaults to (20, 20, 20).
+            exhaustiveness (int, optional): Search exhaustiveness. Higher = slower but more accurate. Defaults to 8.
+            num_modes (int, optional): Maximum number of binding modes to output. Defaults to 9.
+            cpu (int, optional): Number of CPU cores to use. Defaults to all available cores.
+            verbosity (int, optional): Verbosity level (0=quiet, 1=normal, 2=verbose). Defaults to 1.
+            seed (Optional[int], optional): Random seed for reproducibility. Defaults to None.
+
+        Raises:
+            FileNotFoundError: If receptor or ligand file is missing.
+            ValueError: If input files are not `.pdbqt` or grid parameters are invalid.
+            RuntimeError: If Protein or Ligand objects are not prepared.
         """
 
-        self.receptor = Path(receptor).resolve()
-        self.ligand = Path(ligand).resolve()
-        self._validate_inputs(grid_center, grid_size)
+
+        # normalize receptor
+        if isinstance(receptor, Protein):
+            if receptor.pdbqt_path is None or not Path(receptor.pdbqt_path).exists():
+                raise RuntimeError("❌ Protein not prepared. Run Protein.prepare() first.")
+            self.receptor = Path(receptor.pdbqt_path)
+        else:
+            self.receptor = Path(receptor).resolve()
+
+        # normalize ligand
+        if isinstance(ligand, Ligand):
+            if ligand.pdbqt_path is None or not Path(ligand.pdbqt_path).exists():
+                raise RuntimeError("❌ Ligand not prepared. Run Ligand.prepare() first.")
+            self.ligand = Path(ligand.pdbqt_path)
+        else:
+            self.ligand = Path(ligand).resolve()
+
+
+        if not (isinstance(grid_center, tuple) and len(grid_center) == 3):
+            raise ValueError("⚠️ 'grid_center' must be a 3-tuple of floats.")
+        if not (isinstance(grid_size, tuple) and len(grid_size) == 3):
+            raise ValueError("⚠️ 'grid_size' must be a 3-tuple of floats.")
+        if any(not isinstance(v, (float, int)) for v in grid_center + grid_size):
+            raise TypeError(
+                "⚠️ Grid grid_center and grid_size values must be float or int.")
+
 
         if not self.receptor.is_file():
             raise FileNotFoundError(
@@ -81,7 +101,7 @@ class VinaDocking:
 
         # Temp directories
         # Use receptor/ligand names + timestamp for uniqueness
-        self.temp_dir = TEMP_DIR / "vina_results" / f"{self.receptor.stem}_{self.ligand.stem}_docked_ad4_{uuid.uuid4().hex[:8]}"
+        self.temp_dir = TEMP_DIR / "vina_results" / f"{self.receptor.stem}_{self.ligand.stem}_docked_vina_{uuid.uuid4().hex[:8]}"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
         shutil.copy2(self.receptor, self.temp_dir / self.receptor.name)
@@ -96,14 +116,7 @@ class VinaDocking:
 
         self._vina_output: Optional[str] = None
 
-    def _validate_inputs(self, grid_center, grid_size):
-        if not (isinstance(grid_center, tuple) and len(grid_center) == 3):
-            raise ValueError("⚠️ 'grid_center' must be a 3-tuple of floats.")
-        if not (isinstance(grid_size, tuple) and len(grid_size) == 3):
-            raise ValueError("⚠️ 'grid_size' must be a 3-tuple of floats.")
-        if any(not isinstance(v, (float, int)) for v in grid_center + grid_size):
-            raise TypeError(
-                "⚠️ Grid grid_center and grid_size values must be float or int.")
+
 
     def run(self):
         """
@@ -143,27 +156,36 @@ class VinaDocking:
             with open(self.output_log, "w") as log_file:
                 log_file.write(self._vina_output)
 
-    def save_results(self, save_dir: Union[str, Path] = Path("./vina_results")) -> Path:
-        """
-        Copies the docking result files (.pdbqt, .log) to the specified directory.
 
-        Args:
-            save_dir (Union[str, Path], optional): Destination directory to save the output files.
-                Defaults to './vina_results'.
+    def view_results(self):
+        """Visualize docking results using NGLView.
 
         Returns:
-            Path: The full resolved path of the target output folder.
+            nglview.NGLWidget: Interactive 3D viewer for receptor-ligand docking.
+        """
+        view_results(protein_file=self.receptor, ligand_file=self.output_pdbqt)
+
+
+
+    def save_results(self, save_to: Union[str, Path] = Path("./vina_results")) -> Path:
+        """Save docking results to a specified directory.
+
+        Args:
+            save_to (Union[str, Path], optional): Destination folder. Defaults to './vina_results'.
+
+        Returns:
+            Path: Absolute path to the saved results folder.
 
         Raises:
-            RuntimeError: If any result file is missing (docking not run or failed).
+            RuntimeError: If result files are missing (e.g., `run()` not called or failed).
         """
         # Check if results exist before proceeding
         if not self.output_pdbqt.exists() or not self.output_log.exists():
             raise RuntimeError(
                 "❌ Docking results are missing. Please run docking before saving results."
             )
-        save_dir = Path(save_dir).resolve()
+        save_to = Path(save_to).resolve()
 
-        shutil.copytree(self.temp_dir, save_dir, dirs_exist_ok=True)
+        shutil.copytree(self.temp_dir, save_to, dirs_exist_ok=True)
 
-        return save_dir
+        return save_to

@@ -3,9 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Keep bin folder intact (MGLTools etc.)
-!docksuitex/bin/**
-!docksuitex/bin/**/**
+docksuitex/bin/**
+docksuitex/bin/**/**
 
 # Ignore project-specific junk
 docksuitex/__pycache__/

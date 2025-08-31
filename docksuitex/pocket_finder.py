@@ -5,69 +5,81 @@ import shutil
 from pathlib import Path
 from typing import Optional, Tuple, List, Union, Dict
 import uuid
+from docksuitex.protein import Protein
 
 # Paths
-P2RANK_PATH = (Path(__file__).parent / "bin" /
-               "p2rank_2.5.1" / "p2rank_2.5.1" / "prank.bat").resolve()
+P2RANK_PATH = (Path(__file__).parent / "bin" / "p2rank" / "prank.bat").resolve()
 TEMP_DIR = (Path(__file__).parent / "temp").resolve()
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class PocketFinder:
     """
-    A wrapper class for running P2Rank on a given protein structure (PDB format) to predict 
-    potential ligand binding pockets. The class handles running the tool, parsing output, 
-    and saving results.
+    Wrapper for running P2Rank to predict ligand-binding pockets in a protein.
+
+    This class manages execution of the P2Rank tool on a given receptor
+    structure (PDB/PDBQT format), parses the output and save results.
     """
 
-    def __init__(self, protein_path: Union[str, Path], threads: int = os.cpu_count() or 1):
+    def __init__(self, receptor: Union[str, Path, "Protein"], cpu: int = os.cpu_count() or 1):
         """
-        Initialize the PocketFinder with a protein file path.
+        Initialize the PocketFinder with a receptor structure.
 
         Args:
-            protein_path (Union[str, Path]): Path to the input protein file in PDB format.
-            threads (int, optional): Number of threads to use for P2Rank. Defaults to number of CPU cores.
+            receptor (Union[str, Path, Protein]):
+                Either:
+                - Path to a protein file in `.pdb` or `.pdbqt` format, or
+                - A :class:`Protein` object prepared with ``Protein.prepare()``.
+            cpu (int, optional):
+                Number of CPU cores to allocate for P2Rank. Defaults to
+                the number of available cores.
 
         Raises:
-            FileNotFoundError: If the specified protein file does not exist.
-            ValueError: If the input file is not a .pdb file.
+            FileNotFoundError: If the receptor file does not exist.
+            ValueError: If the file is not a supported format.
+            RuntimeError: If a Protein object is provided without being prepared.
         """
-        self.protein_path = Path(protein_path).resolve()
+        if isinstance(receptor, Protein):
+            if receptor.pdbqt_path is None or not Path(receptor.pdbqt_path).exists():
+                raise RuntimeError("❌ Protein not prepared. Run Protein.prepare() first.")
+            self.receptor = Path(receptor.pdbqt_path)
+        else:
+            self.receptor = Path(receptor).resolve()
 
-        if not self.protein_path.is_file():
+        if not self.receptor.is_file():
             raise FileNotFoundError(
-                f"❌ PDB file not found: {self.protein_path}")
+                f"❌ PDB file not found: {self.receptor}")
 
-        if self.protein_path.suffix.lower() != ".pdb":
+        if self.receptor.suffix.lower() not in [".pdb", ".pdbqt"]:
             raise ValueError(
-                "❌ Unsupported file format. Only '.pdb' is supported.")
+                "❌ Unsupported file format. Only '.pdb' and 'pdbqt' is supported.")
 
         # Temp directories
         # Use receptor + uuid for uniqueness
-        self.temp_dir = TEMP_DIR / "p2rank_results" / f"{self.protein_path.stem}_pockets_{uuid.uuid4().hex[:8]}"
+        self.temp_dir = TEMP_DIR / "p2rank_results" / f"{self.receptor.stem}_pockets_{uuid.uuid4().hex[:8]}"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
-        self.threads = threads
+        self.cpu = cpu
 
     def run(self) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
         """
-        Run P2Rank to predict ligand-binding pockets in the protein structure.
+        Execute P2Rank to predict ligand-binding pockets.
 
         Returns:
-            List[Dict[str, Union[int, Tuple[float, float, float]]]]: 
-                A list of dictionaries, each containing:
-                - 'rank': pocket ranking based on prediction confidence
-                - 'center': a tuple of (x, y, z) coordinates of the pocket center
+            List[Dict[str, Union[int, Tuple[float, float, float]]]]:
+                A list of pocket predictions, where each dictionary contains:
+                - ``rank`` (int): Pocket ranking by confidence.
+                - ``center`` (tuple[float, float, float]): (x, y, z) coordinates of the pocket center.
 
         Raises:
-            RuntimeError: If P2Rank execution fails.
+            RuntimeError: If P2Rank fails to run.
         """
         cmd = [
             str(P2RANK_PATH),
             "predict",
-            "-f", str(self.protein_path),
+            "-f", str(self.receptor),
             "-o", str(self.temp_dir),
-            "-threads", str(self.threads)
+            "-threads", str(self.cpu)
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -78,18 +90,18 @@ class PocketFinder:
 
     def _parse_output(self) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
         """
-        Parse the P2Rank-generated CSV output file and extract the pocket centers and ranks.
+        Parse P2Rank CSV output and extract predicted pocket centers.
 
         Returns:
-            List[Dict[str, Union[int, Tuple[float, float, float]]]]: 
-                A list of predicted pockets with rank and center coordinates.
+            List[Dict[str, Union[int, Tuple[float, float, float]]]]:
+                Pocket predictions with rank and coordinates.
 
         Raises:
-            FileNotFoundError: If the CSV output file is not found.
-            ValueError: If coordinate parsing fails or no pockets are found.
+            FileNotFoundError: If the P2Rank CSV output is missing.
+            ValueError: If parsing fails or no pockets are found.
         """
         csv_path = self.temp_dir / \
-            f"{self.protein_path.name}_predictions.csv"
+            f"{self.receptor.name}_predictions.csv"
         if not csv_path.is_file():
             raise FileNotFoundError(f"❌ Prediction CSV not found: {csv_path}")
 
@@ -117,16 +129,20 @@ class PocketFinder:
 
         return pockets
 
-    def save_report(self, save_dir: Union[str, Path] = Path("./p2rank_results")) -> None:
+    def save_report(self, save_to: Union[str, Path] = Path("./p2rank_results")) -> None:
         """
-        Save the entire P2Rank output directory for the current protein to a user-specified location.
+        Save P2Rank results to a user-specified directory.
 
         Args:
-            save_dir (Union[str, Path], optional): Directory to save the output folder.
-                Defaults to "./p2rank_results/".
+            save_to (Union[str, Path], optional):
+                Destination folder to copy results into.
+                Defaults to ``./p2rank_results``.
+
+        Returns:
+            Path: Path to the saved results directory.
 
         Raises:
-            RuntimeError: If the output directory has not been generated (i.e., `run()` was not called).
+            RuntimeError: If no results are available (``run()`` not called).
         """
 
         # Check if results exist before proceeding
@@ -134,8 +150,8 @@ class PocketFinder:
             raise RuntimeError(
                 "❌ P2Rank results are missing. Please run PocketFinder before saving results."
             )
-        save_dir = Path(save_dir).resolve()
+        save_to = Path(save_to).resolve()
 
-        shutil.copytree(self.temp_dir, save_dir, dirs_exist_ok=True)
+        shutil.copytree(self.temp_dir, save_to, dirs_exist_ok=True)
 
-        return save_dir
+        return save_to

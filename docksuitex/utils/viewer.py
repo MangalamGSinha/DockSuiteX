@@ -1,54 +1,153 @@
+import nglview as nv
+import ipywidgets as widgets
+import tempfile
+import threading
+import time
+from IPython.display import display
 from pathlib import Path
-from typing import Literal
-import py3Dmol
 
-def view_molecule(
-    file_path: str,
-    style: Literal["stick", "line", "sphere", "cartoon", "surface"] = "stick",
-    background: str = "white",
-    color: str = "spectrum",
-    width: int = 500,
-    height: int = 500,
-):
+
+def view_molecule(file_path: str | Path) -> nv.NGLWidget:
     """
-    Renders a molecular structure in a Jupyter Notebook using py3Dmol.
+    Renders a molecular structure in Jupyter Notebook using NGLView.
 
     Args:
         file_path (str): Path to the molecular file (.pdb, .pdbqt, .mol2, or .sdf).
-        style (Literal): Visualization style ('stick', 'line', 'sphere', 'cartoon', 'surface').
-        background (str): Background color of the 3Dmol viewer (e.g., 'white', 'black').
-        color (str): Coloring method for atoms or residues (e.g., 'spectrum', 'chain').
-        width (int): Width of the rendered viewer window in pixels.
-        height (int): Height of the rendered viewer window in pixels.
+
+    Returns:
+        nv.NGLWidget: An NGLView widget.
 
     Raises:
         FileNotFoundError: If the specified file does not exist.
-        ValueError: If the file format is unsupported.
-
-    Returns:
-        py3Dmol.view: A 3Dmol viewer object rendered in a Jupyter notebook.
     """
-    path = Path(file_path)
-
-    if not path.exists():
+    file_path = Path(file_path).resolve()
+    if not file_path.exists():
         raise FileNotFoundError(f"❌ File not found: {file_path}")
 
-    ext = path.suffix.lower().lstrip(".")
-    supported_formats = {"pdb", "pdbqt", "mol2", "sdf"}
+    view = nv.show_file(str(file_path))   # replace with your protein file
+    return view
 
-    if ext not in supported_formats:
-        raise ValueError(f"❌ Unsupported format '.{ext}'. Supported formats: {supported_formats}")
 
-    with open(path, "r") as file:
-        molecule_data = file.read()
 
-    # .pdbqt format behaves like .pdb in py3Dmol
-    mol_format = "pdb" if ext in {"pdb", "pdbqt"} else ext
+def view_results(protein_file: str | Path, ligand_file: str | Path) -> None:
+    """
+    Visualize docking results (multiple poses) of a ligand with a protein
+    using NGLView and interactive Jupyter widgets.
 
-    viewer = py3Dmol.view(width=width, height=height)
-    viewer.setBackgroundColor(background)
-    viewer.addModel(molecule_data, mol_format)
-    viewer.setStyle({ }, { style: { "color": color } })
-    viewer.zoomTo()
+    Features:
+        - Step through individual docking poses.
+        - Toggle between showing one pose at a time or all poses simultaneously.
+        - Play/Pause automatic animation of poses.
+        - Adjust animation speed with a slider.
 
-    return viewer.show()
+    Args:
+        protein_file (str | Path): Path to the receptor protein file (e.g., .pdb).
+        ligand_file (str | Path): Path to the ligand docking results file (.pdbqt).
+            The file should contain multiple docking poses in MODEL/ENDMDL blocks.
+
+    Returns:
+        None: Displays the visualization and interactive controls directly
+        in the Jupyter Notebook.
+
+    Raises:
+        FileNotFoundError: If the protein or ligand file does not exist.
+        ValueError: If the ligand file does not contain valid MODEL/ENDMDL blocks.
+    """
+    protein_file = str(Path(protein_file).resolve())
+    ligand_file = str(Path(ligand_file).resolve())
+
+    # Extract ligand poses into temp files
+    poses, current = [], 0
+    with open(ligand_file) as f:
+        pose = []
+        for line in f:
+            if line.startswith("MODEL"):
+                pose = [line]
+            elif line.startswith("ENDMDL"):
+                pose.append(line)
+                tmp = tempfile.NamedTemporaryFile(
+                    delete=False, suffix=".pdbqt", mode="w")
+                tmp.write("".join(pose))
+                tmp.close()
+                poses.append(tmp.name)
+            else:
+                pose.append(line)
+
+    playing, play_speed = [False], [1.0]
+
+    # NGL Viewer
+    view = nv.NGLWidget()
+    protein = view.add_component(protein_file)
+    protein.add_representation(
+        "cartoon", selection="protein")
+
+    # Widgets
+    pose_label = widgets.Label()
+    show_all = widgets.ToggleButton(description="Show All Poses")
+    play_btn = widgets.ToggleButton(description="Play", icon="play")
+    prev_btn = widgets.Button(description="◀️ Prev")
+    next_btn = widgets.Button(description="Next ▶️")
+    speed_slider = widgets.FloatSlider(
+        value=1.0, min=0.2, max=5, step=0.1, description="Speed:")
+
+    # Track ligand components
+    ligand_components = []
+
+    def update(_=None):
+        # Remove old ligands
+        for lig in ligand_components:
+            try:
+                view.remove_component(lig)
+            except Exception:
+                pass
+        ligand_components.clear()
+
+        if show_all.value:
+            for lig in poses:
+                comp = view.add_component(lig)
+                comp.add_representation("ball+stick")
+                ligand_components.append(comp)
+            pose_label.value = f"All poses ({len(poses)})"
+        else:
+            comp = view.add_component(poses[current])
+            comp.add_representation("ball+stick")
+            ligand_components.append(comp)
+            pose_label.value = f"Pose: {current+1}/{len(poses)}"
+
+    def step(d):
+        nonlocal current
+        if not show_all.value:
+            current = (current + d) % len(poses)
+            update()
+
+    def toggle(change):
+        playing[0] = change["new"]
+        play_btn.description, play_btn.icon = (
+            "Pause", "pause") if playing[0] else ("Play", "play")
+        if playing[0]:
+            threading.Thread(target=loop, daemon=True).start()
+
+    def loop():
+        while playing[0]:
+            time.sleep(1 / play_speed[0])
+            if not show_all.value:
+                step(1)
+
+    # Widget callbacks
+    show_all.observe(update, "value")
+    play_btn.observe(toggle, "value")
+    prev_btn.on_click(lambda _: step(-1))
+    next_btn.on_click(lambda _: step(1))
+    speed_slider.observe(
+        lambda c: play_speed.__setitem__(0, c["new"]), "value")
+
+    # Initial update
+    update()
+
+    # Display
+    controls = widgets.VBox([
+        widgets.HBox([prev_btn, pose_label, next_btn]),
+        widgets.HBox([play_btn, speed_slider]),
+        show_all
+    ])
+    display(controls, view)
