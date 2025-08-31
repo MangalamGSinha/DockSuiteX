@@ -2,31 +2,32 @@
 include README.md
 include LICENSE
 
-# Exclude entire DockSuiteX/bin folder (tools like vina, obabel, etc.)
+# Include everything in docksuitex
+recursive-include docksuitex *
+
+# Exclude unwanted dirs inside docksuitex
+recursive-exclude docksuitex/__pycache__ *
 recursive-exclude docksuitex/bin *
+recursive-exclude docksuitex/temp *
 
-# Include utility scripts or data inside DockSuiteX/utils
-recursive-include docksuitex/utils *
-
-# Include examples outside the main package
+# Include examples if needed
 recursive-include examples *
-
-
-
 
 # Exclude Python cache and temporary files
 global-exclude __pycache__/*
 
-# Exclude Git and version control folders
-global-exclude .git/*
-global-exclude .github/*
+# Exclude Git and version control junk
+exclude .gitignore
+exclude .gitattributes
+recursive-exclude .git *
+recursive-exclude .github *
 
 # Exclude build artifacts
-global-exclude build/*
-global-exclude dist/*
-global-exclude *.egg-info/*
+recursive-exclude build *
+recursive-exclude dist *
+recursive-exclude *.egg-info *
 
 # Exclude tests and docs
-global-exclude tests/*
-global-exclude notebooks/*
-global-exclude docs/*
+recursive-exclude tests *
+recursive-exclude notebooks *
+recursive-exclude docs *
