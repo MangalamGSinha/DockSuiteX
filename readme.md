@@ -84,7 +84,7 @@ from docksuitex.utils import clean_temp_folder, fetch_pdb, fetch_sdf, parse_vina
 clean_temp_folder()
 
 # 1. Fetch & prepare protein
-protein_file = fetch_pdb("1UBQ")
+protein_file = fetch_pdb("1HVR")
 prot = Protein(protein_file)
 prot.prepare()
 
@@ -294,7 +294,7 @@ for pocket in pockets:
     print(f"Rank {pocket['rank']}: Center at {pocket['center']}")
 
 # Save full P2Rank output folder
-pf.save_report("pockets")
+pf.save_report("p2rank_report")
 ```
 
 ---
@@ -346,6 +346,7 @@ vina = VinaDocking(
     receptor="protein_prepared.pdbqt",
     ligand="ligand_prepared.pdbqt",
     grid_center=(10.0, 12.5, 8.0),
+    grid_size=(20, 20, 20)
     exhaustiveness=8,
     num_modes=9
 )
