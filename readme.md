@@ -242,7 +242,7 @@ Example:
 from docksuitex import Ligand
 
 # Load ligand
-lig = Ligand("ligand.pdb")
+lig = Ligand("ligand.sdf")
 
 # Prepare ligand for docking
 lig.prepare(minimize="mmff94", remove_water=True, add_hydrogens=True)
@@ -260,10 +260,9 @@ lig.save_pdbqt("ligand_prepared.pdbqt")
 
 #### Class: `PocketFinder`
 
-| Parameter    | Type             | Default         | Description                                                             |
-| ------------ | ---------------- | --------------- | ----------------------------------------------------------------------- |
-| `receptor` | str/Path/Protein | —              | Input receptor. Can be a PDB file, PDBQT file, or a `Protein` object. |
-| `cpu`      | int              | os.cpu\_count() | Number of CPU cores to use.                                             |
+| Parameter    | Type             | Default | Description                                                             |
+| ------------ | ---------------- | ------- | ----------------------------------------------------------------------- |
+| `receptor` | str/Path/Protein | —      | Input receptor. Can be a PDB file, PDBQT file, or a `Protein` object. |
 
 #### Method: `run()`
 
@@ -290,6 +289,7 @@ pf = PocketFinder("protein.pdb")
 
 # Run P2Rank to predict pockets
 pockets = pf.run()
+
 for pocket in pockets:
     print(f"Rank {pocket['rank']}: Center at {pocket['center']}")
 
@@ -346,7 +346,7 @@ vina = VinaDocking(
     receptor="protein_prepared.pdbqt",
     ligand="ligand_prepared.pdbqt",
     grid_center=(10.0, 12.5, 8.0),
-    grid_size=(20, 20, 20)
+    grid_size=(20, 20, 20),
     exhaustiveness=8,
     num_modes=9
 )
@@ -463,9 +463,9 @@ Example:
 from docksuitex import BatchVinaDocking
 
 # Input
-receptor = "protein_prepared.pdbqt"
-ligands = ["lig1_prepared.pdbqt", "lig2_prepared.pdbqt"]
-centers = [(10.0, 12.5, 8.0), (-8.2, 14.6, 25.3)]
+receptor = "protein_prepared.pdbqt" #Receptor path
+ligands = ["lig1_prepared.pdbqt", "lig2_prepared.pdbqt"] #Ligand paths list
+centers = [(10.0, 12.5, 8.0), (-8.2, 14.6, 25.3), (-12.2, -10.1, 8.3)] #Pocket center list
 
 # Initialize batch docking
 batch = BatchVinaDocking(
@@ -525,9 +525,9 @@ Example:
 from docksuitex import BatchAD4Docking
 
 # Input
-receptor = "protein_prepared.pdbqt"
-ligands = ["lig1_prepared.pdbqt", "lig2_prepared.pdbqt"]
-centers = [(10.0, 15.0, 20.0), (25.0, 30.0, 35.0)]
+receptor = "protein_prepared.pdbqt" #Receptor path
+ligands = ["lig1_prepared.pdbqt", "lig2_prepared.pdbqt"] #Ligand paths list
+centers = [(10.0, 12.5, 8.0), (-8.2, 14.6, 25.3), (-12.2, -10.1, 8.3)] #Pocket center list
 
 # Initialize batch docking
 batch = BatchAD4Docking(
@@ -564,7 +564,7 @@ Example:
 ```python
 from docksuitex.utils import parse_vina_log_to_csv
 
-df = parse_vina_log_to_csv(results_dir="outputs", output_csv="outputs/vina_summary.csv")
+df = parse_vina_log_to_csv(results_dir="vina_docking", output_csv="vina_summary.csv")
 print(df.head())
 ```
 
@@ -583,7 +583,7 @@ Example:
 ```python
 from docksuitex.utils import parse_ad4_dlg_to_csv
 
-df = parse_ad4_dlg_to_csv(results_dir="outputs", output_csv="outputs/ad4_summary.csv")
+df = parse_ad4_dlg_to_csv(results_dir="ad4_docking", output_csv="ad4_summary.csv")
 print(df.head())
 ```
 
@@ -606,7 +606,7 @@ Example:
 ```python
 from docksuitex.utils import fetch_pdb
 
-pdb_file = fetch_pdb("1UBQ", save_to="data/pdbs")
+pdb_file = fetch_pdb("1UBQ", save_to="pdbs")
 ```
 
 #### Method: `fetch_sdf()`
@@ -624,7 +624,7 @@ Example:
 ```python
 from docksuitex.utils import fetch_sdf
 
-sdf_file = fetch_sdf(2244, save_to="data/sdfs")
+sdf_file = fetch_sdf(2244, save_to="sdfs")
 ```
 
 ---

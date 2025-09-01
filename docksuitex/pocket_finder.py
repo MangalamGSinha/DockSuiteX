@@ -21,7 +21,7 @@ class PocketFinder:
     structure (PDB/PDBQT format), parses the output and save results.
     """
 
-    def __init__(self, receptor: Union[str, Path, "Protein"], cpu: int = os.cpu_count() or 1):
+    def __init__(self, receptor: Union[str, Path, "Protein"]):
         """
         Initialize the PocketFinder with a receptor structure.
 
@@ -30,9 +30,6 @@ class PocketFinder:
                 Either:
                 - Path to a protein file in `.pdb` or `.pdbqt` format, or
                 - A :class:`Protein` object prepared with ``Protein.prepare()``.
-            cpu (int, optional):
-                Number of CPU cores to allocate for P2Rank. Defaults to
-                the number of available cores.
 
         Raises:
             FileNotFoundError: If the receptor file does not exist.
@@ -59,7 +56,6 @@ class PocketFinder:
         self.temp_dir = TEMP_DIR / "p2rank_results" / f"{self.receptor.stem}_pockets_{uuid.uuid4().hex[:8]}"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
-        self.cpu = cpu
 
     def run(self) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
         """
@@ -79,7 +75,7 @@ class PocketFinder:
             "predict",
             "-f", str(self.receptor),
             "-o", str(self.temp_dir),
-            "-threads", str(self.cpu)
+            "-threads", str(os.cpu_count() or 1)
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
