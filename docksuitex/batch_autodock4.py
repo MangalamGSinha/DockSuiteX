@@ -29,6 +29,7 @@ class BatchAD4Docking:
         ga_crossover_rate: float = 0.8,
         ga_run: int = 10,
         rmstol: float = 2.0,
+        seed: tuple[Union[int, str], Union[int, str]] = ("pid", "time")
     ):
         """Initialize a batch docking job.
 
@@ -49,6 +50,8 @@ class BatchAD4Docking:
             ga_crossover_rate (float, optional): GA crossover rate. Defaults to 0.8.
             ga_run (int, optional): Independent GA runs. Defaults to 10.
             rmstol (float, optional): RMSD tolerance for clustering. Defaults to 2.0.
+            seed (tuple[int | str, int | str], optional): Random seed for docking. 
+                Each element can be an integer or the keywords "pid" or "time".
         """
         self.receptor = Path(receptor).expanduser().resolve()
         self.ligand_list = [Path(l).expanduser().resolve() for l in ligand_list]
@@ -65,6 +68,7 @@ class BatchAD4Docking:
         self.ga_crossover_rate = ga_crossover_rate
         self.ga_run = ga_run
         self.rmstol = rmstol
+        self.seed = seed
 
     def _dock_one(
         self,
@@ -98,6 +102,7 @@ class BatchAD4Docking:
             ga_crossover_rate=self.ga_crossover_rate,
             ga_run=self.ga_run,
             rmstol=self.rmstol,
+            seed=self.seed
         )
         ad4.run()
         

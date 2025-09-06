@@ -133,7 +133,7 @@ docksuitex/
 │   ├── fetcher.py      # Fetch PDB (RCSB) & SDF (PubChem)
 │   ├── viewer.py       # NGLView visualization
 │   ├── parser.py       # Parse logs to CSV summaries
-│   └── cleaner.py      # Reset temp folders
+│   └── cleaner.py      # Reset temp folders and delete bin folder
 │
 └── bin/                # Auto-downloaded on first run
     ├── mgltools/       # MGLTools binaries and scripts
@@ -367,23 +367,24 @@ vina.save_results("vina_docking")
 
 #### Class: `AD4Docking`
 
-| Parameter              | Type                        | Default      | Description                                                                                |
-| ---------------------- | --------------------------- | ------------ | ------------------------------------------------------------------------------------------ |
-| `receptor`           | str/Path/Protein            | —           | Input receptor. Can be a PDBQT file or a `Protein` object.                               |
-| `ligand`             | str/Path/Protein            | —           | Input ligand. Can be a PDBQT file or a `Ligand` object.                                  |
-| `grid_center`        | tuple\[float, float, float] | —           | Center coordinates (x, y, z) of the docking grid in Ångström.                            |
-| `grid_size`          | tuple\[int, int, int]       | (60, 60, 60) | Number of grid points along (x, y, z) axes. Effective box size =`grid_size × spacing`. |
-| `spacing`            | float                       | 0.375        | Distance between adjacent grid points (Å). Controls the resolution of the grid.           |
-| `dielectric`         | float                       | -0.1465      | Dielectric constant for electrostatics.                                                    |
-| `smooth`             | float                       | 0.5          | Smoothing factor for potential maps.                                                       |
-| `ga_pop_size`        | int                         | 150          | Genetic algorithm population size.                                                         |
-| `ga_num_evals`       | int                         | 2,500,000    | Maximum number of energy evaluations in GA.                                                |
-| `ga_num_generations` | int                         | 27,000       | Maximum number of generations in GA.                                                       |
-| `ga_elitism`         | int                         | 1            | Number of top individuals preserved during GA.                                             |
-| `ga_mutation_rate`   | float                       | 0.02         | Probability of mutation in GA.                                                             |
-| `ga_crossover_rate`  | float                       | 0.8          | Probability of crossover in GA.                                                            |
-| `ga_run`             | int                         | 10           | Number of independent GA runs.                                                             |
-| `rmstol`             | float                       | 2.0          | RMSD tolerance for clustering docking results.                                             |
+| Parameter              | Type                           | Default         | Description                                                                                                   |
+| ---------------------- | ------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------- |
+| `receptor`           | str/Path/Protein               | —              | Input receptor. Can be a PDBQT file or a `Protein` object.                                                  |
+| `ligand`             | str/Path/Protein               | —              | Input ligand. Can be a PDBQT file or a `Ligand` object.                                                     |
+| `grid_center`        | tuple\[float, float, float]    | —              | Center coordinates (x, y, z) of the docking grid in Ångström.                                               |
+| `grid_size`          | tuple\[int, int, int]          | (60, 60, 60)    | Number of grid points along (x, y, z) axes. Effective box size =`grid_size × spacing`.                    |
+| `spacing`            | float                          | 0.375           | Distance between adjacent grid points (Å). Controls the resolution of the grid.                              |
+| `dielectric`         | float                          | -0.1465         | Dielectric constant for electrostatics.                                                                       |
+| `smooth`             | float                          | 0.5             | Smoothing factor for potential maps.                                                                          |
+| `ga_pop_size`        | int                            | 150             | Genetic algorithm population size.                                                                            |
+| `ga_num_evals`       | int                            | 2,500,000       | Maximum number of energy evaluations in GA.                                                                   |
+| `ga_num_generations` | int                            | 27,000          | Maximum number of generations in GA.                                                                          |
+| `ga_elitism`         | int                            | 1               | Number of top individuals preserved during GA.                                                                |
+| `ga_mutation_rate`   | float                          | 0.02            | Probability of mutation in GA.                                                                                |
+| `ga_crossover_rate`  | float                          | 0.8             | Probability of crossover in GA.                                                                               |
+| `ga_run`             | int                            | 10              | Number of independent GA runs.                                                                                |
+| `rmstol`             | float                          | 2.0             | RMSD tolerance for clustering docking results.                                                                |
+| `seed`               | tuple\[int \| str, int \| str] | ("pid", "time") | Seeds for AutoDock’s pseudo-random number generator. Each element can be an integer or `"pid"`/`"time"`. |
 
 #### Method: `run()`
 
@@ -489,23 +490,24 @@ for (lig, center), res in results.items():
 
 #### Class: `BatchAD4Docking`
 
-| Parameter              | Type                                   | Default      | Description                                                                               |
-| ---------------------- | -------------------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| `receptor`           | str/Path                               | —           | Path to receptor PDBQT file.                                                              |
-| `ligand_list`        | Sequence\[str/Path]                    | —           | List of ligand PDBQT files.                                                               |
-| `center_list`        | Sequence\[tuple\[float, float, float]] | —           | List of docking box centers (grid centers in Å).                                         |
-| `grid_size`          | tuple\[int, int, int]                  | (60, 60, 60) | Number of grid points along (x, y, z) axes. Effective box size =`grid_size × spacing`. |
-| `spacing`            | float                                  | 0.375        | Distance between adjacent grid points (Å). Controls grid resolution.                     |
-| `dielectric`         | float                                  | -0.1465      | Dielectric constant for electrostatics.                                                   |
-| `smooth`             | float                                  | 0.5          | Smoothing factor for potential maps.                                                      |
-| `ga_pop_size`        | int                                    | 150          | Genetic algorithm population size.                                                        |
-| `ga_num_evals`       | int                                    | 2,500,000    | Maximum number of energy evaluations in GA.                                               |
-| `ga_num_generations` | int                                    | 27,000       | Maximum number of generations in GA.                                                      |
-| `ga_elitism`         | int                                    | 1            | Number of top individuals preserved during GA.                                            |
-| `ga_mutation_rate`   | float                                  | 0.02         | Probability of mutation in GA.                                                            |
-| `ga_crossover_rate`  | float                                  | 0.8          | Probability of crossover in GA.                                                           |
-| `ga_run`             | int                                    | 10           | Number of independent GA runs.                                                            |
-| `rmstol`             | float                                  | 2.0          | RMSD tolerance for clustering docking results.                                            |
+| Parameter              | Type                                   | Default         | Description                                                                                                   |
+| ---------------------- | -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------- |
+| `receptor`           | str/Path                               | —              | Path to receptor PDBQT file.                                                                                  |
+| `ligand_list`        | Sequence\[str/Path]                    | —              | List of ligand PDBQT files.                                                                                   |
+| `center_list`        | Sequence\[tuple\[float, float, float]] | —              | List of docking box centers (grid centers in Å).                                                             |
+| `grid_size`          | tuple\[int, int, int]                  | (60, 60, 60)    | Number of grid points along (x, y, z) axes. Effective box size =`grid_size × spacing`.                     |
+| `spacing`            | float                                  | 0.375           | Distance between adjacent grid points (Å). Controls grid resolution.                                         |
+| `dielectric`         | float                                  | -0.1465         | Dielectric constant for electrostatics.                                                                       |
+| `smooth`             | float                                  | 0.5             | Smoothing factor for potential maps.                                                                          |
+| `ga_pop_size`        | int                                    | 150             | Genetic algorithm population size.                                                                            |
+| `ga_num_evals`       | int                                    | 2,500,000       | Maximum number of energy evaluations in GA.                                                                   |
+| `ga_num_generations` | int                                    | 27,000          | Maximum number of generations in GA.                                                                          |
+| `ga_elitism`         | int                                    | 1               | Number of top individuals preserved during GA.                                                                |
+| `ga_mutation_rate`   | float                                  | 0.02            | Probability of mutation in GA.                                                                                |
+| `ga_crossover_rate`  | float                                  | 0.8             | Probability of crossover in GA.                                                                               |
+| `ga_run`             | int                                    | 10              | Number of independent GA runs.                                                                                |
+| `rmstol`             | float                                  | 2.0             | RMSD tolerance for clustering docking results.                                                                |
+| `seed`               | tuple\[int \| str, int \| str]         | ("pid", "time") | Seeds for AutoDock’s pseudo-random number generator. Each element can be an integer or `"pid"`/`"time"`. |
 
 #### Method: `run_all()`
 

@@ -24,8 +24,6 @@ def clean_temp_folder():
 
 BIN_DIR = (Path(__file__).parent.parent / "bin").resolve()
 
-import shutil
-
 def delete_binaries():
     """Delete the BIN_DIR folder and all its contents."""
     if BIN_DIR.exists() and BIN_DIR.is_dir():

@@ -41,6 +41,7 @@ class AD4Docking:
         ga_crossover_rate: float = 0.8,
         ga_run: int = 10,
         rmstol: float = 2.0,
+        seed: tuple[Union[int, str], Union[int, str]] = ("pid", "time")
     ):
         """
         Initialize an AutoDock4 docking run.
@@ -77,6 +78,8 @@ class AD4Docking:
             Number of independent GA runs.
         rmstol : float, default=2.0
             RMSD tolerance for clustering docking results.
+        seed : tuple[int | str, int | str], default=("pid", "time")
+            Each element can be an integer or the keywords "pid" or "time".
         """
         # normalize receptor
         if isinstance(receptor, Protein):
@@ -110,6 +113,7 @@ class AD4Docking:
         self.ga_crossover_rate = ga_crossover_rate
         self.ga_run = ga_run
         self.rmstol = rmstol
+        self.seed = seed
 
         # Temp directory
         self.temp_dir = TEMP_DIR / "ad4_results" / f"{self.receptor.stem}_{self.ligand.stem}_docked_ad4_{uuid.uuid4().hex[:8]}"
@@ -171,10 +175,11 @@ dielectric {self.dielectric}
         maps_lines = "\n".join(
             f"map receptor.{t}.map" for t in self.ligand_types
         )
+        seed_line = " ".join(str(s) for s in self.seed)
         content = f"""autodock_parameter_version 4.2
 outlev 1
 intelec
-seed pid time
+seed {seed_line}
 ligand_types {' '.join(self.ligand_types)}
 fld receptor.maps.fld
 {maps_lines}
