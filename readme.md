@@ -88,7 +88,7 @@ protein_file = fetch_pdb("1HVR")
 prot = Protein(protein_file)
 prot.prepare()
 
-# 1. Fetch & prepare ligand
+# 2. Fetch & prepare ligand
 ligand_file = fetch_sdf(2244)  # Aspirin
 lig = Ligand(ligand_file)
 lig.prepare(minimize="mmff94")
@@ -96,13 +96,13 @@ lig.prepare(minimize="mmff94")
 # 3. Predict binding pockets
 finder = PocketFinder(prot)
 pockets = finder.run()
-grid_center = pockets[0]['center'] #First Pocket
+center = pockets[0]['center'] #First Pocket
 
 # 4. Run docking (using Vina)
 vina = VinaDocking(
     receptor=prot,
     ligand=lig,
-    grid_center=grid_center,
+    grid_center=center,
     grid_size=(20,20,20),
     exhaustiveness=16
 )
