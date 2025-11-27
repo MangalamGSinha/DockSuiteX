@@ -1,10 +1,10 @@
 site_name: DockSuiteX
 site_description: All-in-one Protein-Ligand Docking Package
 site_author: DockSuiteX Team
-site_url: https://yourusername.github.io/DockSuiteX
+site_url: https://mangalamgsinha.github.io/DockSuiteX
 
 repo_name: DockSuiteX
-repo_url: https://github.com/yourusername/DockSuiteX
+repo_url: https://github.com/mangalamgsinha/DockSuiteX
 
 theme:
   name: material
