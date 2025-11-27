@@ -1,6 +1,41 @@
-"""
-DockSuiteX: All-in-one Protein-Ligand Docking Package
-Integrates MGLTools, P2Rank, and AutoDock Vina
+"""DockSuiteX: All-in-one Protein-Ligand Docking Package.
+
+A comprehensive Python package for molecular docking that integrates multiple
+tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. DockSuiteX
+provides a unified interface for protein and ligand preparation, binding pocket
+prediction, and molecular docking simulations.
+
+Key Features:
+    - Automated protein and ligand preparation using PDBFixer and Open Babel
+    - Binding pocket prediction with P2Rank
+    - Molecular docking with AutoDock Vina and AutoDock4
+    - Batch processing capabilities for high-throughput screening
+    - Interactive 3D visualization with NGLView
+    - Utility functions for fetching structures and parsing results
+
+Note:
+    This package is currently only supported on Windows platforms.
+
+Example:
+    Basic usage for single ligand docking::
+
+        from docksuitex import Protein, Ligand, VinaDocking
+
+        # Prepare protein
+        protein = Protein("protein.pdb")
+        protein.prepare(save_to="prepared_protein.pdbqt")
+
+        # Prepare ligand
+        ligand = Ligand("ligand.sdf")
+        ligand.prepare(save_to="prepared_ligand.pdbqt")
+
+        # Run docking
+        docking = VinaDocking(
+            receptor="prepared_protein.pdbqt",
+            ligand="prepared_ligand.pdbqt",
+            grid_center=(10.0, 15.0, 20.0)
+        )
+        results = docking.run()
 """
 
 __version__ = "1.0.0"
@@ -17,30 +52,21 @@ if platform.system() != "Windows":
 from .protein import Protein
 from .ligand import Ligand
 from .vina import VinaDocking
-from .batch_vina import BatchVinaDocking
 from .autodock4 import AD4Docking
-from .batch_autodock4 import BatchAD4Docking
 from .pocket_finder import PocketFinder
-from pathlib import Path
 
 
 __all__ = [
     "Protein",
     "Ligand",
     "VinaDocking",
-    "BatchVinaDocking",
     "AD4Docking",
-    "BatchAD4Docking",
     "PocketFinder",
 ]
 
 
 
 
-
-
-
-import platform
 import requests
 import zipfile
 import io
@@ -48,12 +74,31 @@ from pathlib import Path
 from tqdm import tqdm
 import shutil
 
-# GitHub repo zip
+# GitHub repository URL for binary dependencies
 GITHUB_ZIP = "https://github.com/MangalamGSinha/DockSuiteX_Binaries/archive/refs/heads/main.zip"
 BIN_DIR = Path(__file__).parent / "bin"
 
 
 def download_binaries():
+    """Download required binary executables from GitHub repository.
+
+    This function automatically downloads and extracts the DockSuiteX binary
+    dependencies (MGLTools, AutoDock Vina, AutoDock4, P2Rank, Open Babel)
+    from the GitHub repository on first import. If binaries already exist,
+    the download is skipped.
+
+    The binaries are extracted to the `bin/` directory within the package
+    installation directory.
+
+    Raises:
+        RuntimeError: If the operating system is not Windows.
+        requests.HTTPError: If the download from GitHub fails.
+        zipfile.BadZipFile: If the downloaded file is corrupted.
+
+    Note:
+        This function is automatically called when the package is imported.
+        The download progress is displayed using tqdm.
+    """
     if platform.system() != "Windows":
         raise RuntimeError("❌ DockSuiteX only supports Windows!")
 

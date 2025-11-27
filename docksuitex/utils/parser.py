@@ -1,7 +1,46 @@
+"""Docking output file parsing utilities.
+
+This module provides functions for parsing AutoDock Vina and AutoDock4 output
+files into structured CSV format for analysis. It extracts binding energies,
+grid parameters, and clustering information from log files.
+
+The parsing functions handle:
+    - AutoDock Vina log file parsing (log.txt)
+    - AutoDock4 DLG file parsing (results.dlg)
+    - Recursive directory scanning for batch results
+    - CSV export with standardized columns
+
+Example:
+    Parsing Vina results::
+
+        from docksuitex.utils import parse_vina_log_to_csv
+
+        # Parse all Vina results in directory
+        parse_vina_log_to_csv(
+            results_dir="vina_docking_results",
+            output_csv="vina_summary.csv"
+        )
+
+    Parsing AutoDock4 results::
+
+        from docksuitex.utils import parse_ad4_dlg_to_csv
+
+        # Parse all AD4 results
+        parse_ad4_dlg_to_csv(
+            results_dir="ad4_docking_results",
+            output_csv="ad4_summary.csv"
+        )
+
+Note:
+    The parsers expect standard output formats from AutoDock Vina and
+    AutoDock4. Custom output formats may not be parsed correctly.
+"""
+
 import re
 import pandas as pd
 from pathlib import Path
 from typing import Union
+
 
 
 def parse_vina_log_to_csv(
@@ -36,6 +75,8 @@ def parse_vina_log_to_csv(
     if not log_files:
         raise FileNotFoundError(f"No Vina log.txt files found in {results_dir}")
 
+    print(f"Starting Vina log parsing for {len(log_files)} files...")
+    print(f"Scanning directory: {results_dir}")
     results = []
 
     for log_file in log_files:
@@ -77,8 +118,11 @@ def parse_vina_log_to_csv(
                 "RMSD UB": float(rmsd_ub),
             })
 
+        print(f"✅ Parsed {log_file.parent.name}/log.txt → {len(docking_results)} modes")
+
     df = pd.DataFrame(results)
     df.to_csv(output_csv, index=False)
+    print(f"\n✅ Parsing completed! Saved {len(results)} results to {output_csv}")
     return df
 
 
@@ -115,6 +159,8 @@ def parse_ad4_dlg_to_csv(
     if not dlg_files:
         raise FileNotFoundError(f"No results.dlg files found in {results_dir}")
 
+    print(f"Starting AutoDock4 DLG parsing for {len(dlg_files)} files...")
+    print(f"Scanning directory: {results_dir}")
     all_data = []
 
     for dlg_file in dlg_files:
@@ -218,6 +264,9 @@ def parse_ad4_dlg_to_csv(
             if in_cluster_section and line.startswith("ENDMDL"):
                 all_data.append(cluster_info)
 
+        print(f"✅ Parsed {dlg_file.parent.name}/results.dlg → {len([d for d in all_data if d.get('Ligand') == ligand])} clusters")
+
     df = pd.DataFrame(all_data)
     df.to_csv(output_csv, index=False)
+    print(f"\n✅ Parsing completed! Saved {len(all_data)} cluster results to {output_csv}")
     return df

@@ -1,0 +1,103 @@
+site_name: DockSuiteX
+site_description: All-in-one Protein-Ligand Docking Package
+site_author: DockSuiteX Team
+site_url: https://yourusername.github.io/DockSuiteX
+
+repo_name: DockSuiteX
+repo_url: https://github.com/yourusername/DockSuiteX
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    # - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            show_signature_annotations: true
+            separate_signature: true
+            merge_init_into_class: true
+            show_if_no_docstring: false
+            members_order: source
+            show_bases: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details:
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: "#"
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Examples: getting-started/examples.md
+  - API Reference:
+      - Overview: api/overview.md
+      - Core Modules:
+          - Protein: api/protein.md
+          - Ligand: api/ligand.md
+          - VinaDocking: api/vina.md
+          - AD4Docking: api/autodock4.md
+          - PocketFinder: api/pocket-finder.md
+      - Batch Processing:
+          - BatchVinaDocking: api/batch-vina.md
+          - BatchAD4Docking: api/batch-autodock4.md
+          - BatchProtein: api/batch-protein.md
+          - BatchLigand: api/batch-ligand.md
+          - BatchPocketFinder: api/batch-pocket-finder.md
+      - Utilities:
+          - Viewer: api/viewer.md
+          - Parser: api/parser.md
+          - Fetcher: api/fetcher.md
+          - Cleaner: api/cleaner.md
+  - About:
+      - Citations: about/cite.md
+      - License: about/license.md
+      - Contributing: about/contributing.md
+      - Changelog: about/changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/DockSuiteX
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/docksuitex

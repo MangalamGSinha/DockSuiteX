@@ -1,3 +1,37 @@
+"""Binding pocket prediction using P2Rank.
+
+This module provides a Python wrapper for P2Rank, a machine learning-based tool
+for predicting ligand-binding pockets in protein structures. P2Rank uses a
+template-free approach based on local chemical neighborhood features.
+
+The pocket finding workflow:
+    1. Run P2Rank prediction on protein structure (PDB or PDBQT)
+    2. Parse CSV output to extract pocket centers and rankings
+    3. Return pocket coordinates for use in docking grid setup
+
+Example:
+    Basic pocket finding::
+
+        from docksuitex import PocketFinder
+
+        # Find pockets in protein structure
+        finder = PocketFinder("protein.pdb")
+        pockets = finder.run(save_to="pocket_results")
+        
+        # Use top pocket for docking
+        top_pocket_center = pockets[0]["center"]
+        print(f"Top pocket at: {top_pocket_center}")
+
+    Finding pockets for docking setup::
+
+        finder = PocketFinder("prepared_receptor.pdbqt")
+        pockets = finder.run()
+        
+        # Get centers for all predicted pockets
+        centers = [pocket["center"] for pocket in pockets]
+
+"""
+
 import os
 import subprocess
 import csv
@@ -5,61 +39,88 @@ import shutil
 from pathlib import Path
 from typing import Optional, Tuple, List, Union, Dict
 import uuid
-from docksuitex.protein import Protein
 
-# Paths
+# Path to P2Rank executable bundled with DockSuiteX
 P2RANK_PATH = (Path(__file__).parent / "bin" / "p2rank" / "prank.bat").resolve()
-TEMP_DIR = (Path(__file__).parent / "temp").resolve()
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class PocketFinder:
-    """
-    Wrapper for running P2Rank to predict ligand-binding pockets in a protein.
+    """Ligand-binding pocket prediction using P2Rank.
 
-    This class manages execution of the P2Rank tool on a given receptor
-    structure (PDB/PDBQT format), parses the output and save results.
+    This class provides a wrapper for P2Rank, a machine learning-based tool
+    for predicting ligand-binding sites in protein structures. It automates
+    running P2Rank, parsing results, and extracting pocket center coordinates.
+
+    P2Rank uses a template-free approach based on local chemical neighborhood
+    features, making it fast and accurate for pocket prediction without
+    requiring known ligand structures.
+
+    Attributes:
+        file_path (Path): Path to the input protein file (PDB or PDBQT).
+
+    Example:
+        Finding pockets for docking::
+
+            from docksuitex import PocketFinder
+
+            finder = PocketFinder("protein.pdb")
+            pockets = finder.run(save_to="pocket_analysis")
+            
+            # Pockets are ranked by confidence
+            for i, pocket in enumerate(pockets):
+                rank = pocket["rank"]
+                center = pocket["center"]
+                print(f"Pocket {rank}: center at {center}")
+
+        Using pocket centers for batch docking::
+
+            finder = PocketFinder("receptor.pdbqt")
+            pockets = finder.run()
+            centers = [p["center"] for p in pockets[:3]]  # Top 3 pockets
+            
+            # Use centers for docking
+            for center in centers:
+                docking = VinaDocking(
+                    receptor="receptor.pdbqt",
+                    ligand="ligand.pdbqt",
+                    grid_center=center
+                )
+                docking.run()
+
+    Note:
+        P2Rank generates multiple output files including visualizations and
+        detailed predictions. The main CSV file is parsed to extract pocket
+        center coordinates.
     """
 
-    def __init__(self, receptor: Union[str, Path, "Protein"]):
-        """
-        Initialize the PocketFinder with a receptor structure.
+    def __init__(self, input: Union[str, Path], _cpu: int = os.cpu_count() or 1,):
+        """Initialize the PocketFinder with a receptor structure.
 
         Args:
-            receptor (Union[str, Path, Protein]):
-                Either:
-                - Path to a protein file in `.pdb` or `.pdbqt` format, or
-                - A :class:`Protein` object prepared with ``Protein.prepare()``.
+            input (Union[str, Path]):
+                Path to a protein file in `.pdb` or `.pdbqt` format.
 
         Raises:
             FileNotFoundError: If the receptor file does not exist.
             ValueError: If the file is not a supported format.
-            RuntimeError: If a Protein object is provided without being prepared.
         """
-        if isinstance(receptor, Protein):
-            if receptor.pdbqt_path is None or not Path(receptor.pdbqt_path).exists():
-                raise RuntimeError("❌ Protein not prepared. Run Protein.prepare() first.")
-            self.receptor = Path(receptor.pdbqt_path)
-        else:
-            self.receptor = Path(receptor).resolve()
+        self.file_path = Path(input).resolve()
+        self.cpu = _cpu
 
-        if not self.receptor.is_file():
+        if not self.file_path.is_file():
             raise FileNotFoundError(
-                f"❌ PDB file not found: {self.receptor}")
+                f"❌ PDB file not found: {self.file_path}")
 
-        if self.receptor.suffix.lower() not in [".pdb", ".pdbqt"]:
+        if self.file_path.suffix.lower() not in [".pdb", ".pdbqt"]:
             raise ValueError(
                 "❌ Unsupported file format. Only '.pdb' and 'pdbqt' is supported.")
 
-        # Temp directories
-        # Use receptor + uuid for uniqueness
-        self.temp_dir = TEMP_DIR / "p2rank_results" / f"{self.receptor.stem}_pockets_{uuid.uuid4().hex[:8]}"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
-
-
-    def run(self) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
-        """
-        Execute P2Rank to predict ligand-binding pockets.
+    def run(self, save_to: Union[str, Path] = None) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
+        """Execute P2Rank to predict ligand-binding pockets.
+        
+        Args:
+            save_to (Union[str, Path], optional): Directory to save the P2Rank report. 
+                Defaults to ".".
 
         Returns:
             List[Dict[str, Union[int, Tuple[float, float, float]]]]:
@@ -70,23 +131,36 @@ class PocketFinder:
         Raises:
             RuntimeError: If P2Rank fails to run.
         """
+
+        if save_to is None:
+            save_to = f"./p2rank_results_{self.file_path.name.replace('.', '_')}"
+
+        output_dir = Path(save_to).resolve()
+        output_dir.mkdir(parents=True, exist_ok=True)
+
         cmd = [
             str(P2RANK_PATH),
             "predict",
-            "-f", str(self.receptor),
-            "-o", str(self.temp_dir),
-            "-threads", str(os.cpu_count() or 1)
+            "-f", str(self.file_path),
+            "-o", str(output_dir),
+            "-threads", str(self.cpu),  
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0:
             raise RuntimeError(f"❌ Error running P2Rank:\n{result.stderr}")
 
-        return self._parse_output()
+        pockets = self._parse_output(output_dir)
+        print(f"✅ Pocket prediction completed. Found {len(pockets)} pockets.")
+        for i, pocket in enumerate(pockets):
+            print(f"Pocket {i+1} center: {pocket['center']}")
+        return pockets
 
-    def _parse_output(self) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
-        """
-        Parse P2Rank CSV output and extract predicted pocket centers.
+    def _parse_output(self, output_dir: Path) -> List[Dict[str, Union[int, Tuple[float, float, float]]]]:
+        """Parse P2Rank CSV output and extract predicted pocket centers.
+        
+        Args:
+            output_dir (Path): Directory where P2Rank results were saved.
 
         Returns:
             List[Dict[str, Union[int, Tuple[float, float, float]]]]:
@@ -96,8 +170,8 @@ class PocketFinder:
             FileNotFoundError: If the P2Rank CSV output is missing.
             ValueError: If parsing fails or no pockets are found.
         """
-        csv_path = self.temp_dir / \
-            f"{self.receptor.name}_predictions.csv"
+        csv_path = output_dir / f"{self.file_path.name}_predictions.csv"
+        
         if not csv_path.is_file():
             raise FileNotFoundError(f"❌ Prediction CSV not found: {csv_path}")
 
@@ -124,30 +198,3 @@ class PocketFinder:
             raise ValueError(f"❌ No pocket centers found in: {csv_path}")
 
         return pockets
-
-    def save_report(self, save_to: Union[str, Path] = Path("./p2rank_results")) -> None:
-        """
-        Save P2Rank results to a user-specified directory.
-
-        Args:
-            save_to (Union[str, Path], optional):
-                Destination folder to copy results into.
-                Defaults to ``./p2rank_results``.
-
-        Returns:
-            Path: Path to the saved results directory.
-
-        Raises:
-            RuntimeError: If no results are available (``run()`` not called).
-        """
-
-        # Check if results exist before proceeding
-        if not any(self.temp_dir.glob("*.csv")):
-            raise RuntimeError(
-                "❌ P2Rank results are missing. Please run PocketFinder before saving results."
-            )
-        save_to = Path(save_to).resolve()
-
-        shutil.copytree(self.temp_dir, save_to, dirs_exist_ok=True)
-
-        return save_to
