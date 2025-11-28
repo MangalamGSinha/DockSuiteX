@@ -1,63 +1,79 @@
-# DockSuiteX
+# 🧬 DockSuiteX
 
 **All-in-one Protein-Ligand Docking Package**
 
 DockSuiteX is a comprehensive Python package for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
 
-## Key Features
+## ✨ Key Features
 
-- **Automated Preparation**: Streamlined protein and ligand preparation using PDBFixer and Open Babel
-- **Pocket Prediction**: Binding pocket prediction with P2Rank machine learning
-- **Multiple Docking Engines**: Support for both AutoDock Vina and AutoDock4
-- **Batch Processing**: High-throughput screening with parallel execution
-- **Interactive Visualization**: 3D molecular visualization with NGLView
-- **Utility Functions**: Built-in tools for fetching structures and parsing results
+- 🔧 **Automated Preparation**: Streamlined protein and ligand preparation using PDBFixer, Open Babel, and AutoDockTools
+- 🎯 **Pocket Prediction**: Binding pocket prediction with P2Rank machine learning
+- ⚡ **Multiple Docking Engines**: Support for both AutoDock Vina and AutoDock4
+- 📊 **Batch Processing**: High-throughput screening with parallel execution
+- 👁️ **Interactive Visualization**: 3D molecular visualization with NGLView
+- 🛠️ **Utility Functions**: Built-in tools for fetching structures and parsing results
 
-## Platform Support
+## 🚀 Flexible Batch Docking - A Unique Feature
+
+!!! success "Complete Flexibility in Docking Scenarios"
+    **DockSuiteX is uniquely designed to handle ALL possible docking combinations**, making it the most versatile docking package for high-throughput screening. Whether you're working with a single molecule or thousands, DockSuiteX adapts to your needs:
+
+    ✅ **1 Ligand → 1 Receptor**  
+    Standard molecular docking for detailed interaction analysis
+    
+    ✅ **Many Ligands → 1 Receptor**  
+    Virtual screening - screen compound libraries against a single protein target
+    
+    ✅ **1 Ligand → Many Receptors**  
+    Inverse docking - test one compound against multiple protein variants or different targets
+    
+    ✅ **Many Ligands → Many Receptors**  
+    Complete combinatorial screening - explore all possible ligand-receptor interactions in one run
+
+    All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
+
+## 💻 Platform Support
 
 !!! warning "Windows Only"
     DockSuiteX currently supports **Windows platforms only**. The package includes pre-compiled binaries for Windows.
 
-## Quick Example
+## 📝 Quick Example
 
 ```python
-from docksuitex import Protein, Ligand, VinaDocking
+from docksuitex import Protein, Ligand, PocketFinder, VinaDocking
+from docksuitex.utils import fetch_pdb, fetch_sdf
 
-# Prepare protein
-protein = Protein("protein.pdb")
-protein.prepare(save_to="prepared_protein.pdbqt")
+# 1. Fetch and prepare receptor
+protein_path = fetch_pdb("1HVR")
+protein = Protein(protein_path)
+protein.prepare()
 
-# Prepare ligand
-ligand = Ligand("ligand.sdf")
-ligand.prepare(save_to="prepared_ligand.pdbqt")
+# 2. Fetch and prepare ligand (Aspirin)
+ligand_path = fetch_sdf("2244")
+ligand = Ligand(ligand_path)
+ligand.prepare(minimize="mmff94")
 
-# Run docking
-docking = VinaDocking(
-    receptor="prepared_protein.pdbqt",
-    ligand="prepared_ligand.pdbqt",
-    grid_center=(10.0, 15.0, 20.0)
+# 3. Find binding pockets
+pocket_finder = PocketFinder(protein.pdbqt_path)
+pockets = pocket_finder.run()
+best_pocket = pockets[0]['center']
+
+# 4. Run Vina docking
+vina = VinaDocking(
+    receptor=protein.pdbqt_path,
+    ligand=ligand.pdbqt_path,
+    grid_center=best_pocket,
+    grid_size=(20, 20, 20)
 )
-results = docking.run()
+vina.run()
 ```
 
-## Integrated Tools
+## 🚦 Getting Started
 
-DockSuiteX bundles and integrates the following tools:
+Check out the [Installation Guide](getting-started/installation.md) and Examples [Single Docking](examples/single_docking.ipynb), [Multiple Docking](examples/multiple_docking.ipynb) to get started.
 
-- **MGLTools**: Protein and ligand preparation (prepare_receptor4.py, prepare_ligand4.py)
-- **AutoDock Vina**: Fast gradient-based docking
-- **AutoDock4**: Classic genetic algorithm-based docking
-- **P2Rank**: Machine learning pocket prediction
-- **Open Babel**: Format conversion and energy minimization
-- **PDBFixer**: Protein structure repair
 
-## Getting Started
-
-Check out the [Installation Guide](getting-started/installation.md) to get started, or jump straight to the [Quick Start Tutorial](getting-started/quickstart.md) to see DockSuiteX in action!
-
----
-
-## Acknowledgments
+## 🙏 Acknowledgments
 
 This package builds upon and automates workflows using:
 

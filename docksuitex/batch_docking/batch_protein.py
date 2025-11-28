@@ -1,30 +1,3 @@
-"""Batch protein preparation with parallel processing.
-
-This module provides high-throughput protein preparation capabilities using
-parallel execution. It automates the preparation of multiple protein structures
-simultaneously for docking workflows.
-
-Example:
-    Batch protein preparation::
-
-        from docksuitex.batch_docking import BatchProtein
-
-        # Prepare all proteins in a folder
-        batch = BatchProtein(
-            inputs="proteins_folder",
-            fix_pdb=True,
-            remove_water=True
-        )
-
-        # Process all proteins in parallel
-        results = batch.prepare_all(save_to="prepared_proteins")
-
-        # Check results
-        for result in results:
-            if result["status"] == "success":
-                print(f"Prepared: {result['pdbqt_path']}")
-"""
-
 import os
 from pathlib import Path
 from typing import List, Union, Dict, Optional
@@ -36,14 +9,15 @@ from ..protein import Protein
 
 
 class BatchProtein:
+    """Handles batch ligand preparation with parallel processing."""
 
     def __init__(
         self,
         inputs: Union[List[Union[str, Path]], str, Path],
         fix_pdb: bool = True,
         remove_heterogens: bool = True,
-        add_hydrogens: bool = True,
         remove_water: bool = True,
+        add_hydrogens: bool = True,
         add_charges: bool = True,
         preserve_charge_types: Optional[list[str]] = None,
     ):
@@ -52,8 +26,8 @@ class BatchProtein:
 
         Args:
             inputs (list[str | Path] | str | Path): 
-                List of protein files or directory containing protein files.
-            fix_pdb, remove_heterogens, add_hydrogens, remove_water, add_charges: 
+                List of protein files path or directory path containing protein files.
+            fix_pdb, remove_heterogens, add_hydrogens, remove_water, add_charges: (bool)
                 Preparation parameters (same as Protein.prepare()).
             preserve_charge_types (list[str], optional): Atom types to preserve charges for.
         """

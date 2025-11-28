@@ -1,2 +1,1 @@
-# Ligand
 ::: docksuitex.ligand.Ligand

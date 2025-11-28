@@ -1,46 +1,3 @@
-"""Ligand structure preparation for molecular docking.
-
-This module provides automated ligand preparation using Open Babel for format
-conversion and energy minimization, combined with AutoDockTools (MGLTools) for
-PDBQT generation required for molecular docking.
-
-The preparation workflow:
-    1. Format conversion to MOL2 using Open Babel
-    2. 3D coordinate generation (if needed)
-    3. Optional energy minimization with forcefields (MMFF94, UFF, GAFF)
-    4. Water molecule removal
-    5. Hydrogen addition and charge assignment
-    6. PDBQT format conversion using AutoDockTools
-
-Example:
-    Basic ligand preparation::
-
-        from docksuitex import Ligand
-
-        # Prepare ligand from SDF file
-        ligand = Ligand(
-            input="ligand.sdf",
-            minimize="mmff94",
-            remove_water=True
-        )
-        
-        # Generate PDBQT file
-        pdbqt_path = ligand.prepare(save_to="prepared_ligand.pdbqt")
-        
-        # Visualize in Jupyter
-        ligand.view_molecule()
-
-    Preparation from SMILES string::
-
-        ligand = Ligand(
-            input="aspirin.smi",
-            minimize="uff",
-            add_hydrogens=True
-        )
-        pdbqt_path = ligand.prepare()
-
-"""
-
 import shutil
 import subprocess
 from pathlib import Path
@@ -49,13 +6,10 @@ import uuid
 
 from docksuitex.utils.viewer import view_molecule
 
-# Configuration - Paths to bundled executables
 MGLTOOLS_PATH = (Path(__file__).parent / "bin" / "mgltools").resolve()
 MGL_PYTHON_EXE = (MGLTOOLS_PATH / "python.exe").resolve()
-PREPARE_LIGAND_SCRIPT = (MGLTOOLS_PATH / "Lib" / "site-packages" /
-                         "AutoDockTools" / "Utilities24" / "prepare_ligand4.py").resolve()
-OBABEL_EXE = (Path(__file__).parent / "bin" /
-              "obabel" / "obabel.exe").resolve()
+PREPARE_LIGAND_SCRIPT = (MGLTOOLS_PATH / "Lib" / "site-packages" / "AutoDockTools" / "Utilities24" / "prepare_ligand4.py").resolve()
+OBABEL_EXE = (Path(__file__).parent / "bin" / "obabel" / "obabel.exe").resolve()
 
 TEMP_DIR = (Path.cwd() / "temp").resolve()
 TEMP_DIR.mkdir(exist_ok=True)
@@ -63,34 +17,18 @@ TEMP_DIR.mkdir(exist_ok=True)
 
 
 class Ligand:
-    """Automated ligand structure preparation for molecular docking.
+    """Ligand structure preparation for molecular docking.
 
-    This class provides a complete workflow for preparing ligand structures
-    for docking simulations. It integrates Open Babel for format conversion
-    and energy minimization, and AutoDockTools for PDBQT generation.
+    This module provides automated ligand preparation using Open Babel for format
+    conversion and energy minimization, combined with AutoDockTools (MGLTools) for
+    PDBQT generation required for molecular docking.
 
-    The preparation process handles:
-        - Format conversion from various structure formats to MOL2
-        - 3D coordinate generation for 2D structures or SMILES
-        - Energy minimization with multiple forcefields
-        - Water molecule removal
-        - Hydrogen addition (polar or all)
-        - Gasteiger charge assignment
-        - PDBQT format conversion for docking
-
-
-    Example:
-        Standard ligand preparation::
-
-            from docksuitex import Ligand
-
-            ligand = Ligand("compound.sdf", minimize="mmff94")
-            pdbqt_file = ligand.prepare(save_to="ligand.pdbqt")
-
-        Preparation from SMILES::
-
-            ligand = Ligand("molecule.smi", minimize="uff")
-            pdbqt_file = ligand.prepare()
+    The preparation workflow:
+        1. Converting various input formats to MOL2, 3D coordinate generation if needed (using Open Babel)
+        2. Optional energy minimization with forcefields: MMFF94, MMFF94S UFF, GAFF (using Open Babel)
+        3. Optional water molecule removal (using Open Babel)
+        4. Optional hydrogen addition and gasteiger charge assignment (using AutoDockTools)
+        5. Converting the MOL2 file to PDBQT format (using AutoDockTools)
 
     Note:
         Temporary files are created in a `temp/Ligands/` directory and are
@@ -118,7 +56,8 @@ class Ligand:
             remove_water (bool, optional): Remove water molecules. Defaults to True.
             add_hydrogens (bool, optional): Add polar hydrogens. Defaults to True.
             add_charges (bool, optional): Assign Gasteiger charges. Defaults to True.
-            preserve_charge_types (list[str], optional): Atom types to preserve charges for. Defaults to None.
+            preserve_charge_types (list[str], optional): Atom types (e.g.,["Zn", "Fe"]) whose charges are preserved; 
+                others get Gasteiger charges; ignored if add_charges=False. Defaults to None.
 
         Raises:
             FileNotFoundError: If the input file does not exist.
@@ -147,8 +86,7 @@ class Ligand:
 
     def prepare(self, save_to: Union[str, Path] = ".") -> Path:
         """
-        Prepare the ligand by converting to MOL2, optionally minimizing energy, 
-        and generating a final PDBQT file using AutoDockTools (from MGLTools).
+        Handles ligand preparation for docking using Open Babel and AutoDockTools (ADT). 
         Saves the prepared PDBQT file to the specified location.
 
         Args:
@@ -168,7 +106,7 @@ class Ligand:
         self.temp_dir = TEMP_DIR / "Ligands" / f"{self.file_path.stem}_{uuid.uuid4().hex[:8]}"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
-        # === Step 1: Convert + Gen3D + Minimize to MOL2 ===
+        # === Step 1: Convert + Gen3D + remove water + Minimize to MOL2 ===
         self.mol2_path = self.temp_dir / f"{self.file_path.stem}.mol2"
         cmd = [
             str(OBABEL_EXE), "-i", self.input_format, str(self.file_path),
@@ -232,28 +170,25 @@ class Ligand:
 
         self.pdbqt_path = save_to
 
-        # # Save logic (merged from save_pdbqt)
-        # save_to = Path(save_to).expanduser().resolve()
-
-        # # treat as file only if it has a suffix (e.g., .pdbqt)
-        # if not save_to.suffix:
-        #     save_to = save_to / self.pdbqt_path.name
-
-        # save_to.parent.mkdir(parents=True, exist_ok=True)
-        # shutil.copy2(self.pdbqt_path, save_to)
         print(f"✅ Ligand prepared successfully: {self.pdbqt_path}")
         return self.pdbqt_path
 
     def view_molecule(self):
         """Visualize the ligand structure in a Jupyter notebook.
 
-        Uses nglview to render either the prepared or original file.
+        Uses NGLView to render either the prepared PDBQT file or the original
+        input file in an interactive 3D viewer.
 
         Returns:
-            object: An nglview.NGLWidget object for rendering.
+            nglview.NGLWidget: Interactive 3D molecular viewer widget.
 
         Raises:
             FileNotFoundError: If neither prepared nor input file exists.
+            ImportError: If nglview is not installed.
+
+        Note:
+            This method requires a Jupyter Notebook/Lab environment and the
+            nglview package.
         """
         path = Path(self.pdbqt_path if self.pdbqt_path else self.file_path).resolve()
         return view_molecule(file_path=path)

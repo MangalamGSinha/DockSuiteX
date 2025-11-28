@@ -1,49 +1,8 @@
-"""AutoDock Vina molecular docking interface.
-
-This module provides a Python wrapper for AutoDock Vina, a widely-used program
-for molecular docking simulations. It automates the process of running Vina
-docking calculations and managing results.
-
-AutoDock Vina uses a gradient optimization method in its local optimization
-procedure and a sophisticated gradient optimization algorithm in its global
-optimization procedure. It can significantly improve the average accuracy of
-the binding mode predictions compared to AutoDock 4.
-
-Example:
-    Basic Vina docking workflow::
-
-        from docksuitex import VinaDocking
-
-        # Initialize docking with prepared files
-        docking = VinaDocking(
-            receptor="protein.pdbqt",
-            ligand="ligand.pdbqt",
-            grid_center=(10.5, 15.2, 20.8),
-            grid_size=(20, 20, 20),
-            exhaustiveness=8
-        )
-
-        # Run docking
-        results_dir = docking.run(save_to="my_docking_results")
-
-        # Visualize results in Jupyter
-        docking.view_results()
-
-Note:
-    Both receptor and ligand must be in PDBQT format. Use the Protein and
-    Ligand classes to prepare structures from other formats.
-
-Attributes:
-    VINA_PATH (Path): Absolute path to the AutoDock Vina executable bundled
-        with DockSuiteX.
-"""
-
 import subprocess
 from pathlib import Path
 from typing import Optional, Union
 import shutil
 import os
-import uuid
 from .utils.viewer import view_results
 
 # Path to AutoDock Vina executable bundled with DockSuiteX
@@ -57,29 +16,14 @@ class VinaDocking:
     parameter validation, command execution, result management, and visualization.
     It automates the docking workflow from input validation to result generation.
 
-    The class validates input files, constructs appropriate command-line arguments,
-    executes Vina, captures output, and organizes results in a structured directory.
-
-    Example:
-        Typical docking workflow::
-
-            from docksuitex import VinaDocking
-
-            # Create docking instance
-            docking = VinaDocking(
-                receptor="prepared_receptor.pdbqt",
-                ligand="prepared_ligand.pdbqt",
-                grid_center=(25.0, 30.0, 15.0),
-                grid_size=(25, 25, 25),
-                exhaustiveness=16,
-                num_modes=20
-            )
-
-            # Execute docking
-            output_path = docking.run(save_to="vina_results")
-
-            # View results interactively
-            docking.view_results()
+    The docking workflow:
+        1. Directory setup: Creates output directory and copies input files.
+        2. Docking (Vina):
+            - Constructs command line arguments including receptor, ligand, and grid parameters.
+            - Runs AutoDock Vina to perform docking.
+        3. Result Processing:
+            - Captures and saves the execution log.
+            - Validates output files (pdbqt poses and log).
 
     Note:
         Grid center coordinates should be determined from binding pocket
@@ -88,8 +32,8 @@ class VinaDocking:
 
     def __init__(
         self,
-        receptor: Union[str, Path, "Protein"],
-        ligand: Union[str, Path, "Ligand"],
+        receptor: Union[str, Path],
+        ligand: Union[str, Path],
         grid_center: tuple[float, float, float],
         grid_size: tuple[int, int, int] = (20, 20, 20),
         exhaustiveness: int = 8,
@@ -99,12 +43,12 @@ class VinaDocking:
 
         _cpu: int = os.cpu_count() or 1,
     ):
-        """Initialize a Vina docking job.
+        """Initialize a Vina docking run.
 
         Args:
-            receptor (Union[str, Path, Protein]): Path to receptor PDBQT file.
+            receptor (Union[str, Path): Path to receptor PDBQT file.
                 Must be a prepared protein structure in PDBQT format.
-            ligand (Union[str, Path, Ligand]): Path to ligand PDBQT file.
+            ligand (Union[str, Path): Path to ligand PDBQT file.
                 Must be a prepared ligand structure in PDBQT format.
             grid_center (tuple[float, float, float]): Grid box center coordinates
                 (x, y, z) in Angstroms. Defines the center of the search space.
@@ -167,13 +111,10 @@ class VinaDocking:
         saves results to the specified directory, and generates output files
         including docked poses and a log file with binding energies.
 
-        The method copies input files to the output directory, constructs the
-        Vina command line, executes the docking, and validates the results.
-
         Args:
             save_to (Union[str, Path], optional): Directory path where docking
                 results will be saved. If None, creates a directory named
-                "vina_docked_{receptor}_{ligand}" in the current directory.
+                "vina_docked_{receptor}_{ligand}_center_{x}_{y}_{z}" in the current directory.
                 Defaults to None.
 
         Returns:
@@ -186,20 +127,11 @@ class VinaDocking:
             RuntimeError: If Vina execution fails (non-zero return code) or
                 if expected output files (output.pdbqt, log.txt) are not created.
 
-        Example:
-            ::
-
-                docking = VinaDocking(
-                    receptor="protein.pdbqt",
-                    ligand="ligand.pdbqt",
-                    grid_center=(10.0, 15.0, 20.0)
-                )
-                results_path = docking.run(save_to="my_results")
-                print(f"Results saved to: {results_path}")
         """
 
         if save_to is None:
-            save_to = f"vina_docked_{self.receptor.stem}_{self.ligand.stem}"
+            center_str = "_".join(f"{c:.2f}" for c in self.grid_center)
+            save_to = f"vina_docked_{self.receptor.stem}_{self.ligand.stem}_center_{center_str}"
         self.output_dir = Path(save_to).resolve()
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -281,15 +213,5 @@ class VinaDocking:
             This method must be called after run() to ensure output files exist.
             It only works in Jupyter Notebook/Lab environments.
 
-        Example:
-            ::
-
-                docking = VinaDocking(
-                    receptor="protein.pdbqt",
-                    ligand="ligand.pdbqt",
-                    grid_center=(10.0, 15.0, 20.0)
-                )
-                docking.run()
-                docking.view_results()  # Opens interactive 3D viewer
         """
         view_results(protein_file=self.receptor, ligand_file=self.output_pdbqt)

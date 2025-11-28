@@ -1,31 +1,3 @@
-"""Batch AutoDock4 docking with parallel processing.
-
-This module provides high-throughput docking capabilities using AutoDock4
-with parallel execution. It handles multiple ligands, multiple receptors, and
-multiple binding pockets simultaneously using process pools.
-
-Example:
-    Batch AutoDock4 docking::
-
-        from docksuitex.batch_docking import BatchAD4Docking
-
-        # Define receptors with their pocket centers
-        receptors_with_centers = {
-            "receptor1.pdbqt": [(10.0, 15.0, 20.0)],
-            "receptor2.pdbqt": [(8.0, 12.0, 16.0)]
-        }
-
-        # Initialize batch docking
-        batch = BatchAD4Docking(
-            receptors_with_centers=receptors_with_centers,
-            ligands=["lig1.pdbqt", "lig2.pdbqt"],
-            ga_run=50
-        )
-
-        # Run all docking jobs in parallel
-        results = batch.run_all(cpu=16, save_to="ad4_batch_results")
-"""
-
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Union, Sequence, Dict
@@ -65,7 +37,7 @@ class BatchAD4Docking:
             receptors_with_centers (Dict[str | Path, Sequence[tuple[float, float, float]]]): 
                 Dictionary mapping receptor PDBQT files to their list of binding pocket centers.
             ligands (Sequence[str | Path]): List of ligand PDBQT files.
-            grid_size (tuple[int, int, int], optional): Number of grid points per axis. Defaults to (60, 60, 60).
+            grid_size (tuple[int, int, int], optional): Number of points in the grid box per axis. Defaults to (60, 60, 60).
             spacing (float, optional): Grid spacing in Å. Defaults to 0.375.
             dielectric (float, optional): Dielectric constant. Defaults to -0.1465.
             smooth (float, optional): Smoothing factor for potential maps. Defaults to 0.5.
@@ -79,6 +51,7 @@ class BatchAD4Docking:
             rmstol (float, optional): RMSD tolerance for clustering. Defaults to 2.0.
             seed (tuple[int | str, int | str], optional): Random seed for docking. 
                 Each element can be an integer or the keywords "pid" or "time".
+
         """
         self.receptors = receptors_with_centers
         

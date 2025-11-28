@@ -6,23 +6,29 @@ The DockSuiteX package is organized into core modules, batch processing modules,
 
 ```
 docksuitex/
-├── protein.py          # Protein preparation (PDBFixer, Open Babel, AutoDockTools)
-├── ligand.py           # Ligand preparation (Open Babel, minimization, AutoDockTools)
-├── pocket_finder.py    # Pocket detection with P2Rank
-├── autodock4.py        # AutoDock4 docking wrapper
-├── vina.py             # AutoDock Vina docking wrapper
-├── batch_autodock4.py  # Parallel batch docking with AutoDock4
-├── batch_vina.py       # Parallel batch docking with AutoDock Vina
+├── protein.py        # Protein preparation (PDBFixer, Open Babel, AutoDockTools)
+├── ligand.py         # Ligand preparation (Open Babel, AutoDockTools)
+├── pocket_finder.py  # Pocket detection with P2Rank
+├── autodock4.py      # AutoDock4 docking wrapper
+├── vina.py           # AutoDock Vina docking wrapper
+│ 
+├── batch_docking/             # Batch processing modules
+│   ├── batch_protein.py       # Parallel batch protein preparation
+│   ├── batch_ligand.py        # Parallel batch ligand preparation
+│   ├── batch_pocket_finder.py # Parallel batch pocket detection
+│   ├── batch_autodock4.py     # Parallel batch docking with AutoDock4
+│   └── batch_vina.py          # Parallel batch docking with AutoDock Vina
+│ 
 ├── utils/
 │   ├── fetcher.py      # Fetch PDB (RCSB) & SDF (PubChem)
 │   ├── viewer.py       # NGLView visualization
 │   ├── parser.py       # Parse logs to CSV summaries
-│   └── cleaner.py      # Reset temp folders and delete bin folder
-│
+│   └── cleaner.py      # Delete bin folder
+│ 
 └── bin/                # Auto-downloaded on first run
-    ├── mgltools/       # MGLTools binaries and scripts
+    ├── mgltools/       # MGLTools(AutoDockTools) binaries and scripts
     ├── obabel/         # Open Babel executables
-    ├── vina/           # AutoDock Vina executable (vina.exe)
+    ├── vina/           # AutoDock Vina executable
     ├── p2rank/         # P2Rank executable and scripts
     └── autodock/       # AutoDock4 & AutoGrid executables
 ```
@@ -43,11 +49,11 @@ Fundamental classes for molecular docking workflows:
 
 High-throughput docking with parallel execution:
 
-- **[BatchVinaDocking](batch-vina.md)** - Parallel Vina docking for multiple ligands and pockets
-- **[BatchAD4Docking](batch-autodock4.md)** - Parallel AutoDock4 docking
-- **[BatchProtein](batch-protein.md)** - Batch protein preparation
-- **[BatchLigand](batch-ligand.md)** - Batch ligand preparation
-- **[BatchPocketFinder](batch-pocket-finder.md)** - Batch pocket prediction
+- **[BatchVinaDocking](batch-vina.md)** - Parallel Vina docking for multiple receptors, ligands and pockets
+- **[BatchAD4Docking](batch-autodock4.md)** - Parallel AutoDock4 docking for multiple receptors, ligands and pockets
+- **[BatchProtein](batch-protein.md)** - Batch protein preparation for multiple receptors
+- **[BatchLigand](batch-ligand.md)** - Batch ligand preparation for multiple ligands
+- **[BatchPocketFinder](batch-pocket-finder.md)** - Batch pocket prediction for multiple receptors
 
 ### Utilities
 
@@ -56,7 +62,7 @@ Helper functions for common tasks:
 - **[Viewer](viewer.md)** - 3D molecular visualization with NGLView
 - **[Parser](parser.md)** - Parse docking logs to CSV format
 - **[Fetcher](fetcher.md)** - Download structures from RCSB PDB and PubChem
-- **[Cleaner](cleaner.md)** - Clean temporary files and manage binaries
+- **[Cleaner](cleaner.md)** - Delete binaries, useful when you want to re-download fresh binaries.
 
 ## Binary Dependencies
 
@@ -68,6 +74,6 @@ DockSuiteX automatically downloads and manages the following third-party tools:
 | AutoDock Vina | Fast gradient-based docking | `bin/vina/` |
 | AutoDock4 | Classic genetic algorithm docking | `bin/autodock/` |
 | P2Rank | Machine learning pocket prediction | `bin/p2rank/` |
-| Open Babel | Format conversion and minimization | `bin/obabel/` |
+| Open Babel | Format conversion and energy minimization | `bin/obabel/` |
 
 All binaries are downloaded from the [DockSuiteX_Binaries](https://github.com/MangalamGSinha/DockSuiteX_Binaries) repository on first import.

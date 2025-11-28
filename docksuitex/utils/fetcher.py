@@ -1,76 +1,30 @@
-"""Structure fetching from online databases.
-
-This module provides functions for downloading protein and ligand structures
-from public databases including RCSB PDB and PubChem. It automates the process
-of retrieving structures for docking studies.
-
-The fetching functions handle:
-    - Protein structure download from RCSB PDB
-    - Ligand structure download from PubChem
-    - Batch downloading of multiple structures
-    - Automatic file naming and organization
-
-Example:
-    Fetching protein structures::
-
-        from docksuitex.utils import fetch_pdb
-
-        # Download single protein
-        pdb_path = fetch_pdb("1UBQ", save_to="structures")
-        
-        # Download multiple proteins
-        paths = fetch_pdb(["1UBQ", "2HHB", "3CL0"], save_to="proteins")
-
-    Fetching ligand structures::
-
-        from docksuitex.utils import fetch_sdf
-
-        # Download ligand from PubChem
-        sdf_path = fetch_sdf("2244", save_to="ligands")  # Aspirin
-        
-        # Download multiple ligands
-        paths = fetch_sdf([2244, 5090, 6323], save_to="ligands")
-
-Note:
-    These functions require an active internet connection and access to
-    the respective databases. Rate limiting may apply for batch downloads.
-"""
-
 import requests
 from pathlib import Path
 from typing import Union, List
+import concurrent.futures
 
 
-def fetch_pdb(pdbid: Union[str, List[str]], save_to: Union[str, Path] = ".") -> Union[Path, List[Path]]:
-    """Download PDB structure file(s) from the RCSB Protein Data Bank.
-
-    This function downloads the `.pdb` file(s) corresponding to the given
-    4-character PDB ID(s).
+def _download_pdb(pid: str, save_to: Union[str, Path]) -> Path:
+    """
+    Download a single PDB file from RCSB.
 
     Args:
-        pdbid (str | List[str]): The 4-character alphanumeric PDB ID (e.g., "1UBQ")
-            or a list of PDB IDs.
-        save_to (str | Path, optional): Directory to save the file(s).
-            Defaults to the current directory.
+        pid (str): The 4-character PDB ID.
+        save_to (Union[str, Path]): Directory to save the file.
 
     Returns:
-        Path | List[Path]: The absolute path(s) to the downloaded `.pdb` file(s).
+        Path: The path to the downloaded file.
 
     Raises:
-        ValueError: If `pdbid` is not a valid 4-character alphanumeric string.
-        requests.RequestException: If the network request fails.
-        RuntimeError: If the PDB file cannot be retrieved (e.g., invalid ID).
+        ValueError: If the PDB ID is invalid.
+        RuntimeError: If the download fails.
     """
-    if isinstance(pdbid, list):
-        return [fetch_pdb(pid, save_to) for pid in pdbid]
+    pid = pid.upper().strip()
+    if len(pid) != 4 or not pid.isalnum():
+        raise ValueError("❌ Invalid PDB ID. Must be 4-character alphanumeric.")
 
-    pdbid = pdbid.upper().strip()
-    if len(pdbid) != 4 or not pdbid.isalnum():
-        raise ValueError(
-            "❌ Invalid PDB ID. It must be a 4-character alphanumeric string.")
-
-    url = f"https://files.rcsb.org/download/{pdbid}.pdb"
-    save_path = Path(save_to).expanduser().resolve() / f"{pdbid}.pdb"
+    url = f"https://files.rcsb.org/download/{pid}.pdb"
+    save_path = Path(save_to).expanduser().resolve() / f"{pid}.pdb"
     save_path.parent.mkdir(parents=True, exist_ok=True)
 
     response = requests.get(url)
@@ -80,36 +34,54 @@ def fetch_pdb(pdbid: Union[str, List[str]], save_to: Union[str, Path] = ".") -> 
     with open(save_path, "w") as f:
         f.write(response.text)
 
-    print(f"✅ Downloaded {pdbid}.pdb → saved to {save_path}")
+    print(f"✅ Downloaded {pid}.pdb → {save_path}")
     return save_path
 
 
-def fetch_sdf(cid: Union[str, int, List[Union[str, int]]], save_to: Union[str, Path] = ".") -> Union[Path, List[Path]]:
-    """Download 3D SDF structure file(s) from PubChem using Compound ID(s).
+def fetch_pdb(pdbid: Union[str, List[str]], save_to: Union[str, Path] = ".", parallel: int = 4) -> Union[Path, List[Path]]:
+    """
+    Download PDB structure file(s) from the RCSB Protein Data Bank.
 
-    This function downloads the `.sdf` file(s) corresponding to the given
-    PubChem CID(s).
+    This function downloads `.pdb` files for the given PDB ID(s). It supports
+    parallel downloading when a list of IDs is provided.
 
     Args:
-        cid (str | int | List[str | int]): The numeric Compound ID (e.g., 2244 for Aspirin)
-            or a list of CIDs.
-        save_to (str | Path, optional): Directory to save the file(s).
+        pdbid (Union[str, List[str]]): A single 4-character PDB ID (e.g., "1UBQ")
+            or a list of PDB IDs.
+        save_to (Union[str, Path], optional): Directory to save the file(s).
             Defaults to the current directory.
+        parallel (int, optional): Number of threads to use for parallel
+            downloading. Defaults to 4.
 
     Returns:
-        Path | List[Path]: The absolute path(s) to the downloaded `.sdf` file(s).
+        Union[Path, List[Path]]: The absolute path(s) to the downloaded `.pdb` file(s).
+    """
+    if isinstance(pdbid, list):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as executor:
+            futures = executor.map(lambda pid: _download_pdb(pid, save_to), pdbid)
+            return list(futures)
+    else:
+        return _download_pdb(pdbid, save_to)
+
+
+def _download_sdf(cid: str, save_to: Union[str, Path]) -> Path:
+    """
+    Download a single SDF file from PubChem.
+
+    Args:
+        cid (str): The Compound ID (CID).
+        save_to (Union[str, Path]): Directory to save the file.
+
+    Returns:
+        Path: The path to the downloaded file.
 
     Raises:
-        ValueError: If `cid` is not a valid integer identifier.
-        requests.RequestException: If the network request fails.
-        RuntimeError: If the SDF file cannot be retrieved or is empty.
+        ValueError: If the CID is invalid.
+        RuntimeError: If the download fails.
     """
-    if isinstance(cid, list):
-        return [fetch_sdf(c, save_to) for c in cid]
-
     cid = str(cid).strip()
     if not cid.isdigit():
-        raise ValueError("❌ Invalid CID. It must be a numeric ID.")
+        raise ValueError("❌ Invalid CID. Must be numeric.")
 
     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/SDF?record_type=3d"
     save_path = Path(save_to).expanduser().resolve() / f"{cid}.sdf"
@@ -117,10 +89,36 @@ def fetch_sdf(cid: Union[str, int, List[Union[str, int]]], save_to: Union[str, P
 
     response = requests.get(url)
     if response.status_code != 200 or not response.text.strip():
-        raise RuntimeError(f"❌ Failed to download SDF file from: {url}")
+        raise RuntimeError(f"❌ Failed to download SDF from: {url}")
 
     with open(save_path, "w") as f:
         f.write(response.text)
 
-    print(f"✅ Downloaded {cid}.sdf → saved to {save_path}")
+    print(f"✅ Downloaded {cid}.sdf → {save_path}")
     return save_path
+
+
+def fetch_sdf(cid: Union[str, int, List[Union[str, int]]], save_to: Union[str, Path] = ".", parallel: int = 4) -> Union[Path, List[Path]]:
+    """
+    Download 3D SDF structure file(s) from PubChem.
+
+    This function downloads `.sdf` files for the given Compound ID(s). It supports
+    parallel downloading when a list of CIDs is provided.
+
+    Args:
+        cid (Union[str, int, List[Union[str, int]]]): A single numeric Compound ID
+            (e.g., 2244) or a list of CIDs.
+        save_to (Union[str, Path], optional): Directory to save the file(s).
+            Defaults to the current directory.
+        parallel (int, optional): Number of threads to use for parallel
+            downloading. Defaults to 4.
+
+    Returns:
+        Union[Path, List[Path]]: The absolute path(s) to the downloaded `.sdf` file(s).
+    """
+    if isinstance(cid, list):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as executor:
+            futures = executor.map(lambda c: _download_sdf(c, save_to), cid)
+            return list(futures)
+    else:
+        return _download_sdf(cid, save_to)

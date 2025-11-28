@@ -1,2 +1,1 @@
-# BatchLigand
 ::: docksuitex.batch_docking.batch_ligand.BatchLigand

@@ -1,2 +1,1 @@
-# BatchVinaDocking
 ::: docksuitex.batch_docking.batch_vina.BatchVinaDocking

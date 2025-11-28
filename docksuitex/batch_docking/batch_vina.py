@@ -1,31 +1,3 @@
-"""Batch AutoDock Vina docking with parallel processing.
-
-This module provides high-throughput docking capabilities using AutoDock Vina
-with parallel execution. It handles multiple ligands, multiple receptors, and
-multiple binding pockets simultaneously using process pools.
-
-Example:
-    Batch docking workflow::
-
-        from docksuitex.batch_docking import BatchVinaDocking
-
-        # Define receptors with their pocket centers
-        receptors_with_centers = {
-            "receptor1.pdbqt": [(10.0, 15.0, 20.0), (12.0, 18.0, 22.0)],
-            "receptor2.pdbqt": [(8.0, 12.0, 16.0)]
-        }
-
-        # Initialize batch docking
-        batch = BatchVinaDocking(
-            receptors_with_centers=receptors_with_centers,
-            ligands="ligands_folder",  # or list of files
-            exhaustiveness=16
-        )
-
-        # Run all docking jobs in parallel
-        results = batch.run_all(cpu=8, save_to="batch_results")
-"""
-
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Union, Sequence, Dict

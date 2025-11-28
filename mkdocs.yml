@@ -43,10 +43,11 @@ plugins:
             show_root_heading: true
             show_signature_annotations: true
             separate_signature: true
-            merge_init_into_class: true
+            merge_init_into_class: false
             show_if_no_docstring: false
             members_order: source
             show_bases: true
+  - mkdocs-jupyter
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -68,22 +69,23 @@ nav:
   - Home: index.md
   - Getting Started:
       - Installation: getting-started/installation.md
-      - Quick Start: getting-started/quickstart.md
-      - Examples: getting-started/examples.md
+      - Examples: 
+          - Single Ligand Docking: examples/single_docking.ipynb
+          - Multiple Ligand Docking: examples/multiple_docking.ipynb
   - API Reference:
       - Overview: api/overview.md
       - Core Modules:
           - Protein: api/protein.md
           - Ligand: api/ligand.md
-          - VinaDocking: api/vina.md
-          - AD4Docking: api/autodock4.md
           - PocketFinder: api/pocket-finder.md
+          - VinaDocking: api/vina.md
+          - AD4Docking: api/autodock4.md         
       - Batch Processing:
-          - BatchVinaDocking: api/batch-vina.md
-          - BatchAD4Docking: api/batch-autodock4.md
           - BatchProtein: api/batch-protein.md
           - BatchLigand: api/batch-ligand.md
           - BatchPocketFinder: api/batch-pocket-finder.md
+          - BatchVinaDocking: api/batch-vina.md
+          - BatchAD4Docking: api/batch-autodock4.md
       - Utilities:
           - Viewer: api/viewer.md
           - Parser: api/parser.md
@@ -93,11 +95,10 @@ nav:
       - Citations: about/cite.md
       - License: about/license.md
       - Contributing: about/contributing.md
-      - Changelog: about/changelog.md
 
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername/DockSuiteX
+      link: https://github.com/mangalamgsinha/DockSuiteX
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/docksuitex

@@ -1,37 +1,3 @@
-"""Binding pocket prediction using P2Rank.
-
-This module provides a Python wrapper for P2Rank, a machine learning-based tool
-for predicting ligand-binding pockets in protein structures. P2Rank uses a
-template-free approach based on local chemical neighborhood features.
-
-The pocket finding workflow:
-    1. Run P2Rank prediction on protein structure (PDB or PDBQT)
-    2. Parse CSV output to extract pocket centers and rankings
-    3. Return pocket coordinates for use in docking grid setup
-
-Example:
-    Basic pocket finding::
-
-        from docksuitex import PocketFinder
-
-        # Find pockets in protein structure
-        finder = PocketFinder("protein.pdb")
-        pockets = finder.run(save_to="pocket_results")
-        
-        # Use top pocket for docking
-        top_pocket_center = pockets[0]["center"]
-        print(f"Top pocket at: {top_pocket_center}")
-
-    Finding pockets for docking setup::
-
-        finder = PocketFinder("prepared_receptor.pdbqt")
-        pockets = finder.run()
-        
-        # Get centers for all predicted pockets
-        centers = [pocket["center"] for pocket in pockets]
-
-"""
-
 import os
 import subprocess
 import csv
@@ -45,47 +11,16 @@ P2RANK_PATH = (Path(__file__).parent / "bin" / "p2rank" / "prank.bat").resolve()
 
 
 class PocketFinder:
-    """Ligand-binding pocket prediction using P2Rank.
+    """Binding pocket prediction using P2Rank.
 
-    This class provides a wrapper for P2Rank, a machine learning-based tool
-    for predicting ligand-binding sites in protein structures. It automates
-    running P2Rank, parsing results, and extracting pocket center coordinates.
+    This module provides a Python wrapper for P2Rank, a machine learning-based tool
+    for predicting ligand-binding pockets in protein structures. P2Rank uses a
+    template-free approach based on local chemical neighborhood features.
 
-    P2Rank uses a template-free approach based on local chemical neighborhood
-    features, making it fast and accurate for pocket prediction without
-    requiring known ligand structures.
-
-    Attributes:
-        file_path (Path): Path to the input protein file (PDB or PDBQT).
-
-    Example:
-        Finding pockets for docking::
-
-            from docksuitex import PocketFinder
-
-            finder = PocketFinder("protein.pdb")
-            pockets = finder.run(save_to="pocket_analysis")
-            
-            # Pockets are ranked by confidence
-            for i, pocket in enumerate(pockets):
-                rank = pocket["rank"]
-                center = pocket["center"]
-                print(f"Pocket {rank}: center at {center}")
-
-        Using pocket centers for batch docking::
-
-            finder = PocketFinder("receptor.pdbqt")
-            pockets = finder.run()
-            centers = [p["center"] for p in pockets[:3]]  # Top 3 pockets
-            
-            # Use centers for docking
-            for center in centers:
-                docking = VinaDocking(
-                    receptor="receptor.pdbqt",
-                    ligand="ligand.pdbqt",
-                    grid_center=center
-                )
-                docking.run()
+    The pocket finding workflow:
+        1. Run P2Rank prediction on protein structure (PDB or PDBQT)
+        2. Parse CSV output to extract pocket centers and rankings
+        3. Return pocket coordinates for use in docking setup
 
     Note:
         P2Rank generates multiple output files including visualizations and
@@ -120,7 +55,7 @@ class PocketFinder:
         
         Args:
             save_to (Union[str, Path], optional): Directory to save the P2Rank report. 
-                Defaults to ".".
+                Defaults to current directory.
 
         Returns:
             List[Dict[str, Union[int, Tuple[float, float, float]]]]:

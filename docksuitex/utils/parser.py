@@ -1,41 +1,3 @@
-"""Docking output file parsing utilities.
-
-This module provides functions for parsing AutoDock Vina and AutoDock4 output
-files into structured CSV format for analysis. It extracts binding energies,
-grid parameters, and clustering information from log files.
-
-The parsing functions handle:
-    - AutoDock Vina log file parsing (log.txt)
-    - AutoDock4 DLG file parsing (results.dlg)
-    - Recursive directory scanning for batch results
-    - CSV export with standardized columns
-
-Example:
-    Parsing Vina results::
-
-        from docksuitex.utils import parse_vina_log_to_csv
-
-        # Parse all Vina results in directory
-        parse_vina_log_to_csv(
-            results_dir="vina_docking_results",
-            output_csv="vina_summary.csv"
-        )
-
-    Parsing AutoDock4 results::
-
-        from docksuitex.utils import parse_ad4_dlg_to_csv
-
-        # Parse all AD4 results
-        parse_ad4_dlg_to_csv(
-            results_dir="ad4_docking_results",
-            output_csv="ad4_summary.csv"
-        )
-
-Note:
-    The parsers expect standard output formats from AutoDock Vina and
-    AutoDock4. Custom output formats may not be parsed correctly.
-"""
-
 import re
 import pandas as pd
 from pathlib import Path
@@ -54,8 +16,7 @@ def parse_vina_log_to_csv(
     (affinity and RMSD values), then writes the results to a CSV file.
 
     Args:
-        results_dir (str | Path): Path to the directory containing docking result subfolders.
-            Each folder should include a `log.txt` file from AutoDock Vina.
+        results_dir (str | Path): Path to the directory to recursively scan for AutoDock Vina 'log.txt' files.
         output_csv (str | Path, optional): Path to save the generated CSV summary.
             Defaults to "vina_summary.csv" in the current directory.
 
@@ -122,7 +83,7 @@ def parse_vina_log_to_csv(
 
     df = pd.DataFrame(results)
     df.to_csv(output_csv, index=False)
-    print(f"\n✅ Parsing completed! Saved {len(results)} results to {output_csv}")
+    print(f"\nParsing completed! Saved {len(results)} results to {output_csv}")
     return df
 
 
@@ -138,8 +99,7 @@ def parse_ad4_dlg_to_csv(
     them to a CSV file.
 
     Args:
-        results_dir (str | Path): Path to the directory containing docking result subfolders.
-            Each folder should include a `results.dlg` file from AutoDock4.
+        results_dir (str | Path): Path to the directory to recursively scan for AutoDock4 'results.dlg' files.
         output_csv (str | Path, optional): Path to save the generated CSV summary.
             Defaults to "ad4_summary.csv" in the current directory.
 
@@ -268,5 +228,5 @@ def parse_ad4_dlg_to_csv(
 
     df = pd.DataFrame(all_data)
     df.to_csv(output_csv, index=False)
-    print(f"\n✅ Parsing completed! Saved {len(all_data)} cluster results to {output_csv}")
+    print(f"\nParsing completed! Saved {len(all_data)} cluster results to {output_csv}")
     return df

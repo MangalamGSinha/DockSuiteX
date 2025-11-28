@@ -1,28 +1,3 @@
-"""Batch pocket finding with parallel processing.
-
-This module provides high-throughput binding pocket prediction using P2Rank
-with parallel execution. It automates pocket finding for multiple protein
-structures simultaneously.
-
-Example:
-    Batch pocket finding::
-
-        from docksuitex.batch_docking import BatchPocketFinder
-
-        # Find pockets for all proteins
-        batch = BatchPocketFinder(
-            inputs="prepared_proteins",
-            max_workers=4
-        )
-
-        # Run pocket finding in parallel
-        pockets_dict = batch.run_all(save_to="pocket_results")
-
-        # pockets_dict maps protein paths to pocket centers
-        for protein_path, centers in pockets_dict.items():
-            print(f"{protein_path}: {len(centers)} pockets found")
-"""
-
 import os
 from pathlib import Path
 from typing import List, Union, Dict, Optional, Tuple
@@ -35,19 +10,24 @@ from ..protein import Protein
 
 
 class BatchPocketFinder:
+    """Batch pocket finding with parallel processing."""
 
     def __init__(
         self,
         inputs: Union[List[Union[str, Path]], str, Path],
+        max_centres: Optional[int] = None,
     ):
         """
         Initialize the batch pocket finder.
 
         Args:
             inputs (list[str | Path] | str | Path): 
-                List of protein files (pdb/pdbqt) or directory containing them.
+                List of protein files path (pdb/pdbqt) or directory path containing them.
+            max_centres (int, optional): Maximum number of pocket centers to return per protein.
+                If None, returns all found pockets. Defaults to None.
         """
-        # Handle input paths
+        self.max_centres = max_centres
+        
         # Handle input paths
         if isinstance(inputs, (str, Path)):
             path = Path(inputs).resolve()
@@ -136,7 +116,7 @@ class BatchPocketFinder:
 
         Returns:
             Dict[str, List[Tuple[float, float, float]]]: 
-                Dictionary mapping absolute protein file path (str) to a list of center coordinates.
+                Dictionary mapping absolute protein file path (str) to a list of center coordinates in ranked order.
                 Example: {"/path/to/prot1.pdbqt": [(1.0, 2.0, 3.0), ...]}
         """
         save_to = Path(save_to).resolve()
@@ -175,6 +155,10 @@ class BatchPocketFinder:
                     # Extract centers from pockets list (assuming pocket is a dict with "center" key)
                     # Based on usage in notebook: centers = [item["center"] for item in pockets]
                     centers = [p["center"] for p in pockets]
+                    
+                    if self.max_centres is not None:
+                        centers = centers[:self.max_centres]
+                        
                     self.results[file_path] = centers
                     
                     count = len(centers)

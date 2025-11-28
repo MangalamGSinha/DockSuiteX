@@ -1,29 +1,3 @@
-"""Batch ligand preparation with parallel processing.
-
-This module provides high-throughput ligand preparation capabilities using
-parallel execution. It automates the preparation of multiple ligand structures
-simultaneously for docking workflows, including energy minimization.
-
-Example:
-    Batch ligand preparation::
-
-        from docksuitex.batch_docking import BatchLigand
-
-        # Prepare all ligands with energy minimization
-        batch = BatchLigand(
-            inputs="ligands_folder",
-            minimize="mmff94",
-            remove_water=True
-        )
-
-        # Process all ligands in parallel
-        results = batch.prepare_all(save_to="prepared_ligands")
-
-        # Check results
-        successful = [r for r in results if r["status"] == "success"]
-        print(f"Prepared {len(successful)} ligands")
-"""
-
 import os
 from pathlib import Path
 from typing import List, Union, Dict, Optional
@@ -35,19 +9,7 @@ from ..ligand import Ligand
 
 
 class BatchLigand:
-    """
-    Handles batch ligand preparation in parallel.
-
-    Example:
-        batch = BatchLigand(
-            inputs="ligands_folder",
-            minimize="mmff94",
-            remove_water=True,
-            add_hydrogens=True,
-            add_charges=True,
-        )
-        batch.prepare_all(save_to="prepared_ligands")
-    """
+    """Handles batch ligand preparation in parallel."""
 
     def __init__(
         self,
@@ -64,7 +26,7 @@ class BatchLigand:
         Args:
             inputs (list[str | Path] | str | Path): 
                 List of ligand files or directory containing ligand files.
-            minimize, remove_water, add_hydrogens, add_charges: 
+            minimize, remove_water, add_hydrogens, add_charges: (bool)
                 Preparation parameters (same as Ligand.prepare()).
             preserve_charge_types (list[str], optional): Atom types to preserve charges for.
         """

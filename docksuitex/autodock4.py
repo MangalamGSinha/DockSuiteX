@@ -1,81 +1,47 @@
-"""AutoDock4 molecular docking interface.
-
-This module provides a Python wrapper for AutoDock4 and AutoGrid, implementing
-the classic genetic algorithm-based docking approach. AutoDock4 is widely used
-for protein-ligand docking with detailed energy calculations.
-
-The docking workflow:
-    1. Grid map generation with AutoGrid (receptor potential maps)
-    2. Genetic algorithm-based conformational search with AutoDock4
-    3. Clustering of docking results by RMSD
-    4. Extraction of best binding poses
-
-AutoDock4 uses Lamarckian Genetic Algorithm (LGA) which combines genetic
-algorithm with local search for efficient conformational sampling.
-
-Example:
-    Basic AutoDock4 docking::
-
-        from docksuitex import AD4Docking
-
-        # Initialize docking
-        docking = AD4Docking(
-            receptor="protein.pdbqt",
-            ligand="ligand.pdbqt",
-            grid_center=(10.5, 15.2, 20.8),
-            grid_size=(60, 60, 60),
-            ga_run=50  # 50 independent runs
-        )
-
-        # Run docking
-        results_dir = docking.run(save_to="ad4_results")
-
-        # Visualize results
-        docking.view_results()
-
-    Advanced docking with custom GA parameters::
-
-        docking = AD4Docking(
-            receptor="receptor.pdbqt",
-            ligand="ligand.pdbqt",
-            grid_center=(25.0, 30.0, 15.0),
-            ga_pop_size=300,
-            ga_num_evals=25000000,
-            ga_run=100
-        )
-        results = docking.run()
-
-"""
-
 import subprocess
 from pathlib import Path
 import shutil
 from typing import Union
-import uuid
 import os
-from .protein import Protein
-from .ligand import Ligand
 from .utils.viewer import view_results
 
-# Paths to AutoDock4 executables bundled with DockSuiteX
 AUTOGRID_EXE = (Path(__file__).parent / "bin" / "autodock" / "autogrid4.exe").resolve()
 AUTODOCK_EXE = (Path(__file__).parent / "bin" / "autodock" / "autodock4.exe").resolve()
 
 
-
 class AD4Docking:
     """
-    A Python wrapper for AutoDock4 and AutoGrid to automate receptor–ligand docking.
+    AutoDock4 molecular docking interface.
 
-    This class automates receptor–ligand docking using AutoDock4.
-    It prepares grid parameter (GPF) and docking parameter (DPF) files,
-    runs AutoGrid and AutoDock, and saves docking results.
+    This module provides a Python wrapper for AutoDock4 and AutoGrid, implementing
+    the classic genetic algorithm-based docking approach. AutoDock4 is widely used
+    for protein-ligand docking with detailed energy calculations.
+
+    The docking workflow:
+        1. Directory setup: Creates output directory and copies input files.
+        2. Grid Generation (AutoGrid):
+            - Creates Grid Parameter File (GPF).
+            - Runs AutoGrid to generate affinity maps (.map) and electrostatics.
+        3. Docking (AutoDock):
+            - Creates Docking Parameter File (DPF).
+            - Runs AutoDock4 using the Lamarckian Genetic Algorithm.
+        4. Result Processing:
+            - Validates execution and output files.
+            - Extracts docked conformations from the DLG log file.
+            - Saves the best poses to a multi-model PDBQT file.
+
+    AutoDock4 uses Lamarckian Genetic Algorithm (LGA) which combines genetic
+    algorithm with local search for efficient conformational sampling.
+
+    Note:
+        Grid center coordinates should be determined from binding pocket
+        prediction (e.g., using PocketFinder) or known binding site information.
     """
 
     def __init__(
         self,
-        receptor: Union[str, Path, "Protein"],
-        ligand: Union[str, Path, "Ligand"],
+        receptor: Union[str, Path],
+        ligand: Union[str, Path],
         grid_center: tuple[float, float, float],
         grid_size: tuple[int, int, int] = (60, 60, 60),
         spacing: float = 0.375,
@@ -92,45 +58,27 @@ class AD4Docking:
         rmstol: float = 2.0,
         seed: tuple[Union[int, str], Union[int, str]] = ("pid", "time")
     ):
-        """
-        Initialize an AutoDock4 docking run.
+        """Initializes an AutoDock4 docking run.
 
-        Parameters
-        ----------
-        receptor : str | Path
-            Path to the receptor PDBQT file.
-        ligand : str | Path
-            Path to the ligand PDBQT file.
-        grid_center : tuple[float, float, float], default=(0,0,0)
-            Grid box center coordinates.
-        grid_size : tuple[int, int, int], default=(60,60,60)
-            Number of points in the grid box.
-        spacing : float, default=0.375
-            Grid spacing in Å.
-        dielectric : float, default=-0.1465
-            Dielectric constant for electrostatics.
-        smooth : float, default=0.5
-            Smoothing factor for potential maps.
-        ga_pop_size : int, default=150
-            Genetic algorithm population size.
-        ga_num_evals : int, default=2_500_000
-            Maximum number of energy evaluations in GA.
-        ga_num_generations : int, default=27_000
-            Maximum number of generations in GA.
-        ga_elitism : int, default=1
-            Number of top individuals preserved during GA.
-        ga_mutation_rate : float, default=0.02
-            Probability of mutation in GA.
-        ga_crossover_rate : float, default=0.8
-            Probability of crossover in GA.
-        ga_run : int, default=10
-            Number of independent GA runs.
-        rmstol : float, default=2.0
-            RMSD tolerance for clustering docking results.
-        seed : tuple[int | str, int | str], default=("pid", "time")
-            Each element can be an integer or the keywords "pid" or "time".
+        Args:
+            receptor (Union[str, Path]): Path to the receptor PDBQT file. Must be a prepared protein structure in PDBQT format.
+            ligand (Union[str, Path]): Path to the ligand PDBQT file. Must be a prepared ligand structure in PDBQT format.
+            grid_center (tuple[float, float, float]): Grid box center coordinates.
+            grid_size (tuple[int, int, int], optional): Number of points in the grid box per axis. Defaults to (60, 60, 60).
+            spacing (float, optional): Grid spacing in Å. Defaults to 0.375.
+            dielectric (float, optional): Dielectric constant for electrostatics. Defaults to -0.1465.
+            smooth (float, optional): Smoothing factor for potential maps. Defaults to 0.5.
+            ga_pop_size (int, optional): Genetic algorithm population size. Defaults to 150.
+            ga_num_evals (int, optional): Maximum number of energy evaluations in GA. Defaults to 2_500_000.
+            ga_num_generations (int, optional): Maximum number of generations in GA. Defaults to 27_000.
+            ga_elitism (int, optional): Number of top individuals preserved during GA. Defaults to 1.
+            ga_mutation_rate (float, optional): Probability of mutation in GA. Defaults to 0.02.
+            ga_crossover_rate (float, optional): Probability of crossover in GA. Defaults to 0.8.
+            ga_run (int, optional): Number of independent GA runs. Defaults to 10.
+            rmstol (float, optional): RMSD tolerance for clustering. Defaults to 2.0.
+            seed (tuple[Union[int, str], Union[int, str]], optional): Seed for random number generation. Defaults to ("pid", "time").
+
         """
-        # normalize receptor
 
         self.receptor = Path(receptor).resolve()
         self.ligand = Path(ligand).resolve()
@@ -315,20 +263,37 @@ analysis
 
 
 
-
-
     def run(self, save_to: Union[str, Path] = None) -> Path:
-        """
-        Runs AutoGrid and AutoDock for molecular docking.
+        """Execute AutoDock4 docking simulation.
+
+        Runs the complete AutoDock4 docking workflow, including grid map generation
+        with AutoGrid and molecular docking with AutoDock4. It manages the creation
+        of parameter files (GPF, DPF), executes the binaries, and processes the results.
+
+        Args:
+            save_to (Union[str, Path], optional): Directory path where docking
+                results will be saved. If None, creates a directory named
+                "ad4_docked_{receptor}_{ligand}_center_{x}_{y}_{z}" in the current directory.
+                Defaults to None.
+
+        Returns:
+            Path: Absolute path to the output directory containing:
+                - Receptor and ligand PDBQT files (copies of inputs).
+                - receptor.gpf, receptor.glg: AutoGrid parameter and log files.
+                - ligand.dpf, results.dlg: AutoDock parameter and log files.
+                - receptor.*.map: Affinity maps generated by AutoGrid.
+                - output.pdbqt: Extracted docked ligand poses (multi-model PDBQT).
 
         Raises:
-        RuntimeError: If AutoGrid or AutoDock fails, or expected output
-            files (.fld or .dlg) are missing.
+            RuntimeError: If AutoGrid or AutoDock execution fails, or if expected
+                output files (e.g., .fld, .dlg) are not created.
+            subprocess.CalledProcessError: If the binary execution returns a non-zero exit code.
         """
         self._setup_environment()
 
         if save_to is None:
-            save_to = f"ad4_docked_{self.receptor.stem}_{self.ligand.stem}"
+            center_str = "_".join(f"{c:.2f}" for c in self.grid_center)
+            save_to = f"ad4_docked_{self.receptor.stem}_{self.ligand.stem}_center_{center_str}"
         self.output_dir = Path(save_to).resolve()
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -391,13 +356,30 @@ analysis
 
 
     def view_results(self):
-        """
-        Visualize docking results using NGLView.
+        """Visualize docking results using NGLView in Jupyter Notebook.
 
-        Opens the receptor and docked ligand in an interactive
-        3D widget inside a Jupyter notebook.
+        Creates an interactive 3D visualization of the receptor-ligand complex
+        with controls to browse through different docking poses. This method
+        requires a Jupyter Notebook environment and the nglview package.
+
+        The visualization includes:
+            - Receptor structure displayed as cartoon representation
+            - Ligand poses displayed as ball-and-stick models
+            - Interactive controls to step through poses
+            - Play/pause animation of poses
+            - Speed control slider
 
         Returns:
-            nglview.NGLWidget: Interactive visualization of receptor–ligand complex.
+            None: Displays the interactive widget directly in the notebook.
+
+        Raises:
+            AttributeError: If run() has not been called yet (output files not set).
+            FileNotFoundError: If output files have been deleted or moved.
+            ImportError: If nglview is not installed.
+
+        Note:
+            This method must be called after run() to ensure output files exist.
+            It only works in Jupyter Notebook/Lab environments.
+
         """
         view_results(protein_file=self.receptor, ligand_file=Path(self.output_dir / "output.pdbqt"))
