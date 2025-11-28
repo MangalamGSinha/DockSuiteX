@@ -8,6 +8,9 @@ repo_url: https://github.com/mangalamgsinha/DockSuiteX
 
 theme:
   name: material
+  icon:
+    logo: fontawesome/solid/dna  # FontAwesome icon
+
   palette:
     # Light mode
     - scheme: default

@@ -1,4 +1,4 @@
-# 🧬 DockSuiteX
+# DockSuiteX
 
 **All-in-one Protein-Ligand Docking Package**
 
@@ -54,14 +54,14 @@ ligand = Ligand(ligand_path)
 ligand.prepare(minimize="mmff94")
 
 # 3. Find binding pockets
-pocket_finder = PocketFinder(protein.pdbqt_path)
+pocket_finder = PocketFinder("1HVR.pdbqt")
 pockets = pocket_finder.run()
 best_pocket = pockets[0]['center']
 
 # 4. Run Vina docking
 vina = VinaDocking(
-    receptor=protein.pdbqt_path,
-    ligand=ligand.pdbqt_path,
+    receptor="1HVR.pdbqt",
+    ligand="2244.pdbqt",
     grid_center=best_pocket,
     grid_size=(20, 20, 20)
 )
