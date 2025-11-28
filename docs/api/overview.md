@@ -39,28 +39,30 @@ docksuitex/
 
 Fundamental classes for molecular docking workflows:
 
-- **[Protein](protein.md)** - Protein structure preparation and conversion to PDBQT format
-- **[Ligand](ligand.md)** - Ligand preparation with energy minimization options
+- **[Protein](protein.md)** - Protein structure preparation and conversion to PDBQT 
+- **[Ligand](ligand.md)** - Ligand preparation with energy minimization options and conversion to PDBQT
+- **[PocketFinder](pocket-finder.md)** - Binding pocket prediction using P2Rank
 - **[VinaDocking](vina.md)** - AutoDock Vina docking interface
 - **[AD4Docking](autodock4.md)** - AutoDock4 docking interface
-- **[PocketFinder](pocket-finder.md)** - Binding pocket prediction using P2Rank
 
 ### Batch Processing
 
 High-throughput docking with parallel execution:
 
-- **[BatchVinaDocking](batch-vina.md)** - Parallel Vina docking for multiple receptors, ligands and pockets
-- **[BatchAD4Docking](batch-autodock4.md)** - Parallel AutoDock4 docking for multiple receptors, ligands and pockets
 - **[BatchProtein](batch-protein.md)** - Batch protein preparation for multiple receptors
 - **[BatchLigand](batch-ligand.md)** - Batch ligand preparation for multiple ligands
 - **[BatchPocketFinder](batch-pocket-finder.md)** - Batch pocket prediction for multiple receptors
+- **[BatchVinaDocking](batch-vina.md)** - Parallel Vina docking for multiple receptors, ligands and pockets
+- **[BatchAD4Docking](batch-autodock4.md)** - Parallel AutoDock4 docking for multiple receptors, ligands and pockets
+
+
 
 ### Utilities
 
 Helper functions for common tasks:
 
 - **[Viewer](viewer.md)** - 3D molecular visualization with NGLView
-- **[Parser](parser.md)** - Parse docking logs to CSV format
+- **[Parser](parser.md)** - Parse docking outputs to CSV format
 - **[Fetcher](fetcher.md)** - Download structures from RCSB PDB and PubChem
 - **[Cleaner](cleaner.md)** - Delete binaries, useful when you want to re-download fresh binaries.
 

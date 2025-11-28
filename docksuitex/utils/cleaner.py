@@ -18,13 +18,12 @@ def delete_binaries():
 
     Warning:
         This will delete all binary executables. They will need to be
-        re-downloaded (~500MB) on next import.
+        re-downloaded (~400MB) on next import.
 
     Example:
         ::
-            from docksuitex.utils import delete_binaries
 
-            # Remove all binaries
+            from docksuitex.utils import delete_binaries
             delete_binaries()
 
     """
