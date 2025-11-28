@@ -13,7 +13,7 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
 - 👁️ **Interactive Visualization**: 3D molecular visualization with NGLView
 - 🛠️ **Utility Functions**: Built-in tools for fetching structures and parsing results
 
-## 🚀 Flexible Batch Docking - A Unique Feature
+## 🚀 Flexible Batch Docking
 
 !!! success "Complete Flexibility in Docking Scenarios"
     **DockSuiteX is uniquely designed to handle ALL possible docking combinations**, making it the most versatile docking package for high-throughput screening. Whether you're working with a single molecule or thousands, DockSuiteX adapts to your needs:
