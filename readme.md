@@ -20,23 +20,21 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
 
 ## 🚀 Flexible Batch Docking - A Unique Feature
 
-!!! success "Complete Flexibility in Docking Scenarios"
-    **DockSuiteX is uniquely designed to handle ALL possible docking combinations**, making it the most versatile docking package for high-throughput screening. Whether you're working with a single molecule or thousands, DockSuiteX adapts to your needs:
+**DockSuiteX is uniquely designed to handle ALL possible docking combinations**, making it the most versatile docking package for high-throughput screening. Whether you're working with a single molecule or thousands, DockSuiteX adapts to your needs:
 
-    ✅ **1 Ligand → 1 Receptor**  
+    ✅**1 Ligand → 1 Receptor**
     Standard molecular docking for detailed interaction analysis
-    
-    ✅ **Many Ligands → 1 Receptor**  
+
+    ✅**Many Ligands → 1 Receptor**
     Virtual screening - screen compound libraries against a single protein target
-    
-    ✅ **1 Ligand → Many Receptors**  
+
+    ✅**1 Ligand → Many Receptors**
     Inverse docking - test one compound against multiple protein variants or different targets
-    
-    ✅ **Many Ligands → Many Receptors**  
+
+    ✅**Many Ligands → Many Receptors**
     Complete combinatorial screening - explore all possible ligand-receptor interactions in one run
 
-    All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
----
+All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
 
 ## 📚 Documentation
 
@@ -56,7 +54,6 @@ pip install docksuitex
 
 ---
 
-
 ## 📜 License
 
 GNU GPL v3 - see [LICENSE](LICENSE) for details.
@@ -67,7 +64,7 @@ GNU GPL v3 - see [LICENSE](LICENSE) for details.
 
 This package builds upon and automates workflows using:
 
-- [AutoDock4 & AutoDock Vina](http://autodock.scripps.edu/)
+- [AutoDock4 &amp; AutoDock Vina](http://autodock.scripps.edu/)
 - [MGLTools](http://mgltools.scripps.edu/)
 - [Open Babel](https://openbabel.org/)
 - [PDBFixer](http://openmm.org/)
