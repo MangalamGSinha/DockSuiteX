@@ -16,6 +16,10 @@ recursive-include examples *
 # Exclude Python cache and temporary files
 global-exclude __pycache__/*
 
+#Exclude Mkdocs files
+exclude site/*
+exclude docs/*
+
 # Exclude Git and version control junk
 exclude .gitignore
 exclude .gitattributes
