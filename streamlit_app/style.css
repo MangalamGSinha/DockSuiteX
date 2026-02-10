@@ -1,0 +1,301 @@
+/* ============================================================
+   DockSuiteX Streamlit — Custom Theme
+   Premium dark molecular-docking UI
+   ============================================================ */
+
+/* ---------- Root variables ---------- */
+:root {
+    --bg-primary: #0e1117;
+    --bg-card: rgba(30, 37, 52, 0.7);
+    --bg-card-hover: rgba(40, 50, 70, 0.85);
+    --accent-teal: #00d4aa;
+    --accent-violet: #7c5cfc;
+    --accent-blue: #3b82f6;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --text-primary: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border-subtle: rgba(148, 163, 184, 0.12);
+    --glass-blur: 12px;
+    --radius: 14px;
+    --transition: 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ---------- Global ---------- */
+.stApp {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ---------- Sidebar branding ---------- */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    border-right: 1px solid var(--border-subtle);
+}
+
+section[data-testid="stSidebar"] .stMarkdown h1 {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* ---------- Hero gradient header ---------- */
+.hero-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-radius: var(--radius);
+    padding: 3rem 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-subtle);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(124, 92, 252, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.hero-header p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* ---------- Glass cards ---------- */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(0, 212, 170, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card .card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.glass-card h3 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.glass-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ---------- Status badges ---------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.status-success {
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--accent-teal);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+}
+
+.status-error {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--accent-rose);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.status-running {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* ---------- Metric cards ---------- */
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.metric-card .metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card .metric-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+/* ---------- Section headers ---------- */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-header h2 {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+/* ---------- Custom buttons ---------- */
+.stButton>button {
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all var(--transition);
+    border: 1px solid var(--border-subtle);
+}
+
+.stButton>button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stDownloadButton>button {
+    background: linear-gradient(135deg, var(--accent-teal), #00b894) !important;
+    color: #0e1117 !important;
+    border: none !important;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.stDownloadButton>button:hover {
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+}
+
+/* ---------- File uploader ---------- */
+.stFileUploader>div {
+    border-radius: var(--radius);
+    border: 2px dashed rgba(148, 163, 184, 0.2);
+    transition: border-color var(--transition);
+}
+
+.stFileUploader>div:hover {
+    border-color: rgba(0, 212, 170, 0.4);
+}
+
+/* ---------- Tabs ---------- */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    background: transparent;
+}
+
+.stTabs [data-baseweb="tab"] {
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+    padding: 8px 20px;
+}
+
+/* ---------- Expander ---------- */
+.streamlit-expanderHeader {
+    border-radius: var(--radius);
+    font-weight: 600;
+}
+
+/* ---------- DataFrame ---------- */
+.stDataFrame {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* ---------- Log output ---------- */
+.log-output {
+    background: #0d1117;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--accent-teal);
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* ---------- Divider ---------- */
+.styled-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+    margin: 1.5rem 0;
+    border: none;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 768px) {
+    .hero-header {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero-header h1 {
+        font-size: 2rem;
+    }
+}

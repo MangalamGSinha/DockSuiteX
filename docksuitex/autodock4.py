@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 from typing import Union
 import os
-from .utils.viewer import view_results
+from .utils.viewer import view_docked_poses
 
 AUTOGRID_EXE = (Path(__file__).parent / "bin" / "autodock" / "autogrid4.exe").resolve()
 AUTODOCK_EXE = (Path(__file__).parent / "bin" / "autodock" / "autodock4.exe").resolve()
@@ -355,7 +355,7 @@ analysis
 
 
 
-    def view_results(self):
+    def view_docked_poses(self):
         """Visualize docking results using NGLView in Jupyter Notebook.
 
         Creates an interactive 3D visualization of the receptor-ligand complex
@@ -382,4 +382,4 @@ analysis
             It only works in Jupyter Notebook/Lab environments.
 
         """
-        view_results(protein_file=self.receptor, ligand_file=Path(self.output_dir / "output.pdbqt"))
+        view_docked_poses(protein_file=self.receptor, ligand_file=Path(self.output_dir / "output.pdbqt"))

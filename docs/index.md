@@ -30,7 +30,7 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
     ✅ **Many Ligands → Many Receptors**  
     Complete combinatorial screening - explore all possible ligand-receptor interactions in one run
 
-    All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
+    All batch operations leverage parallel execution to maximize computational efficiency, with the option to set the number of cpu threads to use. 
 
 ## 💻 Platform Support
 

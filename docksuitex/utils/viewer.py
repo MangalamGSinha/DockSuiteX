@@ -30,9 +30,9 @@ def view_molecule(file_path: str | Path) -> nv.NGLWidget:
 
 
 
-def view_results(protein_file: str | Path, ligand_file: str | Path) -> None:
+def view_docked_poses(protein_file: str | Path, ligand_file: str | Path) -> None:
     """
-    Visualize docking results (multiple poses) of a ligand with a protein
+    Visualize docked poses (multiple poses) of a ligand with a protein
     using NGLView and interactive Jupyter widgets.
 
     Features:

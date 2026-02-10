@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional, Union
 import shutil
 import os
-from .utils.viewer import view_results
+from .utils.viewer import view_docked_poses
 
 # Path to AutoDock Vina executable bundled with DockSuiteX
 VINA_PATH = (Path(__file__).parent / "bin" / "vina" / "vina.exe").resolve()
@@ -187,7 +187,7 @@ class VinaDocking:
         return self.output_dir
 
 
-    def view_results(self):
+    def view_docked_poses(self):
         """Visualize docking results using NGLView in Jupyter Notebook.
 
         Creates an interactive 3D visualization of the receptor-ligand complex
@@ -214,4 +214,4 @@ class VinaDocking:
             It only works in Jupyter Notebook/Lab environments.
 
         """
-        view_results(protein_file=self.receptor, ligand_file=self.output_pdbqt)
+        view_docked_poses(protein_file=self.receptor, ligand_file=self.output_pdbqt)
