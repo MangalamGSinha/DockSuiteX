@@ -2,12 +2,12 @@
 
 [![PyPI version](https://badge.fury.io/py/docksuitex.svg)](https://badge.fury.io/py/docksuitex)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://mangalamgsinha.github.io/DockSuiteX/)
 
 **All-in-one Protein-Ligand Docking Package**
 
-DockSuiteX is a comprehensive Python package and standalone GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations — available both as a Python package (`pip install docksuitex`) and a standalone desktop application (`docksuitex.exe`).
+DockSuiteX is a comprehensive Python package and GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations — available both as a Python package and an easy-to-use GUI.
 
 ## ✨ Key Features
 
@@ -17,7 +17,7 @@ DockSuiteX is a comprehensive Python package and standalone GUI application for 
 - 📊 **Batch Processing**: High-throughput screening with parallel execution
 - 👁️ **Interactive Visualization**: 3D molecular visualization with NGLView
 - 🛠️ **Utility Functions**: Built-in tools for fetching structures and parsing results
-- 🖥️ **Standalone GUI**: Complete desktop application (`docksuitex.exe`) — no coding required
+- 🖥️ **Interactive GUI**: Complete GUI application — no coding required
 
 ## 🚀 Flexible Batch Docking
 
@@ -29,17 +29,17 @@ Standard molecular docking for detailed interaction analysis
 **✅ Many Ligands → 1 Receptor**
 Virtual screening - screen compound libraries against a single protein target
 
-✅ **1 Ligand → Many Receptors**
+**✅ 1 Ligand → Many Receptors**
 Inverse docking - test one compound against multiple protein variants or different targets
 
-✅ **Many Ligands → Many Receptors**
+**✅ Many Ligands → Many Receptors**
 Complete combinatorial screening - explore all possible ligand-receptor interactions in one run
 
 All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
 
 ## 🖥️ GUI Application
 
-DockSuiteX includes a full-featured **standalone GUI application** (`docksuitex.exe`) built with Streamlit, providing a graphical interface for all docking workflows — no coding required.
+DockSuiteX includes a full-featured **GUI application** built with Streamlit, providing a graphical interface for all docking workflows — no coding required. Simply run `docksuitex` in your terminal to launch the app.
 
 **GUI Pages:**
 
@@ -65,7 +65,12 @@ DockSuiteX includes a full-featured **standalone GUI application** (`docksuitex.
 pip install docksuitex
 ```
 
-**Requirements:** Python 3.8+, Windows OS
+After installation, you can launch the application by simply typing:
+```bash
+docksuitex
+```
+
+**Requirements:** Python 3.9+, Windows OS
 
 ---
 
