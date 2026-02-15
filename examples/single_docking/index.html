@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="All-in-one Protein-Ligand Docking Package">
+        <meta name="description" content="All-in-one Protein-Ligand Docking Package & GUI Application">
       
       
         <meta name="author" content="DockSuiteX Team">
@@ -15,10 +15,6 @@
         <link rel="canonical" href="https://mangalamgsinha.github.io/DockSuiteX/examples/single_docking/">
       
       
-        <link rel="prev" href="../../getting-started/installation/">
-      
-      
-        <link rel="next" href="../multiple_docking/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Single Docking - DockSuiteX</title>
+        <title>Single docking - DockSuiteX</title>
       
     
     
@@ -73,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Single Docking
+              Single docking
             
           </span>
         </div>
@@ -131,20 +127,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
@@ -290,8 +286,6 @@
       
   
   
-    
-  
   
   
     
@@ -304,11 +298,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -329,7 +323,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -347,14 +341,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/gui/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    GUI Application
   
 
     
@@ -363,211 +357,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single Docking
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Single Docking
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#jupyter-notebook-is-available-at-single-docking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Jupyter Notebook is available at : Single Docking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fetch-and-prepare-protein" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fetch and prepare Protein
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#find-binding-pockets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Binding Pockets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fetch-and-prepare-ligand" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fetch and prepare Ligand
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#perform-protein-ligand-docking-at-the-first-pocket" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Perform protein ligand docking at the first pocket
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Perform protein ligand docking at the first pocket">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-autodock-vina" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using AutoDock Vina
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-autodock4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using AutoDock4
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -580,14 +369,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../multiple_docking/" class="md-nav__link">
+      <a href="../../getting-started/python_package/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multiple Docking
+    Python Package
   
 
     
@@ -596,14 +385,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -723,7 +504,7 @@
   <span class="md-ellipsis">
     
   
-    Core Modules
+    Examples
   
 
     
@@ -736,6 +517,119 @@
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/examples/single_docking.ipynb" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single Docking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/examples/batch_docking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Batch Docking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -910,10 +804,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
             
   
   
@@ -931,8 +825,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1107,10 +1001,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
             
   
   
@@ -1128,8 +1022,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1536,7 +1430,7 @@
   
 
 
-  <h1>Single Docking</h1>
+  <h1>Single docking</h1>
 
 <script>
 (function (global, factory) {
@@ -2043,17 +1937,17 @@ from docksuitex.utils import fetch_pdb, fetch_sdf, parse_vina_log_to_csv, parse_
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch the protein structure (1HVR) from the PDB</span>
-<span class="n">Protein_path</span> <span class="o">=</span> <span class="n">fetch_pdb</span><span class="p">(</span><span class="n">pdbid</span> <span class="o">=</span> <span class="s2">"1HVR"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch the protein structure</span>
+<span class="n">protein_path</span> <span class="o">=</span> <span class="n">fetch_pdb</span><span class="p">(</span><span class="n">pdbid</span> <span class="o">=</span> <span class="s2">"1HVR"</span><span class="p">)</span>
 
 <span class="c1"># Visualize the downloaded protein structure</span>
-<span class="n">view_molecule</span><span class="p">(</span><span class="n">Protein_path</span><span class="p">)</span>
+<span class="n">view_molecule</span><span class="p">(</span><span class="n">protein_path</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Fetch the protein structure (1HVR) from the PDB
-Protein_path = fetch_pdb(pdbid = "1HVR")
+<div class="clipboard-copy-txt" id="cell-2"># Fetch the protein structure
+protein_path = fetch_pdb(pdbid = "1HVR")
 
 # Visualize the downloaded protein structure
-view_molecule(Protein_path)</div>
+view_molecule(protein_path)</div>
 </div>
 </div>
 </div>
@@ -2082,18 +1976,18 @@ view_molecule(Protein_path)</div>
 <span class="c1"># This cleans the PDB, removes water/heterogens, and adds hydrogens/charges</span>
 
 <span class="n">prot</span> <span class="o">=</span> <span class="n">Protein</span><span class="p">(</span>
-    <span class="nb">input</span><span class="o">=</span> <span class="n">Protein_path</span><span class="p">,</span> 
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">protein_path</span><span class="p">,</span> 
 
     <span class="c1">#Default parameters</span>
-    <span class="n">fix_pdb</span> <span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">fix_pdb</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">remove_heterogens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">remove_water</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">add_hydrogens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">add_charges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-    <span class="n">preserve_charge_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">preserve_charge_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1">#eg: ["Zn", "Fe"]</span>
     <span class="p">)</span>
 
-<span class="n">prot</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
+<span class="n">prepared_prot_path</span> <span class="o">=</span> <span class="n">prot</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
 
 <span class="c1"># Visualize the prepared protein structure</span>
 <span class="n">prot</span><span class="o">.</span><span class="n">view_molecule</span><span class="p">()</span>
@@ -2102,18 +1996,18 @@ view_molecule(Protein_path)</div>
 # This cleans the PDB, removes water/heterogens, and adds hydrogens/charges
 
 prot = Protein(
-    input= Protein_path, 
+    input = protein_path, 
 
     #Default parameters
-    fix_pdb =True, 
+    fix_pdb=True, 
     remove_heterogens=True, 
     remove_water=True,
     add_hydrogens=True, 
     add_charges=True, 
-    preserve_charge_types=None,
+    preserve_charge_types=None, #eg: ["Zn", "Fe"]
     )
 
-prot.prepare()
+prepared_prot_path = prot.prepare()
 
 # Visualize the prepared protein structure
 prot.view_molecule()</div>
@@ -2153,11 +2047,11 @@ prot.view_molecule()</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Identify binding pockets on the protein surface using P2Rank</span>
-<span class="n">pf</span> <span class="o">=</span> <span class="n">PocketFinder</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s2">"1HVR.pdbqt"</span><span class="p">)</span>
+<span class="n">pf</span> <span class="o">=</span> <span class="n">PocketFinder</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">prepared_prot_path</span><span class="p">)</span>
 <span class="n">pockets</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4"># Identify binding pockets on the protein surface using P2Rank
-pf = PocketFinder(input="1HVR.pdbqt")
+pf = PocketFinder(input=prepared_prot_path)
 pockets = pf.run()</div>
 </div>
 </div>
@@ -2194,17 +2088,17 @@ pockets = pf.run()</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch the ligand structure (CID 338) from PubChem</span>
-<span class="n">Ligand_path</span> <span class="o">=</span> <span class="n">fetch_sdf</span><span class="p">(</span><span class="n">cid</span> <span class="o">=</span> <span class="s2">"338"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch the ligand structure</span>
+<span class="n">ligand_path</span> <span class="o">=</span> <span class="n">fetch_sdf</span><span class="p">(</span><span class="n">cid</span> <span class="o">=</span> <span class="s2">"2244"</span><span class="p">)</span>
 
 <span class="c1"># Visualize the downloaded ligand structure</span>
-<span class="n">view_molecule</span><span class="p">(</span><span class="n">Ligand_path</span><span class="p">)</span>
+<span class="n">view_molecule</span><span class="p">(</span><span class="n">ligand_path</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Fetch the ligand structure (CID 338) from PubChem
-Ligand_path = fetch_sdf(cid = "338")
+<div class="clipboard-copy-txt" id="cell-5"># Fetch the ligand structure
+ligand_path = fetch_sdf(cid = "2244")
 
 # Visualize the downloaded ligand structure
-view_molecule(Ligand_path)</div>
+view_molecule(ligand_path)</div>
 </div>
 </div>
 </div>
@@ -2233,17 +2127,17 @@ view_molecule(Ligand_path)</div>
 <span class="c1"># This minimizes the structure, removes water and adds hydrogens/charges</span>
 
 <span class="n">lig</span> <span class="o">=</span> <span class="n">Ligand</span><span class="p">(</span>
-    <span class="nb">input</span><span class="o">=</span><span class="n">Ligand_path</span><span class="p">,</span> 
+    <span class="nb">input</span><span class="o">=</span><span class="n">ligand_path</span><span class="p">,</span> 
 
     <span class="c1">#Default parameters</span>
     <span class="n">minimize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1">#Options: "mmff94", "mmff94s", "uff", "gaff"</span>
     <span class="n">remove_water</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">add_hydrogens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">add_charges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-    <span class="n">preserve_charge_types</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">preserve_charge_types</span><span class="o">=</span><span class="kc">None</span> <span class="c1">#eg: ["Zn", "Fe"]</span>
 <span class="p">)</span>
 
-<span class="n">lig</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
+<span class="n">prepared_lig_path</span> <span class="o">=</span> <span class="n">lig</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
 
 <span class="c1"># Visualize the prepared ligand structure</span>
 <span class="n">lig</span><span class="o">.</span><span class="n">view_molecule</span><span class="p">()</span>
@@ -2252,17 +2146,17 @@ view_molecule(Ligand_path)</div>
 # This minimizes the structure, removes water and adds hydrogens/charges
 
 lig = Ligand(
-    input=Ligand_path, 
+    input=ligand_path, 
 
     #Default parameters
     minimize=None,  #Options: "mmff94", "mmff94s", "uff", "gaff"
     remove_water=True, 
     add_hydrogens=True, 
     add_charges=True, 
-    preserve_charge_types=None
+    preserve_charge_types=None #eg: ["Zn", "Fe"]
 )
 
-lig.prepare()
+prepared_lig_path = lig.prepare()
 
 # Visualize the prepared ligand structure
 lig.view_molecule()</div>
@@ -2312,56 +2206,49 @@ lig.view_molecule()</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define the grid center based on the first identified pocket</span>
-<span class="n">center</span> <span class="o">=</span> <span class="n">pockets</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'center'</span><span class="p">]</span>
-
-<span class="c1"># Initialize Vina docking with the receptor, ligand, and grid center</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Initialize Vina docking with the receptor, ligand, and grid center</span>
 <span class="n">vina</span> <span class="o">=</span> <span class="n">VinaDocking</span><span class="p">(</span>
-    <span class="n">receptor</span><span class="o">=</span><span class="s2">"1HVR.pdbqt"</span><span class="p">,</span>
-    <span class="n">ligand</span><span class="o">=</span><span class="s2">"338.pdbqt"</span><span class="p">,</span>
-    <span class="n">grid_center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+    <span class="n">receptor</span><span class="o">=</span><span class="n">prepared_prot_path</span><span class="p">,</span>
+    <span class="n">ligand</span><span class="o">=</span><span class="n">prepared_lig_path</span><span class="p">,</span>
+    <span class="n">grid_center</span><span class="o">=</span><span class="n">pockets</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'center'</span><span class="p">],</span>   <span class="c1">#First pocket center</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="c1"># Random seed for reproducibility</span>
     
     <span class="c1"># Default Parameters</span>
     <span class="n">grid_size</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span>
     <span class="n">exhaustiveness</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">num_modes</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  
 <span class="p">)</span>
 
 <span class="c1"># Run docking and save results</span>
-<span class="n">vina</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"vina_results/1HVR_338"</span><span class="p">)</span>
+<span class="n">vina</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="sa">f</span><span class="s2">"vina_results"</span><span class="p">)</span>
 
 <span class="c1">#Interactively view the docked poses</span>
-<span class="n">vina</span><span class="o">.</span><span class="n">view_results</span><span class="p">()</span>
+<span class="n">vina</span><span class="o">.</span><span class="n">view_docked_poses</span><span class="p">()</span>
 
-<span class="c1"># Parse Vina results to a CSV summary</span>
-<span class="n">parse_vina_log_to_csv</span><span class="p">(</span><span class="n">results_dir</span><span class="o">=</span><span class="s2">"vina_results"</span><span class="p">,</span> <span class="n">output_csv</span><span class="o">=</span><span class="s2">"vina_results/vina_summary.csv"</span><span class="p">)</span>
+<span class="n">vina</span><span class="o">.</span><span class="n">parse_results</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Define the grid center based on the first identified pocket
-center = pockets[0]['center']
-
-# Initialize Vina docking with the receptor, ligand, and grid center
+<div class="clipboard-copy-txt" id="cell-7"># Initialize Vina docking with the receptor, ligand, and grid center
 vina = VinaDocking(
-    receptor="1HVR.pdbqt",
-    ligand="338.pdbqt",
-    grid_center=center,
+    receptor=prepared_prot_path,
+    ligand=prepared_lig_path,
+    grid_center=pockets[0]['center'],   #First pocket center
+    seed=42, # Random seed for reproducibility
     
     # Default Parameters
     grid_size=(20,20,20),
     exhaustiveness=8,
     num_modes=9,
-    seed=42
+    verbosity=1,  
 )
 
 # Run docking and save results
-vina.run(save_to="vina_results/1HVR_338")
+vina.run(save_to=f"vina_results")
 
 #Interactively view the docked poses
-vina.view_results()
+vina.view_docked_poses()
 
-# Parse Vina results to a CSV summary
-parse_vina_log_to_csv(results_dir="vina_results", output_csv="vina_results/vina_summary.csv")
-</div>
+vina.parse_results()</div>
 </div>
 </div>
 </div>
@@ -2397,14 +2284,12 @@ parse_vina_log_to_csv(results_dir="vina_results", output_csv="vina_results/vina_
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define the grid center based on the first identified pocket</span>
-<span class="n">center</span> <span class="o">=</span> <span class="n">pockets</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'center'</span><span class="p">]</span>
-
-<span class="c1"># Perform docking with the first pocket using AutoDock4</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Perform docking with the first pocket using AutoDock4</span>
 <span class="n">ad4</span> <span class="o">=</span> <span class="n">AD4Docking</span><span class="p">(</span>
-    <span class="n">receptor</span><span class="o">=</span><span class="s2">"1HVR.pdbqt"</span><span class="p">,</span>
-    <span class="n">ligand</span><span class="o">=</span><span class="s2">"338.pdbqt"</span><span class="p">,</span>
-    <span class="n">grid_center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+    <span class="n">receptor</span><span class="o">=</span><span class="n">prepared_prot_path</span><span class="p">,</span>
+    <span class="n">ligand</span><span class="o">=</span><span class="n">prepared_lig_path</span><span class="p">,</span>
+    <span class="n">grid_center</span><span class="o">=</span><span class="n">pockets</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'center'</span><span class="p">],</span>   <span class="c1">#First pocket center</span>
+    <span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span><span class="mi">42</span><span class="p">),</span> <span class="c1"># Random seed for reproducibility</span>
 
     <span class="c1">#Default Parameters</span>
     <span class="n">grid_size</span><span class="o">=</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">60</span><span class="p">),</span>
@@ -2418,28 +2303,23 @@ parse_vina_log_to_csv(results_dir="vina_results", output_csv="vina_results/vina_
     <span class="n">ga_mutation_rate</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
     <span class="n">ga_crossover_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
     <span class="n">ga_run</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">rmstol</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">)</span>
+    <span class="n">rmstol</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>  
 <span class="p">)</span>
 
-
 <span class="c1"># Run docking and save results</span>
-<span class="n">ad4</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"ad4_results/1HVR_338"</span><span class="p">)</span>    
+<span class="n">ad4</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"ad4_results"</span><span class="p">)</span>    
 
 <span class="c1">#Interactively view the docked poses</span>
-<span class="n">ad4</span><span class="o">.</span><span class="n">view_results</span><span class="p">()</span>
+<span class="n">ad4</span><span class="o">.</span><span class="n">view_docked_poses</span><span class="p">()</span>
 
-<span class="c1"># Parse AD4 results to a CSV summary</span>
-<span class="n">parse_ad4_dlg_to_csv</span><span class="p">(</span><span class="n">results_dir</span><span class="o">=</span><span class="s2">"ad4_results"</span><span class="p">,</span> <span class="n">output_csv</span><span class="o">=</span><span class="s2">"ad4_results/ad4_summary.csv"</span><span class="p">)</span>
+<span class="n">ad4</span><span class="o">.</span><span class="n">parse_results</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Define the grid center based on the first identified pocket
-center = pockets[0]['center']
-
-# Perform docking with the first pocket using AutoDock4
+<div class="clipboard-copy-txt" id="cell-8"># Perform docking with the first pocket using AutoDock4
 ad4 = AD4Docking(
-    receptor="1HVR.pdbqt",
-    ligand="338.pdbqt",
-    grid_center=center,
+    receptor=prepared_prot_path,
+    ligand=prepared_lig_path,
+    grid_center=pockets[0]['center'],   #First pocket center
+    seed=(21,42), # Random seed for reproducibility
 
     #Default Parameters
     grid_size=(60,60,60),
@@ -2453,19 +2333,16 @@ ad4 = AD4Docking(
     ga_mutation_rate=0.02,
     ga_crossover_rate=0.8,
     ga_run=10,
-    rmstol=2.0,
-    seed=("pid", "time")
+    rmstol=2.0,  
 )
 
-
 # Run docking and save results
-ad4.run(save_to="ad4_results/1HVR_338")    
+ad4.run(save_to="ad4_results")    
 
 #Interactively view the docked poses
-ad4.view_results()
+ad4.view_docked_poses()
 
-# Parse AD4 results to a CSV summary
-parse_ad4_dlg_to_csv(results_dir="ad4_results", output_csv="ad4_results/ad4_summary.csv")</div>
+ad4.parse_results()</div>
 </div>
 </div>
 </div>

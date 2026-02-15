@@ -6,37 +6,37 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="All-in-one Protein-Ligand Docking Package">
+        <meta name="description" content="All-in-one Protein-Ligand Docking Package & GUI Application">
       
       
         <meta name="author" content="DockSuiteX Team">
       
       
-        <link rel="canonical" href="https://mangalamgsinha.github.io/DockSuiteX/examples/multiple_docking/">
+        <link rel="canonical" href="https://mangalamgsinha.github.io/DockSuiteX/api/examples/batch_docking/">
       
       
-        <link rel="prev" href="../single_docking/">
+        <link rel="prev" href="../../overview/">
       
       
-        <link rel="next" href="../../api/overview/">
+        <link rel="next" href="../../protein/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Multiple Docking - DockSuiteX</title>
+        <title>Batch Docking - DockSuiteX</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,7 +73,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#jupyter-notebook-is-available-at-multiple-docking" class="md-skip">
+        <a href="#jupyter-notebook-is-available-at-batch-docking" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="DockSuiteX" class="md-header__button md-logo" aria-label="DockSuiteX" data-md-component="logo">
+    <a href="../../.." title="DockSuiteX" class="md-header__button md-logo" aria-label="DockSuiteX" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M352 0c17.7 0 32 14.3 32 32 0 57.8-24.4 104.8-57.4 144.5-24.1 28.9-53.8 55.1-83.6 79.5 29.8 24.5 59.5 50.6 83.6 79.5 33 39.6 57.4 86.7 57.4 144.5 0 17.7-14.3 32-32 32s-32-14.3-32-32H64c0 17.7-14.3 32-32 32S0 497.7 0 480c0-57.8 24.4-104.8 57.4-144.5 24.1-28.9 53.8-55 83.6-79.5-29.8-24.5-59.5-50.6-83.6-79.5C24.4 136.8 0 89.8 0 32 0 14.3 14.3 0 32 0s32 14.3 32 32h256c0-17.7 14.3-32 32-32m-68.5 384H100.6c-8.2 10.5-15.1 21.1-20.6 32h224.2c-5.6-10.9-12.5-21.5-20.6-32zM238 336c-14.3-13-29.8-25.8-46-39-16.2 13.1-31.7 26-46 39zM100.5 128h182.9c8.2-10.5 15.1-21.1 20.6-32H79.9c5.6 10.9 12.5 21.5 20.6 32m45.5 48c14.3 13 29.8 25.8 46 39 16.2-13.1 31.7-26 46-39z"/></svg>
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Multiple Docking
+              Batch Docking
             
           </span>
         </div>
@@ -131,20 +131,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
@@ -236,7 +236,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="DockSuiteX" class="md-nav__button md-logo" aria-label="DockSuiteX" data-md-component="logo">
+    <a href="../../.." title="DockSuiteX" class="md-nav__button md-logo" aria-label="DockSuiteX" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M352 0c17.7 0 32 14.3 32 32 0 57.8-24.4 104.8-57.4 144.5-24.1 28.9-53.8 55.1-83.6 79.5 29.8 24.5 59.5 50.6 83.6 79.5 33 39.6 57.4 86.7 57.4 144.5 0 17.7-14.3 32-32 32s-32-14.3-32-32H64c0 17.7-14.3 32-32 32S0 497.7 0 480c0-57.8 24.4-104.8 57.4-144.5 24.1-28.9 53.8-55 83.6-79.5-29.8-24.5-59.5-50.6-83.6-79.5C24.4 136.8 0 89.8 0 32 0 14.3 14.3 0 32 0s32 14.3 32 32h256c0-17.7 14.3-32 32-32m-68.5 384H100.6c-8.2 10.5-15.1 21.1-20.6 32h224.2c-5.6-10.9-12.5-21.5-20.6-32zM238 336c-14.3-13-29.8-25.8-46-39-16.2 13.1-31.7 26-46 39zM100.5 128h182.9c8.2-10.5 15.1-21.1 20.6-32H79.9c5.6 10.9 12.5 21.5 20.6 32m45.5 48c14.3 13 29.8 25.8 46 39 16.2-13.1 31.7-26 46-39z"/></svg>
@@ -266,7 +266,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -282,6 +282,121 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/gui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GUI Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/python_package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -308,17 +423,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Getting Started
+    API Reference
   
 
     
@@ -329,12 +444,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Getting Started
+    API Reference
   
 
           </label>
@@ -347,14 +462,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/installation/" class="md-nav__link">
+      <a href="../../overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    Overview
   
 
     
@@ -387,10 +502,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
             
   
   
@@ -408,8 +523,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -426,7 +541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../single_docking/" class="md-nav__link">
+      <a href="../single_docking.ipynb" class="md-nav__link">
         
   
   
@@ -468,7 +583,7 @@
   <span class="md-ellipsis">
     
   
-    Multiple Docking
+    Batch Docking
   
 
     
@@ -486,7 +601,7 @@
   <span class="md-ellipsis">
     
   
-    Multiple Docking
+    Batch Docking
   
 
     
@@ -510,10 +625,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#jupyter-notebook-is-available-at-multiple-docking" class="md-nav__link">
+  <a href="#jupyter-notebook-is-available-at-batch-docking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Jupyter Notebook is available at : Multiple Docking
+        Jupyter Notebook is available at : Batch Docking
       
     </span>
   </a>
@@ -609,290 +724,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Core Modules
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Core Modules
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/protein/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Protein
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/ligand/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ligand
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/pocket-finder/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PocketFinder
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/vina/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    VinaDocking
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/autodock4/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    AD4Docking
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
               
                 
   
@@ -920,7 +751,7 @@
   <span class="md-ellipsis">
     
   
-    Batch Processing
+    Core Modules
   
 
     
@@ -936,7 +767,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Batch Processing
+    Core Modules
   
 
           </label>
@@ -949,14 +780,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/batch-protein/" class="md-nav__link">
+      <a href="../../protein/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BatchProtein
+    Protein
   
 
     
@@ -977,14 +808,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/batch-ligand/" class="md-nav__link">
+      <a href="../../ligand/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BatchLigand
+    Ligand
   
 
     
@@ -1005,14 +836,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/batch-pocket-finder/" class="md-nav__link">
+      <a href="../../pocket-finder/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BatchPocketFinder
+    PocketFinder
   
 
     
@@ -1033,14 +864,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/batch-vina/" class="md-nav__link">
+      <a href="../../vina/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BatchVinaDocking
+    VinaDocking
   
 
     
@@ -1061,14 +892,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/batch-autodock4/" class="md-nav__link">
+      <a href="../../autodock4/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BatchAD4Docking
+    AD4Docking
   
 
     
@@ -1117,7 +948,7 @@
   <span class="md-ellipsis">
     
   
-    Utilities
+    Batch Processing
   
 
     
@@ -1130,6 +961,203 @@
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Batch Processing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch-protein/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BatchProtein
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch-ligand/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BatchLigand
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch-pocket-finder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BatchPocketFinder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch-vina/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BatchVinaDocking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch-autodock4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BatchAD4Docking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1146,7 +1174,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/viewer/" class="md-nav__link">
+      <a href="../../viewer/" class="md-nav__link">
         
   
   
@@ -1174,7 +1202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/parser/" class="md-nav__link">
+      <a href="../../parser/" class="md-nav__link">
         
   
   
@@ -1202,7 +1230,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/fetcher/" class="md-nav__link">
+      <a href="../../fetcher/" class="md-nav__link">
         
   
   
@@ -1230,7 +1258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/cleaner/" class="md-nav__link">
+      <a href="../../cleaner/" class="md-nav__link">
         
   
   
@@ -1325,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/cite/" class="md-nav__link">
+      <a href="../../../about/cite/" class="md-nav__link">
         
   
   
@@ -1353,7 +1381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/license/" class="md-nav__link">
+      <a href="../../../about/license/" class="md-nav__link">
         
   
   
@@ -1381,7 +1409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/contributing/" class="md-nav__link">
+      <a href="../../../about/contributing/" class="md-nav__link">
         
   
   
@@ -1434,10 +1462,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#jupyter-notebook-is-available-at-multiple-docking" class="md-nav__link">
+  <a href="#jupyter-notebook-is-available-at-batch-docking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Jupyter Notebook is available at : Multiple Docking
+        Jupyter Notebook is available at : Batch Docking
       
     </span>
   </a>
@@ -1536,7 +1564,7 @@
   
 
 
-  <h1>Multiple Docking</h1>
+  <h1>Batch Docking</h1>
 
 <script>
 (function (global, factory) {
@@ -1980,7 +2008,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h5 id="jupyter-notebook-is-available-at-multiple-docking">Jupyter Notebook is available at : <a href="https://github.com/MangalamGSinha/DockSuiteX/tree/main/docs/examples/multiple_docking.ipynb">Multiple Docking</a><a class="anchor-link" href="#jupyter-notebook-is-available-at-multiple-docking">¶</a></h5>
+<h5 id="jupyter-notebook-is-available-at-batch-docking">Jupyter Notebook is available at : <a href="https://github.com/MangalamGSinha/DockSuiteX/tree/main/docs/examples/batch_docking.ipynb">Batch Docking</a><a class="anchor-link" href="#jupyter-notebook-is-available-at-batch-docking">¶</a></h5>
 </div>
 </div>
 </div>
@@ -2075,7 +2103,7 @@ fetch_pdb(pdbid = ["1HVR", "2TRX"], save_to="proteins", parallel=2)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Initialize BatchProtein to process all proteins in the 'proteins' directory</span>
 <span class="c1"># This cleans the PDB, removes water/heterogens, and adds hydrogens/charges</span>
 
-<span class="n">batch</span> <span class="o">=</span> <span class="n">BatchProtein</span><span class="p">(</span>
+<span class="n">batch_prot</span> <span class="o">=</span> <span class="n">BatchProtein</span><span class="p">(</span>
     <span class="n">inputs</span><span class="o">=</span><span class="s2">"proteins"</span><span class="p">,</span>
 
     <span class="c1">#Default parameters</span>
@@ -2089,12 +2117,12 @@ fetch_pdb(pdbid = ["1HVR", "2TRX"], save_to="proteins", parallel=2)</div>
 
 
 <span class="c1"># Run preparation for all proteins using 8 CPUs</span>
-<span class="n">batch</span><span class="o">.</span><span class="n">prepare_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"prepared_proteins"</span><span class="p">,</span> <span class="n">cpu</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">batch_prot</span><span class="o">.</span><span class="n">prepare_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"prepared_proteins"</span><span class="p">,</span> <span class="n">cpu</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3"># Initialize BatchProtein to process all proteins in the 'proteins' directory
 # This cleans the PDB, removes water/heterogens, and adds hydrogens/charges
 
-batch = BatchProtein(
+batch_prot = BatchProtein(
     inputs="proteins",
 
     #Default parameters
@@ -2108,7 +2136,7 @@ batch = BatchProtein(
 
 
 # Run preparation for all proteins using 8 CPUs
-batch.prepare_all(save_to="prepared_proteins", cpu = 8)</div>
+batch_prot.prepare_all(save_to="prepared_proteins", cpu = 8)</div>
 </div>
 </div>
 </div>
@@ -2145,16 +2173,16 @@ batch.prepare_all(save_to="prepared_proteins", cpu = 8)</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Identify binding pockets for all prepared proteins using P2Rank</span>
-<span class="n">batch</span> <span class="o">=</span> <span class="n">BatchPocketFinder</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="s2">"prepared_proteins"</span><span class="p">,</span>  <span class="n">max_centres</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">batch_pf</span> <span class="o">=</span> <span class="n">BatchPocketFinder</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="s2">"prepared_proteins"</span><span class="p">,</span>  <span class="n">max_centres</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="c1"># Run pocket detection and return receptors with their pocket centers</span>
-<span class="n">receptors_with_centers</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">run_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"pockets_output"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">receptors_with_centers</span> <span class="o">=</span> <span class="n">batch_pf</span><span class="o">.</span><span class="n">run_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"pockets_output"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4"># Identify binding pockets for all prepared proteins using P2Rank
-batch = BatchPocketFinder(inputs="prepared_proteins",  max_centres=3)
+batch_pf = BatchPocketFinder(inputs="prepared_proteins",  max_centres=3)
 
 # Run pocket detection and return receptors with their pocket centers
-receptors_with_centers = batch.run_all(save_to="pockets_output", cpu=8)</div>
+receptors_with_centers = batch_pf.run_all(save_to="pockets_output", cpu=8)</div>
 </div>
 </div>
 </div>
@@ -2190,11 +2218,11 @@ receptors_with_centers = batch.run_all(save_to="pockets_output", cpu=8)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch multiple ligand structures (CIDs 228, 338, 339, 340) in parallel</span>
-<span class="n">fetch_sdf</span><span class="p">(</span><span class="n">cid</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">"228"</span><span class="p">,</span> <span class="s2">"338"</span><span class="p">,</span> <span class="s2">"339"</span><span class="p">,</span> <span class="s2">"340"</span><span class="p">],</span> <span class="n">save_to</span><span class="o">=</span><span class="s2">"ligands"</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch multiple ligand structures in parallel</span>
+<span class="n">fetch_sdf</span><span class="p">(</span><span class="n">cid</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">"228"</span><span class="p">,</span> <span class="s2">"338"</span><span class="p">],</span> <span class="n">save_to</span><span class="o">=</span><span class="s2">"ligands"</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Fetch multiple ligand structures (CIDs 228, 338, 339, 340) in parallel
-fetch_sdf(cid =  ["228", "338", "339", "340"], save_to="ligands", parallel=2)</div>
+<div class="clipboard-copy-txt" id="cell-5"># Fetch multiple ligand structures in parallel
+fetch_sdf(cid =  ["228", "338"], save_to="ligands", parallel=2)</div>
 </div>
 </div>
 </div>
@@ -2222,7 +2250,7 @@ fetch_sdf(cid =  ["228", "338", "339", "340"], save_to="ligands", parallel=2)</d
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Initialize BatchLigand to process all ligands in the 'ligands' directory</span>
 <span class="c1"># This minimizes the structure, removes water and adds hydrogens/charges</span>
 
-<span class="n">batch</span> <span class="o">=</span> <span class="n">BatchLigand</span><span class="p">(</span>
+<span class="n">batch_lig</span> <span class="o">=</span> <span class="n">BatchLigand</span><span class="p">(</span>
     <span class="n">inputs</span><span class="o">=</span><span class="s2">"ligands"</span><span class="p">,</span>
 
     <span class="c1">#Default parameters</span>
@@ -2233,12 +2261,12 @@ fetch_sdf(cid =  ["228", "338", "339", "340"], save_to="ligands", parallel=2)</d
     <span class="n">preserve_charge_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="c1"># Run preparation for all ligands using 8 CPUs</span>
-<span class="n">batch</span><span class="o">.</span><span class="n">prepare_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"prepared_ligands"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">batch_lig</span><span class="o">.</span><span class="n">prepare_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"prepared_ligands"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-6"># Initialize BatchLigand to process all ligands in the 'ligands' directory
 # This minimizes the structure, removes water and adds hydrogens/charges
 
-batch = BatchLigand(
+batch_lig = BatchLigand(
     inputs="ligands",
 
     #Default parameters
@@ -2249,7 +2277,7 @@ batch = BatchLigand(
     preserve_charge_types=None,
 )
 # Run preparation for all ligands using 8 CPUs
-batch.prepare_all(save_to="prepared_ligands", cpu=8)</div>
+batch_lig.prepare_all(save_to="prepared_ligands", cpu=8)</div>
 </div>
 </div>
 </div>
@@ -2297,44 +2325,40 @@ batch.prepare_all(save_to="prepared_ligands", cpu=8)</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Initialize BatchVinaDocking with prepared receptors (and their pockets) and ligands</span>
-<span class="n">batch</span> <span class="o">=</span> <span class="n">BatchVinaDocking</span><span class="p">(</span>
+<span class="n">batch_vina</span> <span class="o">=</span> <span class="n">BatchVinaDocking</span><span class="p">(</span>
     <span class="n">receptors_with_centers</span><span class="o">=</span><span class="n">receptors_with_centers</span><span class="p">,</span>
     <span class="n">ligands</span><span class="o">=</span><span class="s2">"prepared_ligands"</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="c1"># Random seed for reproducibility</span>
 
     <span class="c1"># Default Parameters</span>
     <span class="n">grid_size</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span>
     <span class="n">exhaustiveness</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">num_modes</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> 
-    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 
-
 <span class="c1"># Run Vina docking for all receptor-ligand pairs using 8 CPUs</span>
-<span class="n">results_vina</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">run_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"vina_batch_results"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-
+<span class="n">batch_vina</span><span class="o">.</span><span class="n">run_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"vina_batch_results"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 <span class="c1"># Parse all Vina output logs into a single CSV summary</span>
-<span class="n">parse_vina_log_to_csv</span><span class="p">(</span><span class="n">results_dir</span><span class="o">=</span><span class="s2">"vina_batch_results"</span><span class="p">,</span> <span class="n">output_csv</span><span class="o">=</span><span class="s2">"vina_batch_results/vina_summary.csv"</span><span class="p">)</span>
+<span class="n">batch_vina</span><span class="o">.</span><span class="n">parse_results</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7"># Initialize BatchVinaDocking with prepared receptors (and their pockets) and ligands
-batch = BatchVinaDocking(
+batch_vina = BatchVinaDocking(
     receptors_with_centers=receptors_with_centers,
     ligands="prepared_ligands",
+    seed=42, # Random seed for reproducibility
 
     # Default Parameters
     grid_size=(20,20,20),
     exhaustiveness=8,
     num_modes=9, 
-    seed=42
 )
 
-
 # Run Vina docking for all receptor-ligand pairs using 8 CPUs
-results_vina = batch.run_all(save_to="vina_batch_results", cpu=8)
-
+batch_vina.run_all(save_to="vina_batch_results", cpu=8)
 
 # Parse all Vina output logs into a single CSV summary
-parse_vina_log_to_csv(results_dir="vina_batch_results", output_csv="vina_batch_results/vina_summary.csv")</div>
+batch_vina.parse_results()</div>
 </div>
 </div>
 </div>
@@ -2374,6 +2398,7 @@ parse_vina_log_to_csv(results_dir="vina_batch_results", output_csv="vina_batch_r
 <span class="n">batch_ad4</span> <span class="o">=</span> <span class="n">BatchAD4Docking</span><span class="p">(</span>
     <span class="n">receptors_with_centers</span><span class="o">=</span><span class="n">receptors_with_centers</span><span class="p">,</span>
     <span class="n">ligands</span><span class="o">=</span><span class="s2">"prepared_ligands"</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span>  <span class="c1">#Random seed for reproducibility</span>
 
     <span class="c1">#Default Parameters</span>
     <span class="n">grid_size</span><span class="o">=</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">60</span><span class="p">),</span>
@@ -2388,21 +2413,19 @@ parse_vina_log_to_csv(results_dir="vina_batch_results", output_csv="vina_batch_r
     <span class="n">ga_crossover_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
     <span class="n">ga_run</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">rmstol</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">)</span>
 <span class="p">)</span>
-
 
 <span class="c1"># Run AutoDock4 docking for all receptor-ligand pairs using 8 CPUs</span>
 <span class="n">results_ad4</span> <span class="o">=</span> <span class="n">batch_ad4</span><span class="o">.</span><span class="n">run_all</span><span class="p">(</span><span class="n">save_to</span><span class="o">=</span><span class="s2">"ad4_batch_results"</span><span class="p">,</span> <span class="n">cpu</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
-
 <span class="c1"># Parse all AD4 output logs into a single CSV summary</span>
-<span class="n">parse_ad4_dlg_to_csv</span><span class="p">(</span><span class="n">results_dir</span><span class="o">=</span><span class="s2">"ad4_batch_results"</span><span class="p">,</span> <span class="n">output_csv</span><span class="o">=</span><span class="s2">"ad4_batch_results/ad4_summary.csv"</span><span class="p">)</span>
+<span class="n">batch_ad4</span><span class="o">.</span><span class="n">parse_results</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8"># Initialize BatchAD4Docking with prepared receptors (and their pockets) and ligands
 batch_ad4 = BatchAD4Docking(
     receptors_with_centers=receptors_with_centers,
     ligands="prepared_ligands",
+    seed=(21, 42),  #Random seed for reproducibility
 
     #Default Parameters
     grid_size=(60,60,60),
@@ -2417,17 +2440,13 @@ batch_ad4 = BatchAD4Docking(
     ga_crossover_rate=0.8,
     ga_run=10,
     rmstol=2.0,
-    seed=("pid", "time")
 )
-
 
 # Run AutoDock4 docking for all receptor-ligand pairs using 8 CPUs
 results_ad4 = batch_ad4.run_all(save_to="ad4_batch_results", cpu=8)
 
-
 # Parse all AD4 output logs into a single CSV summary
-parse_ad4_dlg_to_csv(results_dir="ad4_batch_results", output_csv="ad4_batch_results/ad4_summary.csv")
-</div>
+batch_ad4.parse_results()</div>
 </div>
 </div>
 </div>
@@ -2523,10 +2542,10 @@ parse_ad4_dlg_to_csv(results_dir="ad4_batch_results", output_csv="ad4_batch_resu
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
