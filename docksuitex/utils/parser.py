@@ -7,7 +7,7 @@ from typing import Union
 
 def parse_vina_log_to_csv(
     results_dir: Union[str, Path],
-    output_csv: Union[str, Path] = "vina_summary.csv"
+    save_to: Union[str, Path] = "vina_summary.csv"
 ) -> pd.DataFrame:
     """Parse AutoDock Vina log files into a structured CSV summary.
 
@@ -17,7 +17,7 @@ def parse_vina_log_to_csv(
 
     Args:
         results_dir (str | Path): Path to the directory to recursively scan for AutoDock Vina 'log.txt' files.
-        output_csv (str | Path, optional): Path to save the generated CSV summary.
+        save_to (str | Path, optional): Path to save the generated CSV summary.
             Defaults to "vina_summary.csv" in the current directory.
 
     Returns:
@@ -82,14 +82,14 @@ def parse_vina_log_to_csv(
         print(f"✅ Parsed {log_file.parent.name}/log.txt → {len(docking_results)} modes")
 
     df = pd.DataFrame(results)
-    df.to_csv(output_csv, index=False)
-    print(f"\nParsing completed! Saved {len(results)} results to {output_csv}")
+    df.to_csv(save_to, index=False)
+    print(f"\nParsing completed! Saved {len(results)} results to {save_to}")
     return df
 
 
 def parse_ad4_dlg_to_csv(
     results_dir: Union[str, Path],
-    output_csv: Union[str, Path] = "ad4_summary.csv"
+    save_to: Union[str, Path] = "ad4_summary.csv"
 ) -> pd.DataFrame:
     """Parse AutoDock4 DLG result files into a structured CSV summary.
 
@@ -100,7 +100,7 @@ def parse_ad4_dlg_to_csv(
 
     Args:
         results_dir (str | Path): Path to the directory to recursively scan for AutoDock4 'results.dlg' files.
-        output_csv (str | Path, optional): Path to save the generated CSV summary.
+        save_to (str | Path, optional): Path to save the generated CSV summary.
             Defaults to "ad4_summary.csv" in the current directory.
 
     Returns:
@@ -227,6 +227,6 @@ def parse_ad4_dlg_to_csv(
         print(f"✅ Parsed {dlg_file.parent.name}/results.dlg → {len([d for d in all_data if d.get('Ligand') == ligand])} clusters")
 
     df = pd.DataFrame(all_data)
-    df.to_csv(output_csv, index=False)
-    print(f"\nParsing completed! Saved {len(all_data)} cluster results to {output_csv}")
+    df.to_csv(save_to, index=False)
+    print(f"\nParsing completed! Saved {len(all_data)} cluster results to {save_to}")
     return df

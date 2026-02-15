@@ -1,37 +1,31 @@
-# Core documentation and license
+# Core files
 include README.md
 include LICENSE
+include pyproject.toml
+include requirements.txt
 
-# Include everything in docksuitex
+# Include Source
 recursive-include docksuitex *
-
-# Exclude unwanted dirs inside docksuitex
-recursive-exclude docksuitex/__pycache__ *
-recursive-exclude docksuitex/bin *
-recursive-exclude docksuitex/temp *
-
-# Include examples if needed
+recursive-include streamlit_app *
 recursive-include examples *
 
-# Exclude Python cache and temporary files
+# Global excludes
 global-exclude __pycache__/*
+global-exclude *.py[cod]
+global-exclude *.pyd
+global-exclude .git*
+global-exclude .DS_Store
 
-#Exclude Mkdocs files
-exclude site/*
-exclude docs/*
-
-# Exclude Git and version control junk
-exclude .gitignore
-exclude .gitattributes
-recursive-exclude .git *
-recursive-exclude .github *
-
-# Exclude build artifacts
-recursive-exclude build *
-recursive-exclude dist *
-recursive-exclude *.egg-info *
-
-# Exclude tests and docs
-recursive-exclude tests *
-recursive-exclude notebooks *
-recursive-exclude docs *
+# Prune directories
+prune tests
+prune docs
+prune site
+prune notebooks
+prune build
+prune dist
+prune build_env
+prune *.egg-info
+prune .github
+prune docksuitex/bin
+prune docksuitex/temp
+prune temp

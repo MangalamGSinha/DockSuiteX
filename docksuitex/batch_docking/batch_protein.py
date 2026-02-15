@@ -9,7 +9,7 @@ from ..protein import Protein
 
 
 class BatchProtein:
-    """Handles batch ligand preparation with parallel processing."""
+    """Handles batch protein preparation with parallel processing."""
 
     def __init__(
         self,

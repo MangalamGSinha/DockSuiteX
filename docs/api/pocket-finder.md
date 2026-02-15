@@ -1,2 +1,3 @@
-::: docksuitex.pocket_finder.PocketFinder
+# PocketFinder API
 
+::: docksuitex.pocket_finder.PocketFinder

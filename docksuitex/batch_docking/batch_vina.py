@@ -70,6 +70,7 @@ class BatchVinaDocking:
         self.seed = seed
         self.verbosity = verbosity
         self.results: dict[tuple[str, str, tuple[float, float, float]], Union[Path, str]] = {}
+        self.output_dir: Path | None = None
 
     def _dock_one(
         self,
@@ -104,8 +105,10 @@ class BatchVinaDocking:
         )
 
         center_str = "_".join(f"{c:.2f}" for c in center)
-        result_path = vina.run(save_to=Path(save_to) / f"{receptor.stem}_{ligand.stem}_center_{center_str}")
-
+        vina.run(save_to=Path(save_to) / f"{receptor.stem}_{ligand.stem}_center_{center_str}")
+        
+        # vina.run() now returns a DataFrame, but we need the output path here
+        result_path = vina.output_dir
 
         return receptor.name, ligand.name, center, result_path
 
@@ -131,6 +134,7 @@ class BatchVinaDocking:
         """
         save_to = Path(save_to).expanduser().resolve()
         save_to.mkdir(parents=True, exist_ok=True)
+        self.output_dir = save_to
 
         # Simple strategy: Divide total CPUs among workers
         # Each worker gets at least 1 CPU
@@ -168,3 +172,26 @@ class BatchVinaDocking:
 
         print("Batch processing completed!")
         return self.results
+
+    def parse_results(self, save_to: Union[str, Path, None] = None) -> "pd.DataFrame":
+        """Parse all Vina docking log files into a single CSV summary.
+
+        Args:
+            save_to (str | Path, optional): Path to save the CSV file.
+                Defaults to `<output_dir>/vina_summary.csv`.
+
+        Returns:
+            pd.DataFrame: DataFrame containing parsed docking results.
+
+        Raises:
+            FileNotFoundError: If run_all() has not been called yet.
+        """
+        if not self.output_dir:
+            raise FileNotFoundError("No output directory found. Call run_all() first.")
+
+        from ..utils.parser import parse_vina_log_to_csv
+
+        if save_to is None:
+            save_to = self.output_dir / "vina_summary.csv"
+
+        return parse_vina_log_to_csv(results_dir=self.output_dir, save_to=save_to)

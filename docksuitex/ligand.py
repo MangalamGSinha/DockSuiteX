@@ -2,7 +2,7 @@ import shutil
 import subprocess
 from pathlib import Path
 from typing import Optional, Union, Literal
-import uuid
+import os
 
 from docksuitex.utils.viewer import view_molecule
 
@@ -10,9 +10,6 @@ MGLTOOLS_PATH = (Path(__file__).parent / "bin" / "mgltools").resolve()
 MGL_PYTHON_EXE = (MGLTOOLS_PATH / "python.exe").resolve()
 PREPARE_LIGAND_SCRIPT = (MGLTOOLS_PATH / "Lib" / "site-packages" / "AutoDockTools" / "Utilities24" / "prepare_ligand4.py").resolve()
 OBABEL_EXE = (Path(__file__).parent / "bin" / "obabel" / "obabel.exe").resolve()
-
-TEMP_DIR = (Path.cwd() / "temp").resolve()
-TEMP_DIR.mkdir(exist_ok=True)
 
 
 
@@ -31,9 +28,8 @@ class Ligand:
         5. Converting the MOL2 file to PDBQT format (using AutoDockTools)
 
     Note:
-        Temporary files are created in a `temp/Ligands/` directory and are
-        not automatically cleaned up. The final PDBQT file is saved to the
-        specified location.
+        Intermediate files (e.g., MOL2) are saved in an
+        ``intermediate_ligands/`` subfolder within the output directory.
     """
 
     SUPPORTED_INPUTS = {"mol2", "sdf", "pdb", "mol", "smi"}
@@ -102,12 +98,19 @@ class Ligand:
             ValueError: If an unsupported forcefield or input format is provided.
             RuntimeError: If AutoDockTools fails to generate the PDBQT file.
         """
-        # Create a unique temp directory per object
-        self.temp_dir = TEMP_DIR / "Ligands" / f"{self.file_path.stem}_{uuid.uuid4().hex[:8]}"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        # Resolve output directory early so intermediate files go there
+        save_to = Path(save_to).expanduser().resolve()
+        if not save_to.suffix:
+            save_to = save_to / f"{self.file_path.stem}.pdbqt"
+        save_to.parent.mkdir(parents=True, exist_ok=True)
+        output_dir = save_to.parent
+
+        # Intermediate files go in a subfolder of the output directory
+        intermediates_dir = output_dir / "intermediate_ligands"
+        intermediates_dir.mkdir(parents=True, exist_ok=True)
 
         # === Step 1: Convert + Gen3D + remove water + Minimize to MOL2 ===
-        self.mol2_path = self.temp_dir / f"{self.file_path.stem}.mol2"
+        self.mol2_path = intermediates_dir / f"{self.file_path.stem}.mol2"
         cmd = [
             str(OBABEL_EXE), "-i", self.input_format, str(self.file_path),
             "-o", "mol2", "-O", str(self.mol2_path),
@@ -125,23 +128,23 @@ class Ligand:
                     f"❌ Unsupported forcefield '{forcefield}'. Supported: {self.SUPPORTED_FORCEFIELDS}")
             cmd += ["--minimize", "--ff", forcefield]
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
+
+
+        # Fix for missing OpenBabel data in bundled app: use MGLTools' OB data
+        env = os.environ.copy()
+        mgl_ob_data = MGLTOOLS_PATH / "OpenBabel-2.3.2" / "data"
+        if mgl_ob_data.exists():
+            env["BABEL_DATADIR"] = str(mgl_ob_data)
+
+        result = subprocess.run(cmd, capture_output=True, text=True, env=env)
         if result.returncode != 0:
             raise RuntimeError(f"❌ OpenBabel failed:\n{result.stderr}")
 
         # === Step 2: MGLTools to PDBQT ===
 
-        save_to = Path(save_to).expanduser().resolve()
-        
-        # treat as file only if it has a suffix (e.g., .pdbqt)
-        if not save_to.suffix:
-            save_to = save_to / f"{self.file_path.stem}.pdbqt"
-        
-        save_to.parent.mkdir(parents=True, exist_ok=True)
-
         mgl_cmd = [
             str(MGL_PYTHON_EXE), str(PREPARE_LIGAND_SCRIPT),
-            "-l", self.mol2_path, "-o", save_to,
+            "-l", str(self.mol2_path), "-o", str(save_to),
             "-U", "nphs_lps"
         ]
         # ADT prepare_ligand4.py doesn't have -U waters flag, remove water is handled by obabel
@@ -162,7 +165,7 @@ class Ligand:
             mgl_cmd,
             text=True,
             capture_output=True,
-            cwd=self.temp_dir
+            cwd=str(self.mol2_path.parent),
         )
 
         if result.returncode != 0:

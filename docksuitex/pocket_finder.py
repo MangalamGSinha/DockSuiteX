@@ -4,10 +4,18 @@ import csv
 import shutil
 from pathlib import Path
 from typing import Optional, Tuple, List, Union, Dict
-import uuid
+import sys
 
 # Path to P2Rank executable bundled with DockSuiteX
-P2RANK_PATH = (Path(__file__).parent / "bin" / "p2rank" / "prank.bat").resolve()
+def resource_path(relative_path: str) -> Path:
+    """Get absolute path to resource (works in dev and PyInstaller)."""
+    if hasattr(sys, "_MEIPASS"):
+        base_path = Path(sys._MEIPASS)
+    else:
+        base_path = Path(__file__).parent
+    return base_path / relative_path
+
+P2RANK_PATH = resource_path("bin/p2rank/prank.bat")
 
 
 class PocketFinder:
@@ -34,6 +42,8 @@ class PocketFinder:
         Args:
             input (Union[str, Path]):
                 Path to a protein file in `.pdb` or `.pdbqt` format.
+            _cpu (int, optional): Number of CPU cores for P2Rank.
+                Defaults to all available cores.
 
         Raises:
             FileNotFoundError: If the receptor file does not exist.
@@ -78,10 +88,15 @@ class PocketFinder:
             "predict",
             "-f", str(self.file_path),
             "-o", str(output_dir),
-            "-threads", str(self.cpu),  
+            "-threads", str(self.cpu),
         ]
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd,
+            shell=True,            # IMPORTANT for .bat files
+            capture_output=True,
+            text=True
+        )
         if result.returncode != 0:
             raise RuntimeError(f"❌ Error running P2Rank:\n{result.stderr}")
 

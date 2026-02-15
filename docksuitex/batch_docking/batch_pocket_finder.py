@@ -163,6 +163,8 @@ class BatchPocketFinder:
                     
                     count = len(centers)
                     print(f"✅ {Path(file_path).name} → found {count} pockets, saved to {Path(result['output_dir']).name}")
+                    for i, center in enumerate(centers):
+                        print(f"   Pocket {i+1} center: {center}")
                 else:
                     print(f"❌ {Path(file_path).name} failed. Error: {result.get('error', 'Unknown')}")
                     # We don't add failed files to results, or we could add empty list

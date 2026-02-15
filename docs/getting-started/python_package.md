@@ -1,4 +1,6 @@
-# Installation
+# Python Package
+
+If you prefer using DockSuiteX as a Python library in your scripts/notebooks, follow these instructions.
 
 ## Requirements
 
@@ -6,25 +8,15 @@
 - **Operating System**: Windows (currently Windows-only)
 - **Dependencies**: Automatically installed via pip
 
-## Prerequisites
+## Installation
 
-**Java (JDK/JRE)** is required for **P2Rank** pocket prediction.
-Download the latest LTS release from [Adoptium Temurin](https://adoptium.net/temurin/releases).
-After installation, make sure Java is added to your **System PATH** so it can be accessed from the command line.
-
-**Verify Java installation:**
-
-```bash
-java -version
-```
-
-## Install from PyPI
+### Install from PyPI
 
 ```bash
 pip install docksuitex
 ```
 
-## Install from Source
+### Install from Source
 
 ```bash
 git clone https://github.com/MangalamGSinha/DockSuiteX.git

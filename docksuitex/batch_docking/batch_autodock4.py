@@ -89,6 +89,7 @@ class BatchAD4Docking:
         self.rmstol = rmstol
         self.seed = seed
         self.results: dict[tuple[str, str, tuple[float, float, float]], Union[Path, str]] = {}
+        self.output_dir: Path | None = None
 
     def _dock_one(
         self,
@@ -128,7 +129,10 @@ class BatchAD4Docking:
         )
         
         center_str = "_".join(f"{c:.2f}" for c in center)
-        result_path = ad4.run(save_to=Path(save_to) / f"{receptor.stem}_{ligand.stem}_center_{center_str}")
+        ad4.run(save_to=Path(save_to) / f"{receptor.stem}_{ligand.stem}_center_{center_str}")
+        
+        # ad4.run() now returns a DataFrame, so we use ad4.output_dir for the path
+        result_path = ad4.output_dir
 
         return receptor.name, ligand.name, center, result_path
 
@@ -154,6 +158,7 @@ class BatchAD4Docking:
         """
         save_to = Path(save_to).expanduser().resolve()
         save_to.mkdir(parents=True, exist_ok=True)
+        self.output_dir = save_to
 
         total_tasks = sum(len(self.ligands) * len(centers) for centers in self.receptors.values())
         max_workers = min(cpu, total_tasks)
@@ -187,3 +192,25 @@ class BatchAD4Docking:
         print("Batch processing completed!")
         return self.results
 
+    def parse_results(self, save_to: Union[str, Path, None] = None) -> "pd.DataFrame":
+        """Parse all AutoDock4 DLG result files into a single CSV summary.
+
+        Args:
+            save_to (str | Path, optional): Path to save the CSV file.
+                Defaults to `<output_dir>/ad4_summary.csv`.
+
+        Returns:
+            pd.DataFrame: DataFrame containing parsed docking results.
+
+        Raises:
+            FileNotFoundError: If run_all() has not been called yet.
+        """
+        if not self.output_dir:
+            raise FileNotFoundError("No output directory found. Call run_all() first.")
+
+        from ..utils.parser import parse_ad4_dlg_to_csv
+
+        if save_to is None:
+            save_to = self.output_dir / "ad4_summary.csv"
+
+        return parse_ad4_dlg_to_csv(results_dir=self.output_dir, save_to=save_to)

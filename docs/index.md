@@ -2,7 +2,7 @@
 
 **All-in-one Protein-Ligand Docking Package**
 
-DockSuiteX is a comprehensive Python package for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
+DockSuiteX is a comprehensive Python package and GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
 
 ## ✨ Key Features
 
@@ -12,8 +12,9 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
 - 📊 **Batch Processing**: High-throughput screening with parallel execution
 - 👁️ **Interactive Visualization**: 3D molecular visualization with NGLView
 - 🛠️ **Utility Functions**: Built-in tools for fetching structures and parsing results
+- 🖥️ **GUI Application**: Complete desktop application — no coding required
 
-## 🚀 Flexible Batch Docking
+## 🚀 Batch Docking
 
 !!! success "Complete Flexibility in Docking Scenarios"
     **DockSuiteX is uniquely designed to handle ALL possible docking combinations**, making it the most versatile docking package for high-throughput screening. Whether you're working with a single molecule or thousands, DockSuiteX adapts to your needs:
@@ -37,41 +38,24 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
 !!! warning "Windows Only"
     DockSuiteX currently supports **Windows platforms only**. The package includes pre-compiled binaries for Windows.
 
-## 📝 Quick Example
-
-```python
-from docksuitex import Protein, Ligand, PocketFinder, VinaDocking
-from docksuitex.utils import fetch_pdb, fetch_sdf
-
-# 1. Fetch and prepare receptor
-protein_path = fetch_pdb("1HVR")
-protein = Protein(protein_path)
-protein.prepare()
-
-# 2. Fetch and prepare ligand (Aspirin)
-ligand_path = fetch_sdf("2244")
-ligand = Ligand(ligand_path)
-ligand.prepare(minimize="mmff94")
-
-# 3. Find binding pockets
-pocket_finder = PocketFinder("1HVR.pdbqt")
-pockets = pocket_finder.run()
-best_pocket = pockets[0]['center']
-
-# 4. Run Vina docking
-vina = VinaDocking(
-    receptor="1HVR.pdbqt",
-    ligand="2244.pdbqt",
-    grid_center=best_pocket,
-    grid_size=(20, 20, 20)
-)
-vina.run()
-```
 
 ## 🚦 Getting Started
 
-Check out the [Installation Guide](getting-started/installation.md) and Examples [Single Docking](examples/single_docking.ipynb), [Multiple Docking](examples/multiple_docking.ipynb) to get started.
+=== "GUI Application"
 
+    DockSuiteX includes a full-featured **GUI application** built with Streamlit.
+    
+    To use the GUI:
+    ```bash
+    pip install docksuitex
+    docksuitex
+    ```
+    
+    See the [GUI Application Guide](getting-started/gui.md).
+
+=== "Python Package"
+
+    Check out the [Installation Guide](getting-started/python_package.md) and Example [Single Docking](examples/single_docking.ipynb) to get started with the Python interface.
 
 ## 🙏 Acknowledgments
 

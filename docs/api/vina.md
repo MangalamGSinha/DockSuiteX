@@ -1,2 +1,3 @@
-::: docksuitex.vina.VinaDocking
+# VinaDocking API
 
+::: docksuitex.vina.VinaDocking

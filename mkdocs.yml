@@ -1,5 +1,5 @@
 site_name: DockSuiteX
-site_description: All-in-one Protein-Ligand Docking Package
+site_description: All-in-one Protein-Ligand Docking Package & GUI Application
 site_author: DockSuiteX Team
 site_url: https://mangalamgsinha.github.io/DockSuiteX
 
@@ -12,13 +12,6 @@ theme:
     logo: fontawesome/solid/dna  # FontAwesome icon
 
   palette:
-    # Light mode
-    - scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
     # Dark mode
     - scheme: slate
       primary: indigo
@@ -26,6 +19,13 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
   features:
     - navigation.sections
     - navigation.top
@@ -71,12 +71,13 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
-      - Installation: getting-started/installation.md
-      - Examples: 
-          - Single Docking: examples/single_docking.ipynb
-          - Multiple Docking: examples/multiple_docking.ipynb
+      - GUI Application: getting-started/gui.md
+      - Python Package: getting-started/python_package.md
   - API Reference:
       - Overview: api/overview.md
+      - Examples: 
+          - Single Docking: api/examples/single_docking.ipynb
+          - Batch Docking: api/examples/batch_docking.ipynb
       - Core Modules:
           - Protein: api/protein.md
           - Ligand: api/ligand.md

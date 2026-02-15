@@ -2,15 +2,30 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 
-docksuitex/bin/**
-docksuitex/bin/**/**
-
-# Ignore project-specific junk
-docksuitex/__pycache__/
+# DockSuiteX specific
+docksuitex/bin/
 docksuitex/temp/
 temp/
+build_env/
 build/
 dist/
 *.egg-info/
 Test.ipynb
+
+# MkDocs
+site/
+
+# IDE/Tools
+.vscode/
+.idea/
+.pytest_cache/
+.ipynb_checkpoints/
+*.log
+
+# Environments
+venv/
+.venv/
+env/
+.env/

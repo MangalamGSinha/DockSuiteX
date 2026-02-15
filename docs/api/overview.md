@@ -1,5 +1,10 @@
 # API Overview
 
+The API reference documents the Python modules that power both the **Python package** and the **GUI application**. Whether you're writing scripts or using the GUI, the same core engine runs under the hood.
+
+!!! info "Using the GUI?"
+    If you're using the GUI application, you don't need to interact with the API directly. The GUI wraps all these modules in a graphical interface. This reference is for Python developers who want to use DockSuiteX programmatically.
+
 ## Project Structure
 
 The DockSuiteX package is organized into core modules, batch processing modules, and utility functions:
@@ -11,6 +16,7 @@ docksuitex/
 ├── pocket_finder.py  # Pocket detection with P2Rank
 ├── autodock4.py      # AutoDock4 docking wrapper
 ├── vina.py           # AutoDock Vina docking wrapper
+├── cli.py            # Command Line Interface (CLI) entry point
 │ 
 ├── batch_docking/             # Batch processing modules
 │   ├── batch_protein.py       # Parallel batch protein preparation
@@ -25,12 +31,18 @@ docksuitex/
 │   ├── parser.py       # Parse logs to CSV summaries
 │   └── cleaner.py      # Delete bin folder
 │ 
-└── bin/                # Auto-downloaded on first run
-    ├── mgltools/       # MGLTools(AutoDockTools) binaries and scripts
-    ├── obabel/         # Open Babel executables
-    ├── vina/           # AutoDock Vina executable
-    ├── p2rank/         # P2Rank executable and scripts
-    └── autodock/       # AutoDock4 & AutoGrid executables
+├── bin/                # Auto-downloaded on first run
+│    ├── mgltools/       # MGLTools(AutoDockTools) binaries and scripts
+│    ├── obabel/         # Open Babel executables
+│    ├── vina/           # AutoDock Vina executable
+│    ├── p2rank/         # P2Rank executable and scripts
+│    ├── java/           # Java Runtime Environment (JRE) for P2Rank
+│    └── autodock/       # AutoDock4 & AutoGrid executables
+│
+└── streamlit_app/          # Streamlit GUI Application
+    ├── app.py              # Main GUI entry point
+    ├── style.css           # Custom CSS for the GUI
+    └── pages/              # Individual GUI pages (Docking, Fetch, etc.)
 ```
 
 ## Module Categories
@@ -76,6 +88,7 @@ DockSuiteX automatically downloads and manages the following third-party tools:
 | AutoDock Vina | Fast gradient-based docking | `bin/vina/` |
 | AutoDock4 | Classic genetic algorithm docking | `bin/autodock/` |
 | P2Rank | Machine learning pocket prediction | `bin/p2rank/` |
+| Java JRE | Runtime for P2Rank | `bin/java/` |
 | Open Babel | Format conversion and energy minimization | `bin/obabel/` |
 
 All binaries are downloaded from the [DockSuiteX_Binaries](https://github.com/MangalamGSinha/DockSuiteX_Binaries) repository on first import.

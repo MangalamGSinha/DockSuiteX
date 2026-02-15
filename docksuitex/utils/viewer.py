@@ -13,7 +13,7 @@ def view_molecule(file_path: str | Path) -> nv.NGLWidget:
     Renders a molecular structure in Jupyter Notebook using NGLView.
 
     Args:
-        file_path (str): Path to the molecular file (.pdb, .pdbqt, .mol2, or .sdf).
+        file_path (str | Path): Path to the molecular file (.pdb, .pdbqt, .mol2, or .sdf).
 
     Returns:
         nv.NGLWidget: An NGLView widget.
@@ -49,10 +49,6 @@ def view_docked_poses(protein_file: str | Path, ligand_file: str | Path) -> None
     Returns:
         None: Displays the visualization and interactive controls directly
         in the Jupyter Notebook.
-
-    Raises:
-        FileNotFoundError: If the protein or ligand file does not exist.
-        ValueError: If the ligand file does not contain valid MODEL/ENDMDL blocks.
     """
     protein_file = str(Path(protein_file).resolve())
     ligand_file = str(Path(ligand_file).resolve())

@@ -1,1 +1,3 @@
+# BatchLigand API
+
 ::: docksuitex.batch_docking.batch_ligand.BatchLigand

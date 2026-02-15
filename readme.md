@@ -7,7 +7,7 @@
 
 **All-in-one Protein-Ligand Docking Package**
 
-DockSuiteX is a comprehensive Python package for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
+DockSuiteX is a comprehensive Python package and standalone GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations — available both as a Python package (`pip install docksuitex`) and a standalone desktop application (`docksuitex.exe`).
 
 ## ✨ Key Features
 
@@ -17,6 +17,7 @@ DockSuiteX is a comprehensive Python package for molecular docking that integrat
 - 📊 **Batch Processing**: High-throughput screening with parallel execution
 - 👁️ **Interactive Visualization**: 3D molecular visualization with NGLView
 - 🛠️ **Utility Functions**: Built-in tools for fetching structures and parsing results
+- 🖥️ **Standalone GUI**: Complete desktop application (`docksuitex.exe`) — no coding required
 
 ## 🚀 Flexible Batch Docking
 
@@ -36,6 +37,20 @@ Complete combinatorial screening - explore all possible ligand-receptor interact
 
 All batch operations leverage **parallel execution** to maximize computational efficiency, enabling high-throughput virtual screening on your local machine without requiring cluster computing resources.
 
+## 🖥️ GUI Application
+
+DockSuiteX includes a full-featured **standalone GUI application** (`docksuitex.exe`) built with Streamlit, providing a graphical interface for all docking workflows — no coding required.
+
+**GUI Pages:**
+
+- 🏠 **Home** — Landing page with feature overview and docking scenario cards
+- 🔬 **Single Docking** — Complete workflow: upload molecules, prepare structures, find binding pockets, configure & run docking, visualize results in 3D
+- ⚡ **Batch Docking** — High-throughput screening with parallel execution for all ligand-receptor combinations
+- 🌐 **Fetch Molecules** — Download protein (PDB) and ligand (SDF) structures directly from RCSB PDB and PubChem
+- 📌 **About** — Citations, references, and contributing information
+
+<!-- Screenshots will be added here -->
+
 ## 📚 Documentation
 
 **📖 For complete documentation, API reference, and examples, visit:**
@@ -50,7 +65,7 @@ All batch operations leverage **parallel execution** to maximize computational e
 pip install docksuitex
 ```
 
-**Requirements:** Python 3.8+, Windows OS, Java (for P2Rank)
+**Requirements:** Python 3.8+, Windows OS
 
 ---
 

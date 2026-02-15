@@ -7,8 +7,6 @@ import shutil
 from pdbfixer import PDBFixer
 from openmm.app import PDBFile
 
-import uuid
-
 from .utils.viewer import view_molecule
 
 
@@ -18,8 +16,6 @@ MGL_PYTHON_EXE = (MGLTOOLS_PATH / "python.exe").resolve()
 PREPARE_RECEPTOR_SCRIPT = (MGLTOOLS_PATH / "Lib" / "site-packages" /"AutoDockTools" / "Utilities24" / "prepare_receptor4.py").resolve()
 
 OBABEL_EXE = (Path(__file__).parent / "bin" /"obabel" / "obabel.exe").resolve()
-TEMP_DIR = (Path.cwd() / "temp").resolve()
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 
 
@@ -38,9 +34,8 @@ class Protein:
             5. Converting the PDB file to PDBQT format (using AutoDockTools).
 
         Note:
-            Temporary files are created in a `temp/Proteins/` directory and are
-            not automatically cleaned up. The final PDBQT file is saved to the
-            specified location.
+            Intermediate files (converted PDB, fixed PDB) are saved in an
+            ``intermediate_proteins/`` subfolder within the output directory.
     """
     SUPPORTED_INPUTS = {".pdb", ".mol2", ".sdf",
                         ".pdbqt", ".cif", ".ent", ".xyz"}
@@ -113,17 +108,24 @@ class Protein:
         Raises:
             RuntimeError: If Open Babel or AutoDockTools commands fail.
         """
-        # Create a unique temp directory per object
-        self.temp_dir = TEMP_DIR / "Proteins" / f"{self.file_path.stem}_{uuid.uuid4().hex[:8]}"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        # Resolve output directory early so intermediate files go there
+        save_to = Path(save_to).expanduser().resolve()
+        if not save_to.suffix:
+            save_to = save_to / f"{self.file_path.stem}.pdbqt"
+        save_to.parent.mkdir(parents=True, exist_ok=True)
+        output_dir = save_to.parent
+
+        # Intermediate files go in a subfolder of the output directory
+        intermediates_dir = output_dir / "intermediate_proteins"
+        intermediates_dir.mkdir(parents=True, exist_ok=True)
 
         # Convert to .pdb if needed
         if self.ext != ".pdb":
-            self.pdb_path = self.temp_dir / f"{self.file_path.stem}.pdb"
+            self.pdb_path = intermediates_dir / f"{self.file_path.stem}.pdb"
             cmd = [str(OBABEL_EXE), str(self.file_path),"-O", str(self.pdb_path), "--gen3d"]
             result = subprocess.run(cmd, capture_output=True, text=True)
             if result.returncode != 0:
-                raise PreparationError(f"Open Babel conversion failed:\n{result.stderr}")
+                raise RuntimeError(f"❌ Open Babel conversion failed:\n{result.stderr}")
 
         else:
             self.pdb_path = self.file_path
@@ -141,7 +143,7 @@ class Protein:
 
 
         # Save fixed PDB
-        fixed_pdb_path = self.temp_dir / f"{self.file_path.stem}_fixed.pdb"
+        fixed_pdb_path = intermediates_dir / f"{self.file_path.stem}_fixed.pdb"
         with open(fixed_pdb_path, "w") as f:
             PDBFile.writeFile(fixer.topology, fixer.positions, f)
 
@@ -150,13 +152,6 @@ class Protein:
 
 
         # Convert to PDBQT using AutoDockTools
-        save_to = Path(save_to).expanduser().resolve()
-        
-        # treat as file only if it has a suffix (e.g., .pdbqt)
-        if not save_to.suffix:
-            save_to = save_to / f"{self.file_path.stem}.pdbqt"
-        
-        save_to.parent.mkdir(parents=True, exist_ok=True)
 
         U_flag = "nphs_lps_waters" if self.remove_water else "nphs_lps"
         cmd = [

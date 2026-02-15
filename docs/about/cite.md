@@ -1,8 +1,8 @@
 # Citations
 
-If you use DockSuiteX in your research, please cite it as:
+If you use DockSuiteX (Python package or GUI application) in your research, please cite it as:
 
-**Sinha, M. G. (2025). *DockSuiteX: An all in one protein ligand docking package* [Computer software]. GitHub. https://github.com/MangalamGSinha/DockSuiteX**
+**Sinha, M. G. (2025). *DockSuiteX: An all-in-one protein-ligand docking package and GUI application* [Computer software]. GitHub. https://github.com/MangalamGSinha/DockSuiteX**
 
 DockSuiteX builds upon the following excellent tools. Please cite them as appropriate:
 
