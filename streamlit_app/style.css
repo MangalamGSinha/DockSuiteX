@@ -50,32 +50,6 @@
     --glass-blur: 12px;
 }
 
-/* ---------- Auto-detect: browser prefers light ---------- */
-@media (prefers-color-scheme: light) {
-
-    :root:not([data-theme]) .stApp,
-    .stApp:not([data-theme]) {
-        --bg-primary: #f8fafc;
-        --bg-secondary: #f1f5f9;
-        --bg-tertiary: #e2e8f0;
-        --bg-card: rgba(255, 255, 255, 0.85);
-        --bg-card-hover: rgba(241, 245, 249, 0.95);
-        --bg-log: #f1f5f9;
-        --accent-teal: #0d9488;
-        --accent-violet: #6d28d9;
-        --accent-blue: #2563eb;
-        --accent-amber: #d97706;
-        --accent-rose: #e11d48;
-        --text-primary: #1e293b;
-        --text-muted: #475569;
-        --text-on-accent: #ffffff;
-        --border-subtle: rgba(100, 116, 139, 0.18);
-        --shadow-card: rgba(0, 0, 0, 0.08);
-        --shadow-accent: rgba(13, 148, 136, 0.2);
-        --glass-blur: 12px;
-    }
-}
-
 /* ---------- Global ---------- */
 .stApp {
     font-family: 'Inter', 'Segoe UI', sans-serif;
