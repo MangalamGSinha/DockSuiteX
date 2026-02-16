@@ -9,6 +9,9 @@ recursive-include docksuitex *
 recursive-include streamlit_app *
 recursive-include examples *
 
+# Exclude bin directory contents (binaries are downloaded at runtime)
+recursive-exclude docksuitex/bin *
+
 # Include bin directory placeholder
 include docksuitex/bin/.keep
 
