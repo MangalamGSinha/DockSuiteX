@@ -52,4 +52,4 @@ exclude = ["tests*", "docs*", "site*"]
 
 # Optional, only if you have a CLI
 [project.scripts]
-DockSuiteX = "docksuitex.cli:main"
+docksuitex = "docksuitex.cli:main"

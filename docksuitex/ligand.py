@@ -20,12 +20,16 @@ class Ligand:
     conversion and energy minimization, combined with AutoDockTools (MGLTools) for
     PDBQT generation required for molecular docking.
 
-    The preparation workflow:
-        1. Converting various input formats to MOL2, 3D coordinate generation if needed (using Open Babel)
-        2. Optional energy minimization with forcefields: MMFF94, MMFF94S UFF, GAFF (using Open Babel)
-        3. Optional water molecule removal (using Open Babel)
-        4. Optional hydrogen addition and gasteiger charge assignment (using AutoDockTools)
-        5. Converting the MOL2 file to PDBQT format (using AutoDockTools)
+        The preparation workflow:
+            1. Converting various input formats to MOL2, 3D coordinate generation if needed (using Open Babel)
+            2. Optional energy minimization with forcefields: MMFF94, MMFF94S UFF, GAFF (using Open Babel)
+            3. Optional water molecule removal (using Open Babel)
+            4. Optional hydrogen addition and gasteiger charge assignment (using AutoDockTools)
+            5. Converting the MOL2 file to PDBQT format (using AutoDockTools)
+
+        Supported Input Formats:
+            DockSuiteX supports a variety of ligand input formats including Tripos MOL2 (.mol2), 
+            Structure Data File (.sdf), PDB (.pdb), MDL Molfile (.mol), and SMILES (.smi).
 
     Note:
         Intermediate files (e.g., MOL2) are saved in an

@@ -61,11 +61,11 @@ def render_log_if_present(session_key: str, title: str = "Logs:"):
         st.code(st.session_state[session_key], language="text")
 
 
-def render_input_section(title, key_prefix, storage_key, allowed_exts):
+def render_input_section(title, key_prefix, storage_key, allowed_exts, uploader_label):
     """Renders a file upload section WITHOUT visualization."""
     st.markdown(f'<div class="section-header"><h2>{title}</h2></div>', unsafe_allow_html=True)
     uploaded = st.file_uploader(
-        f"Upload files ({' / '.join([x.upper() for x in allowed_exts])})",
+        uploader_label,
         type=allowed_exts,
         accept_multiple_files=True,
         key=f"{key_prefix}_uploader",
@@ -166,7 +166,13 @@ col_prot, col_lig = st.columns(2, gap="large")
 
 # ── Protein Preparation ───────────────────────────────────────
 with col_prot:
-    render_input_section("🧬 Protein Preparation", "prot", "protein_inputs", ["pdb"])
+    render_input_section(
+        "🧬 Protein Preparation", 
+        "prot", 
+        "protein_inputs", 
+        ["pdb", "mol2", "sdf", "pdbqt", "cif", "ent", "xyz"],
+        "Upload protein (PDB/MOL2/SDF/PDBQT/CIF/ENT/XYZ)"
+    )
     all_proteins = st.session_state["protein_inputs"]
 
     with st.expander("⚙️ Protein Options", expanded=True):
@@ -210,7 +216,13 @@ with col_prot:
 
 # ── Ligand Preparation ────────────────────────────────────────
 with col_lig:
-    render_input_section("💊 Ligand Preparation", "lig", "ligand_inputs", ["mol2","sdf","pdb","mol","smi"])
+    render_input_section(
+        "💊 Ligand Preparation", 
+        "lig", 
+        "ligand_inputs", 
+        ["mol2","sdf","pdb","mol","smi"],
+        "Upload ligand (MOL2/SDF/PDB/MOL/SMI)"
+    )
     all_ligands = st.session_state["ligand_inputs"]
 
     with st.expander("⚙️ Ligand Options", expanded=True):

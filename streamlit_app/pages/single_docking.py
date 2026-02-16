@@ -201,6 +201,10 @@ def init_session_state():
         for key in ["s_log_ligand", "s_log_protein", "s_log_docking", "s_log_pockets"]:
             if key not in st.session_state:
                 st.session_state[key] = ""
+        
+        if "s_pose_slider" not in st.session_state:
+            st.session_state["s_pose_slider"] = 1
+            
     except Exception:
         # Ignore if running in a context without session state (e.g. initial import)
         pass
@@ -268,7 +272,7 @@ col_prot, col_lig = st.columns(2, gap="large")
 # ── Protein Preparation ───────────────────────────────────────
 with col_prot:
     st.markdown('<div class="section-header"><h2>🧬 Protein Preparation</h2></div>', unsafe_allow_html=True)
-    prot_file = st.file_uploader("Upload protein (PDB)", type=["pdb"], key="s_prot_uploader")
+    prot_file = st.file_uploader("Upload protein (PDB/MOL2/SDF/PDBQT/CIF/ENT/XYZ)", type=["pdb", "mol2", "sdf", "pdbqt", "cif", "ent", "xyz"], key="s_prot_uploader")
 
     if prot_file:
         st.session_state["s_protein_input"] = {"name": prot_file.name, "data": prot_file.getvalue(), "ext": Path(prot_file.name).suffix}
@@ -580,6 +584,7 @@ if st.button("🚀 Run Docking", type="primary", use_container_width=True, key="
                     df.to_csv(dock_out / csv_name, index=False)
 
                     st.session_state["s_docking_results"] = dock_out
+                    st.session_state["s_pose_slider"] = 1 # Reset pose slider
                 except Exception as e:
                     st.error(str(e))
                     with st.expander("Traceback"): st.code(traceback.format_exc())
@@ -651,19 +656,19 @@ if st.session_state.get("s_docking_results"):
                 num_models = len(models)
 
                 # ── Pose navigation controls ──
+                # Ensure the slider value is within bounds
+                if st.session_state["s_pose_slider"] > num_models:
+                    st.session_state["s_pose_slider"] = 1
+                
                 ctrl_cols = st.columns([0.08, 0.08, 0.84])
                 with ctrl_cols[0]:
                     if st.button("◀", key="s_pose_prev", help="Previous pose"):
-                        cur = st.session_state.get("s_pose_slider", 1)
-                        st.session_state["s_pose_slider"] = max(1, cur - 1)
+                        st.session_state["s_pose_slider"] = max(1, st.session_state["s_pose_slider"] - 1)
                 with ctrl_cols[1]:
                     if st.button("▶", key="s_pose_next", help="Next pose"):
-                        cur = st.session_state.get("s_pose_slider", 1)
-                        st.session_state["s_pose_slider"] = min(num_models, cur + 1)
+                        st.session_state["s_pose_slider"] = min(num_models, st.session_state["s_pose_slider"] + 1)
                 with ctrl_cols[2]:
-                    model_idx = st.slider("Select Pose", 1, num_models,
-                                          st.session_state.get("s_pose_slider", 1),
-                                          key="s_pose_slider") - 1
+                    model_idx = st.slider("Select Pose", 1, num_models, key="s_pose_slider") - 1
 
                 selected_model = models[model_idx]
                 

@@ -33,6 +33,11 @@ class Protein:
             4. Optionally adding hydrogens and gasteiger charges (using AutoDockTools).
             5. Converting the PDB file to PDBQT format (using AutoDockTools).
 
+        Supported Input Formats:
+            DockSuiteX supports a variety of protein input formats including PDB (.pdb), 
+            Protein Data Bank PDBQT (.pdbqt), Tripos MOL2 (.mol2), Structure Data File (.sdf), 
+            Crystallographic Information File (.cif), PDB Entity (.ent), and XYZ (.xyz).
+
         Note:
             Intermediate files (converted PDB, fixed PDB) are saved in an
             ``intermediate_proteins/`` subfolder within the output directory.
