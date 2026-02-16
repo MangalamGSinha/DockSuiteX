@@ -163,4 +163,4 @@ with col_sdf:
 
 
 # ── Footer ─────────────────────────────────────────────────────
-st.caption("DockSuiteX © 2025")
+st.caption("DockSuiteX © 2026")

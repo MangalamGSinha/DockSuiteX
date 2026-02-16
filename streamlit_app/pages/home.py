@@ -147,4 +147,4 @@ st.markdown(
 st.markdown("")
 
 # ── Footer ─────────────────────────────────────────────────────
-st.caption("DockSuiteX © 2025")
+st.caption("DockSuiteX © 2026")

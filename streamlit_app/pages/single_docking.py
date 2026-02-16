@@ -699,4 +699,4 @@ if st.session_state.get("s_docking_results"):
 
     st.info(f"Docking complete! Results in `{results_dir}`")
 
-st.caption("DockSuiteX © 2025")
+st.caption("DockSuiteX © 2026")
