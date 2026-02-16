@@ -3,16 +3,33 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.so
+*.dll
+*.dylib
 
-# DockSuiteX specific
-docksuitex/bin/
+# DockSuiteX specific - binaries (but keep .keep file)
+docksuitex/bin/*
+!docksuitex/bin/.keep
 docksuitex/temp/
 temp/
 build_env/
+
+# Distribution / packaging
 build/
 dist/
 *.egg-info/
+.eggs/
+*.egg
+wheels/
+*.whl
+
+# Testing
 Test.ipynb
+tests/__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
 # MkDocs
 site/
@@ -20,12 +37,40 @@ site/
 # IDE/Tools
 .vscode/
 .idea/
-.pytest_cache/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Jupyter
 .ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Logs
 *.log
+logs/
 
 # Environments
 venv/
 .venv/
 env/
-.env/
+.env
+ENV/
+env.bak/
+venv.bak/
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Backup files
+*.bak
+*.tmp
+*.temp
+*~

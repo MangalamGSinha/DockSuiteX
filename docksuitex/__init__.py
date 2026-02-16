@@ -1,4 +1,3 @@
-
 import platform
 
 if platform.system() != "Windows":
@@ -21,8 +20,6 @@ __all__ = [
     "AD4Docking",
     "PocketFinder",
 ]
-
-
 
 
 import requests
@@ -60,8 +57,12 @@ def download_binaries():
     if platform.system() != "Windows":
         raise RuntimeError("❌ DockSuiteX only supports Windows!")
 
-    # If bin already exists, skip
-    if BIN_DIR.exists() and any(BIN_DIR.iterdir()):
+    # Ensure bin directory exists
+    BIN_DIR.mkdir(exist_ok=True)
+
+    # Check if binaries exist (ignore .keep file)
+    existing_files = [f for f in BIN_DIR.iterdir() if f.name != '.keep']
+    if existing_files:
         # print(f"✅ Binaries already exist in {BIN_DIR}")
         return
 

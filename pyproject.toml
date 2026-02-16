@@ -49,6 +49,7 @@ exclude = ["tests*", "docs*", "site*"]
 [tool.setuptools.package-data]
 "streamlit_app" = ["**/*"]
 "*" = ["examples/**/*"]
+"docksuitex" = ["bin/.keep"]
 
 # Optional, only if you have a CLI
 [project.scripts]

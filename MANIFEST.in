@@ -9,6 +9,9 @@ recursive-include docksuitex *
 recursive-include streamlit_app *
 recursive-include examples *
 
+# Include bin directory placeholder
+include docksuitex/bin/.keep
+
 # Global excludes
 global-exclude __pycache__/*
 global-exclude *.py[cod]
@@ -26,6 +29,5 @@ prune dist
 prune build_env
 prune *.egg-info
 prune .github
-prune docksuitex/bin
 prune docksuitex/temp
 prune temp
