@@ -49,7 +49,6 @@ DockSuiteX includes a full-featured **GUI application** built with Streamlit, pr
 - 🌐 **Fetch Molecules** — Download protein (PDB) and ligand (SDF) structures directly from RCSB PDB and PubChem
 - 📌 **About** — Citations, references, and contributing information
 
-<!-- Screenshots will be added here -->
 
 ## 📚 Documentation
 
@@ -69,6 +68,10 @@ After installation, you can launch the application by simply typing:
 ```bash
 docksuitex
 ```
+*If the command is not recognized, try:*
+```bash
+python -m docksuitex
+```
 
 **Requirements:** Python 3.9+, Windows OS
 
@@ -84,7 +87,7 @@ GNU GPL v3 - see [LICENSE](LICENSE) for details.
 
 This package builds upon and automates workflows using:
 
-- [AutoDock4 &amp; AutoDock Vina](http://autodock.scripps.edu/)
+- [AutoDock4 & AutoDock Vina](http://autodock.scripps.edu/)
 - [MGLTools](http://mgltools.scripps.edu/)
 - [Open Babel](https://openbabel.org/)
 - [PDBFixer](http://openmm.org/)

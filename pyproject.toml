@@ -35,7 +35,7 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/MangalamGSinha/DockSuiteX"
-"Documentation" = "https://github.com/MangalamGSinha/DockSuiteX/wiki"
+"Documentation" = "https://mangalamgsinha.github.io/DockSuiteX"
 "Source" = "https://github.com/MangalamGSinha/DockSuiteX"
 "Issue Tracker" = "https://github.com/MangalamGSinha/DockSuiteX/issues"
 

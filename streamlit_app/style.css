@@ -1,13 +1,17 @@
 /* ============================================================
    DockSuiteX Streamlit — Custom Theme
-   Premium dark molecular-docking UI
+   Supports dark & light modes via [data-theme] on .stApp
    ============================================================ */
 
-/* ---------- Root variables ---------- */
-:root {
+/* ---------- Dark theme (default) ---------- */
+:root,
+[data-theme="dark"] {
     --bg-primary: #0e1117;
+    --bg-secondary: #0f172a;
+    --bg-tertiary: #1e293b;
     --bg-card: rgba(30, 37, 52, 0.7);
     --bg-card-hover: rgba(40, 50, 70, 0.85);
+    --bg-log: #0d1117;
     --accent-teal: #00d4aa;
     --accent-violet: #7c5cfc;
     --accent-blue: #3b82f6;
@@ -15,15 +19,67 @@
     --accent-rose: #f43f5e;
     --text-primary: #e2e8f0;
     --text-muted: #94a3b8;
+    --text-on-accent: #0e1117;
     --border-subtle: rgba(148, 163, 184, 0.12);
+    --shadow-card: rgba(0, 0, 0, 0.3);
+    --shadow-accent: rgba(0, 212, 170, 0.3);
     --glass-blur: 12px;
     --radius: 14px;
     --transition: 0.25s cubic-bezier(.4, 0, .2, 1);
 }
 
+/* ---------- Light theme ---------- */
+[data-theme="light"] {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-tertiary: #e2e8f0;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-card-hover: rgba(241, 245, 249, 0.95);
+    --bg-log: #f1f5f9;
+    --accent-teal: #0d9488;
+    --accent-violet: #6d28d9;
+    --accent-blue: #2563eb;
+    --accent-amber: #d97706;
+    --accent-rose: #e11d48;
+    --text-primary: #1e293b;
+    --text-muted: #475569;
+    --text-on-accent: #ffffff;
+    --border-subtle: rgba(100, 116, 139, 0.18);
+    --shadow-card: rgba(0, 0, 0, 0.08);
+    --shadow-accent: rgba(13, 148, 136, 0.2);
+    --glass-blur: 12px;
+}
+
+/* ---------- Auto-detect: browser prefers light ---------- */
+@media (prefers-color-scheme: light) {
+
+    :root:not([data-theme]) .stApp,
+    .stApp:not([data-theme]) {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #f1f5f9;
+        --bg-tertiary: #e2e8f0;
+        --bg-card: rgba(255, 255, 255, 0.85);
+        --bg-card-hover: rgba(241, 245, 249, 0.95);
+        --bg-log: #f1f5f9;
+        --accent-teal: #0d9488;
+        --accent-violet: #6d28d9;
+        --accent-blue: #2563eb;
+        --accent-amber: #d97706;
+        --accent-rose: #e11d48;
+        --text-primary: #1e293b;
+        --text-muted: #475569;
+        --text-on-accent: #ffffff;
+        --border-subtle: rgba(100, 116, 139, 0.18);
+        --shadow-card: rgba(0, 0, 0, 0.08);
+        --shadow-accent: rgba(13, 148, 136, 0.2);
+        --glass-blur: 12px;
+    }
+}
+
 /* ---------- Global ---------- */
 .stApp {
     font-family: 'Inter', 'Segoe UI', sans-serif;
+    transition: background-color var(--transition), color var(--transition);
 }
 
 /* ---------- Equal-height columns ---------- */
@@ -39,8 +95,9 @@
 
 /* ---------- Sidebar branding ---------- */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
     border-right: 1px solid var(--border-subtle);
+    transition: background var(--transition);
 }
 
 section[data-testid="stSidebar"] .stMarkdown h1 {
@@ -53,13 +110,14 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
 
 /* ---------- Hero gradient header ---------- */
 .hero-header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-secondary) 100%);
     border-radius: var(--radius);
     padding: 3rem 2.5rem;
     margin-bottom: 2rem;
     border: 1px solid var(--border-subtle);
     position: relative;
     overflow: hidden;
+    transition: background var(--transition), border-color var(--transition);
 }
 
 .hero-header::before {
@@ -108,7 +166,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     background: var(--bg-card-hover);
     border-color: rgba(0, 212, 170, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 30px var(--shadow-card);
 }
 
 .glass-card .card-icon {
@@ -167,6 +225,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     border-radius: var(--radius);
     padding: 1.25rem;
     text-align: center;
+    transition: background var(--transition), border-color var(--transition);
 }
 
 .metric-card .metric-value {
@@ -210,19 +269,19 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
 
 .stButton>button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px var(--shadow-card);
 }
 
 .stDownloadButton>button {
     background: linear-gradient(135deg, var(--accent-teal), #00b894) !important;
-    color: #0e1117 !important;
+    color: var(--text-on-accent) !important;
     border: none !important;
     border-radius: 10px;
     font-weight: 700;
 }
 
 .stDownloadButton>button:hover {
-    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+    box-shadow: 0 4px 20px var(--shadow-accent);
 }
 
 /* ---------- File uploader ---------- */
@@ -262,7 +321,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
 
 /* ---------- Log output ---------- */
 .log-output {
-    background: #0d1117;
+    background: var(--bg-log);
     border: 1px solid var(--border-subtle);
     border-radius: 10px;
     padding: 1rem;
@@ -273,6 +332,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     max-height: 400px;
     overflow-y: auto;
     white-space: pre-wrap;
+    transition: background var(--transition), color var(--transition);
 }
 
 /* ---------- Divider ---------- */
@@ -327,7 +387,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     background: var(--bg-card-hover);
     border-color: rgba(124, 92, 252, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 30px var(--shadow-card);
 }
 
 .scenario-ratio {
@@ -358,7 +418,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     height: 44px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
-    color: #0e1117;
+    color: var(--text-on-accent);
     font-weight: 800;
     font-size: 1.2rem;
     display: inline-flex;
@@ -383,7 +443,7 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
 .tech-badge:hover {
     border-color: var(--accent-teal);
     background: var(--bg-card-hover);
-    box-shadow: 0 0 12px rgba(0, 212, 170, 0.15);
+    box-shadow: 0 0 12px var(--shadow-accent);
 }
 
 /* ---------- Responsive tweaks ---------- */
@@ -395,4 +455,14 @@ section[data-testid="stSidebar"] .stMarkdown h1 {
     .hero-header h1 {
         font-size: 2rem;
     }
+}
+
+/* ---------- Theme toggle styling ---------- */
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
 }

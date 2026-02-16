@@ -55,7 +55,7 @@ DockSuiteX is a comprehensive Python package and GUI application for molecular d
 
 === "Python Package"
 
-    Check out the [Installation Guide](getting-started/python_package.md) and Example [Single Docking](examples/single_docking.ipynb) to get started with the Python interface.
+    Check out the [Installation Guide](getting-started/python_package.md) and Examples: [Single Docking](api/examples/single_docking.ipynb) | [Batch Docking](api/examples/batch_docking.ipynb) to get started with the Python interface.
 
 ## 🙏 Acknowledgments
 

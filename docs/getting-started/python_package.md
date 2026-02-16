@@ -4,7 +4,7 @@ If you prefer using DockSuiteX as a Python library in your scripts/notebooks, fo
 
 ## Requirements
 
-- **Python**: 3.8 or higher
+- **Python**: 3.9 or higher
 - **Operating System**: Windows (currently Windows-only)
 - **Dependencies**: Automatically installed via pip
 
@@ -31,6 +31,10 @@ To completely uninstall DockSuiteX, you should first remove the downloaded binar
 1. **Remove Binaries**:
    ```bash
    docksuitex --clean
+   ```
+   *If the command is not recognized, try:*
+   ```bash
+   python -m docksuitex --clean
    ```
 2. **Uninstall Package**:
    ```bash
