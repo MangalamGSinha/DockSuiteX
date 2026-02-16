@@ -28,8 +28,7 @@ docksuitex/
 ├── utils/
 │   ├── fetcher.py      # Fetch PDB (RCSB) & SDF (PubChem)
 │   ├── viewer.py       # NGLView visualization
-│   ├── parser.py       # Parse logs to CSV summaries
-│   └── cleaner.py      # Delete bin folder
+│   └── parser.py       # Parse logs to CSV summaries
 │ 
 ├── bin/                # Auto-downloaded on first run
 │    ├── mgltools/       # MGLTools(AutoDockTools) binaries and scripts
@@ -76,7 +75,6 @@ Helper functions for common tasks:
 - **[Viewer](viewer.md)** - 3D molecular visualization with NGLView
 - **[Parser](parser.md)** - Parse docking outputs to CSV format
 - **[Fetcher](fetcher.md)** - Download structures from RCSB PDB and PubChem
-- **[Cleaner](cleaner.md)** - Delete binaries, useful when you want to re-download fresh binaries.
 
 ## Binary Dependencies
 

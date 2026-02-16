@@ -24,6 +24,19 @@ cd DockSuiteX
 pip install .
 ```
 
+## Uninstallation
+
+To completely uninstall DockSuiteX, you should first remove the downloaded binary executables and then uninstall the Python package.
+
+1. **Remove Binaries**:
+   ```bash
+   docksuitex --clean
+   ```
+2. **Uninstall Package**:
+   ```bash
+   pip uninstall docksuitex
+   ```
+
 ## Binary Dependencies
 
 DockSuiteX automatically downloads required binary executables on first import:

@@ -19,6 +19,21 @@ The easiest way to use DockSuiteX is via the GUI command.
 
 ---
 
+## Uninstallation
+
+To completely uninstall DockSuiteX, you should first remove the downloaded binary executables and then uninstall the Python package.
+
+1. **Remove Binaries**:
+   ```bash
+   docksuitex --clean
+   ```
+2. **Uninstall Package**:
+   ```bash
+   pip uninstall docksuitex
+   ```
+
+---
+
 
 ## Screenshots
 

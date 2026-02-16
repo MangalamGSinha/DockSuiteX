@@ -94,7 +94,6 @@ nav:
           - Viewer: api/viewer.md
           - Parser: api/parser.md
           - Fetcher: api/fetcher.md
-          - Cleaner: api/cleaner.md
   - About:
       - Citations: about/cite.md
       - License: about/license.md
