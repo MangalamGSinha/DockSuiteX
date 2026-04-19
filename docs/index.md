@@ -2,7 +2,7 @@
 
 **All-in-one Protein-Ligand Docking Package**
 
-DockSuiteX is a comprehensive Python package and GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, and AutoDock4. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
+DockSuiteX is a comprehensive Python package and GUI application for molecular docking that integrates multiple tools including MGLTools, P2Rank, AutoDock Vina, AutoDock4 and ProLIF. It provides a unified, user-friendly interface for protein and ligand preparation, binding pocket prediction, and molecular docking simulations.
 
 ## ✨ Key Features
 
@@ -48,12 +48,13 @@ DockSuiteX is a comprehensive Python package and GUI application for molecular d
 
     DockSuiteX includes a full-featured **GUI application** built with Streamlit.
     
-    To use the GUI:
+    To use the GUI, run this in your terminal (command prompt):
     ```bash
     pip install docksuitex
     docksuitex
     ```
-    
+    Requirements: Python 3.9+, Windows OS
+
     See the [GUI Application Guide](getting-started/gui.md).
 
 === "Python Package"
