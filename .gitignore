@@ -6,6 +6,7 @@ __pycache__/
 *.so
 *.dll
 *.dylib
+*.c
 
 # DockSuiteX specific - binaries (but keep .keep file)
 docksuitex/bin/*
