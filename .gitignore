@@ -95,3 +95,4 @@ Desktop.ini
 # 3. Allow essential root files (Recommended)
 !.gitignore
 !mkdocs.yml
+!readme.md
