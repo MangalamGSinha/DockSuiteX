@@ -1,0 +1,503 @@
+/* ============================================================
+   DockSuiteX Streamlit — Custom Theme
+   Supports dark & light modes via [data-theme] on .stApp
+   ============================================================ */
+
+:root {
+    /* Map custom properties to official Streamlit theme variables */
+    --bg-primary: var(--background-color);
+    --bg-secondary: var(--secondary-background-color);
+    --bg-tertiary: var(--secondary-background-color);
+    --bg-card: var(--secondary-background-color);
+    --bg-card-hover: var(--secondary-background-color);
+    --bg-log: var(--background-color);
+    --text-primary: var(--text-color);
+    --text-muted: var(--text-color);
+    
+    /* Default Dark Accents */
+    --accent-teal: #00d4aa;
+    --accent-violet: #7c5cfc;
+    --accent-blue: #3b82f6;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --text-on-accent: #ffffff;
+    --border-subtle: rgba(128, 128, 128, 0.15);
+    --shadow-card: rgba(0, 0, 0, 0.1);
+    --shadow-accent: rgba(0, 212, 170, 0.2);
+    --glass-blur: 12px;
+    --radius: 14px;
+    --transition: 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* System-level Light Mode overrides for accents */
+@media (prefers-color-scheme: light) {
+    :root {
+        --accent-teal: #0d9488;
+        --accent-violet: #6d28d9;
+        --accent-blue: #2563eb;
+        --accent-amber: #d97706;
+        --accent-rose: #e11d48;
+        --text-on-accent: #ffffff;
+    }
+}
+
+/* ---------- Global ---------- */
+.stApp {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary);
+    transition: background-color var(--transition), color var(--transition);
+}
+
+/* ---------- Equal-height columns ---------- */
+[data-testid="stHorizontalBlock"] {
+    align-items: flex-start !important;
+}
+
+[data-testid="stHorizontalBlock"]>[data-testid="stColumn"]>div:first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+}
+
+/* ---------- Sidebar branding ---------- */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    border-right: 1px solid var(--border-subtle);
+    transition: background var(--transition);
+}
+
+section[data-testid="stSidebar"] .stMarkdown h1 {
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* ---------- Hero gradient header ---------- */
+.hero-header {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 50%, var(--bg-secondary) 100%);
+    border-radius: var(--radius);
+    padding: 3rem 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-subtle);
+    position: relative;
+    overflow: hidden;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.hero-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(124, 92, 252, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.hero-header p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* ---------- Glass cards ---------- */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(0, 212, 170, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--shadow-card);
+}
+
+.glass-card .card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.glass-card h3 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.glass-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ---------- Status badges ---------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.status-success {
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--accent-teal);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+}
+
+/* ---------- Metric cards ---------- */
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.metric-card .metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card .metric-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+/* ---------- Section headers ---------- */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-header h2 {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+/* ---------- Custom buttons ---------- */
+.stButton>button {
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all var(--transition);
+    border: 1px solid var(--border-subtle);
+}
+
+.stButton>button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px var(--shadow-card);
+}
+
+.stDownloadButton>button {
+    background: linear-gradient(135deg, var(--accent-teal), #00b894) !important;
+    color: var(--text-on-accent) !important;
+    border: none !important;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.stDownloadButton>button:hover {
+    box-shadow: 0 4px 20px var(--shadow-accent);
+}
+
+/* ---------- File uploader ---------- */
+.stFileUploader>div {
+    border-radius: var(--radius);
+    border: 2px dashed rgba(148, 163, 184, 0.2);
+    transition: border-color var(--transition);
+}
+
+.stFileUploader>div:hover {
+    border-color: rgba(0, 212, 170, 0.4);
+}
+
+/* ---------- Tabs ---------- */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    background: transparent;
+}
+
+.stTabs [data-baseweb="tab"] {
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+    padding: 8px 20px;
+}
+
+/* ---------- Expander ---------- */
+.streamlit-expanderHeader {
+    border-radius: var(--radius);
+    font-weight: 600;
+}
+
+/* ---------- DataFrame ---------- */
+.stDataFrame {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* ---------- Divider ---------- */
+.styled-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+    margin: 1.5rem 0;
+    border: none;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* ---------- Landing page: hero subtitle ---------- */
+.hero-subtitle {
+    font-size: 1.35rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Landing page: scenario cards ---------- */
+.scenario-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all var(--transition);
+    height: 100%;
+}
+
+.scenario-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(124, 92, 252, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--shadow-card);
+}
+
+.scenario-ratio {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-violet), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.scenario-title {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.scenario-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* ---------- Landing page: step numbers ---------- */
+.step-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    color: var(--text-on-accent);
+    font-weight: 800;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+}
+
+/* ---------- Landing page: tech badges ---------- */
+.tech-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: all var(--transition);
+}
+
+.tech-badge:hover {
+    border-color: var(--accent-teal);
+    background: var(--bg-card-hover);
+    box-shadow: 0 0 12px var(--shadow-accent);
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 768px) {
+    .hero-header {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero-header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ---------- Streamlit native widget overrides ---------- */
+/* Make Streamlit's built-in elements respect our CSS variables */
+
+/* Main area & header bar */
+.stApp > header {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Markdown and text elements */
+.stApp .stMarkdown,
+.stApp .stMarkdown p,
+.stApp .stMarkdown li,
+.stApp .stCaption,
+.stApp label,
+.stApp .stSelectbox label,
+.stApp .stNumberInput label,
+.stApp .stTextInput label,
+.stApp .stTextArea label,
+.stApp .stRadio label,
+.stApp .stCheckbox label {
+    color: var(--text-primary) !important;
+}
+
+.stApp .stMarkdown h1,
+.stApp .stMarkdown h2,
+.stApp .stMarkdown h3,
+.stApp .stMarkdown h4 {
+    color: var(--text-primary) !important;
+}
+
+/* Input widgets (text, number, select, etc.) */
+.stApp .stTextInput > div > div,
+.stApp .stNumberInput > div > div,
+.stApp .stSelectbox > div > div,
+.stApp .stMultiSelect > div > div,
+.stApp .stTextArea > div > div {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-subtle) !important;
+    transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.stApp .stTextInput input,
+.stApp .stNumberInput input,
+.stApp .stTextArea textarea {
+    color: var(--text-primary) !important;
+}
+
+/* Expander */
+.stApp .streamlit-expanderHeader,
+.stApp [data-testid="stExpander"] summary {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-secondary) !important;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.stApp [data-testid="stExpander"] {
+    border-color: var(--border-subtle) !important;
+}
+
+/* Info / Warning / Error / Success boxes */
+.stApp .stAlert {
+    transition: background-color var(--transition), color var(--transition);
+}
+
+/* Slider */
+.stApp .stSlider span {
+    color: var(--text-primary) !important;
+}
+
+/* Radio & checkbox text */
+.stApp .stRadio div[role="radiogroup"] label,
+.stApp .stCheckbox label span {
+    color: var(--text-primary) !important;
+}
+
+/* Horizontal rule / divider */
+.stApp hr {
+    border-color: var(--border-subtle) !important;
+}
+
+/* Code blocks */
+.stApp .stCodeBlock {
+    background-color: var(--bg-log) !important;
+    transition: background-color var(--transition);
+}
+
+/* Tabs */
+.stApp .stTabs [data-baseweb="tab"] {
+    color: var(--text-muted) !important;
+}
+
+.stApp .stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: var(--accent-teal) !important;
+}
+
+/* Spinner */
+.stApp .stSpinner > div {
+    border-top-color: var(--accent-teal) !important;
+}
+
+/* Captions */
+.stApp .stCaption p {
+    color: var(--text-muted) !important;
+}

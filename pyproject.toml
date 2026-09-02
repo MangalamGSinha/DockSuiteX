@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "DockSuiteX"
+version = "4.6.0"
+description = "All-in-one protein-ligand docking package for Windows and Linux with bundled tools"
+readme = "readme.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+  {name = "Mangalam Gautam Sinha", email = "mangalamgsinha@gmail.com"}
+]
+keywords = ["docking", "autodock", "vina", "bioinformatics", "ligand", "protein", "drug discovery"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
+
+dependencies = [
+  "pdbfixer-wheel>=1.11.0",
+  "OpenMM>=8.3.1",
+  "openbabel-wheel",
+  "pandas>=1.3",
+  "requests>=2.26",
+  "nglview",
+  "ipywidgets",
+  "streamlit",  
+  "tqdm",
+  "biopython",
+  "prolif",
+  "rdkit",
+  "py3Dmol"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/MangalamGSinha/DockSuiteX"
+"Documentation" = "https://mangalamgsinha.github.io/DockSuiteX"
+"Source" = "https://github.com/MangalamGSinha/DockSuiteX"
+"Issue Tracker" = "https://github.com/MangalamGSinha/DockSuiteX/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests*", "site*", "docksuitex.bin*"]
+
+[tool.setuptools.package-data]
+"streamlit_app" = ["**/*"]
+"docksuitex" = ["bin/.keep"]
+
+# Optional, only if you have a CLI
+[project.scripts]
+docksuitex = "docksuitex.cli:main"
